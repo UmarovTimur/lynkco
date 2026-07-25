@@ -1,26 +1,47 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { AboutBento } from "@/components/sections/AboutBento";
-import { Intro } from "@/components/sections/Intro";
+import { ValueProps } from "@/components/sections/ValueProps";
+import { Geography } from "@/components/sections/Geography";
+import { Complectations } from "@/components/sections/Complectations";
+import { Stock } from "@/components/sections/Stock";
 import { Process } from "@/components/sections/Process";
+import { Terms } from "@/components/sections/Terms";
+import { Faq } from "@/components/sections/Faq";
+import { LeadForm } from "@/components/sections/LeadForm";
+import { Intro } from "@/components/sections/Intro";
+import { AboutBento } from "@/components/sections/AboutBento";
 import { Work } from "@/components/sections/Work";
 import { FounderBio } from "@/components/sections/FounderBio";
 import { Pricing } from "@/components/sections/Pricing";
-import { Faq } from "@/components/sections/Faq";
 import { CtaFooter } from "@/components/sections/CtaFooter";
 
 export default function Home() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-white">
       <Nav />
+
+      {/* Lynk & Co 06 content */}
       <Hero />
-      <AboutBento />
-      <Intro />
+      <ValueProps />
+      <Geography />
+      <Complectations />
+      <Stock />
       <Process />
+      <Terms />
+      <Faq />
+      <LeadForm />
+
+      {/*
+        Leftover template demo content (Hanzo portfolio placeholders) — kept
+        per request, has no Lynk & Co equivalent yet. Grouped here rather
+        than interspersed with real business content above.
+      */}
+      <Intro />
+      <AboutBento />
       <Work />
       <FounderBio />
       <Pricing />
-      <Faq />
+
       <CtaFooter />
     </main>
   );

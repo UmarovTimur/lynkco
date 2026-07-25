@@ -2,10 +2,10 @@ import { ArrowRight, Mail, X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 
 const SOCIALS = [
-  { label: "Email", href: "mailto:hello@hanzo.studio", Icon: Mail },
-  { label: "X", href: "https://x.com", Icon: X },
-  { label: "LinkedIn", href: "https://linkedin.com", Icon: LinkedinIcon },
-  { label: "Instagram", href: "https://instagram.com/stfnco", Icon: InstagramIcon },
+  { label: "Email", href: "#lead-form", Icon: Mail },
+  { label: "X", href: "#", Icon: X },
+  { label: "LinkedIn", href: "#", Icon: LinkedinIcon },
+  { label: "Instagram", href: "#", Icon: InstagramIcon },
 ];
 
 export function CtaFooter() {
@@ -21,28 +21,28 @@ export function CtaFooter() {
 
       <div className="relative flex w-full max-w-[1440px] flex-col items-center">
         <span className="rounded-full bg-white/10 px-4 py-2 text-xs text-white">
-          2 spots available
+          Прямые поставки по параллельному импорту
         </span>
 
         <h2 className="mt-6 max-w-full text-center font-sans text-5xl font-normal leading-[1.15] tracking-[-0.03em] text-white">
-          Let&apos;s Connect
+          Остались вопросы?
         </h2>
 
         <p className="mt-4 max-w-md text-center text-base leading-[1.7] text-white/60">
-          Feel free to contact me if having any questions. I&apos;m available
-          for new projects or just for chatting.
+          Свяжитесь с нами — ответим оперативно в рабочие дни и подготовим
+          коммерческое предложение под ваш объём и регион.
         </p>
 
         <a
-          href="#"
+          href="#lead-form"
           className="mt-8 flex h-[51px] items-center gap-2 rounded-full border border-white/20 bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
         >
-          Book a free intro call
+          Получить коммерческое предложение
           <ArrowRight size={16} />
         </a>
 
         <div className="mt-24 flex w-full flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
-          <span className="text-base text-white">© Hanzo Studio, 2025</span>
+          <span className="text-base text-white">© Lynk & Co 06 Import, 2025</span>
 
           <div className="flex items-center gap-3">
             {SOCIALS.map(({ label, href, Icon }) => (

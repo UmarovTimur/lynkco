@@ -18,9 +18,9 @@ const instrumentSerif = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Hanzo — a Design Craftsman's Portfolio Template",
+  title: "Lynk & Co 06 — параллельный импорт из Китая",
   description:
-    "Hanzo is a free minimal and elegant portfolio template made for product, software, and digital designers to share their work quickly and effectively.",
+    "Прямые поставки Lynk & Co 06 по параллельному импорту. Автомобили в наличии на складе в Хоргосе, отгрузка от одной единицы, доставка по странам СНГ.",
 };
 
 export default function RootLayout({
@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ru"
       className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

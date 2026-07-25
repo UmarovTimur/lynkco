@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { ArrowRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,40 +11,44 @@ interface FaqItem {
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question:
-      "What's the difference between a subscription and a custom project?",
+    question: "Двигатель трёхцилиндровый?",
     answer:
-      "The subscription is ongoing and flexible — ideal for continuous design needs. Custom projects are one-time, fixed-scope engagements for larger goals like a rebrand or product launch.",
+      "Да, 1.5-литровый турбированный трёхцилиндровый агрегат объёмом 1499 см³ в паре с 7-ступенчатым преселективом. Это современное решение, обеспечивающее отличную динамику при низком расходе топлива.",
   },
   {
-    question: "How fast is the turnaround?",
+    question: "Почему мощность 156 л.с.?",
     answer:
-      "Most requests are delivered within 1–2 business days. Larger tasks may take longer, but you'll always be kept in the loop.",
+      "Мощность 114 кВт выбрана для экспортной спецификации — в странах ЕАЭС она попадает в льготную категорию по налогообложению и сборам.",
   },
   {
-    question: "How many requests can I make?",
+    question: "В какие страны поставляете?",
     answer:
-      "As many as you like — with a subscription, you can queue unlimited requests, and they'll be handled one at a time in priority order.",
+      "Работаем по всем странам СНГ. Маршрут и сроки подбираем индивидуально под каждый регион.",
   },
   {
-    question: "What types of design do you handle?",
+    question: "Сколько стоит доставка?",
     answer:
-      "Websites, product UI, landing pages, brand assets, decks, social media visuals — anything digital that needs to look and feel sharp.",
+      "Стоимость зависит от удалённости и способа перевозки. Она рассчитывается при подготовке коммерческого предложения.",
   },
   {
-    question: "What tools do you use?",
+    question: "Можно взять один автомобиль?",
     answer:
-      "Figma for design, Notion for task management, and Slack or email for async communication.",
+      "Да, минимальной партии нет. Вы можете заказать от одной единицы для теста спроса.",
   },
   {
-    question: "Can I pause the subscription?",
+    question: "Какие документы нужны для регистрации?",
     answer:
-      "Yes — you can pause anytime and resume when you're ready. Unused days roll over.",
+      "Состав документов зависит от страны ввоза. Для России и стран ЕАЭС основными являются СБКТС и ЭПТС. Мы консультируем по пакетам документов для каждой страны.",
   },
   {
-    question: "Do you offer development too?",
+    question: "Что с гарантией и запчастями?",
     answer:
-      "Joris focuses on design only, but all deliverables are dev-ready. He can also recommend trusted no-code or Webflow/Framer developers if needed.",
+      "Заводская гарантия не распространяется, что стандартно для параллельного импорта. Мы организуем поставку любых необходимых запчастей по вашему запросу.",
+  },
+  {
+    question: "Как получить актуальный прайс?",
+    answer:
+      "Оставьте заявку от юридического лица. Условия формируются индивидуально под ваш объём и регион поставки.",
   },
 ];
 
@@ -62,37 +65,25 @@ export function Faq() {
         FAQ
       </p>
       <h2 className="mt-4 text-center font-sans text-[32px] font-medium text-black md:text-[48px]">
-        Your Questions, Answered
+        Ответы на частые вопросы
       </h2>
 
       <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
         <div className="rounded-3xl bg-neutral-100 p-10">
-          <Image
-            src="/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
-            alt="Joris"
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
-          <p className="mt-6 text-lg text-black">
-            <span className="font-bold">Have more questions?</span>{" "}
+          <p className="text-lg text-black">
+            <span className="font-bold">Остались вопросы?</span>{" "}
             <span className="font-normal">
-              Book a free discovery call
+              Оставьте заявку от юридического лица — ответим оперативно в
+              рабочие дни.
             </span>
           </p>
           <a
-            href="#"
+            href="#lead-form"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-white"
           >
-            Book a Discovery Call
+            Получить коммерческое предложение
             <ArrowRight className="size-4" />
           </a>
-          <p className="mt-6 text-sm text-black/60">
-            Or, email me at{" "}
-            <a href="mailto:joris@hanzo.com" className="text-accent-orange">
-              joris@hanzo.com
-            </a>
-          </p>
         </div>
 
         <div>
@@ -105,7 +96,7 @@ export function Faq() {
                 onClick={() => toggleIndex(index)}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <span className="text-2xl font-normal text-black">
+                  <span className="text-xl font-normal text-black md:text-2xl">
                     {item.question}
                   </span>
                   <Plus

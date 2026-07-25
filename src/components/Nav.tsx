@@ -6,12 +6,12 @@ import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 import type { NavLink } from "@/types/content";
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Process", href: "#process" },
-  { label: "Work", href: "#work" },
-  { label: "About", href: "#about-1" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Комплектации", href: "#complectations" },
+  { label: "География", href: "#geography" },
+  { label: "Наличие", href: "#stock" },
+  { label: "Схема поставки", href: "#process" },
   { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#cta" },
+  { label: "Заявка", href: "#lead-form" },
 ];
 
 export function Nav() {
@@ -24,7 +24,7 @@ export function Nav() {
           href="#hero"
           className="flex h-11 items-center rounded-[22px] bg-white px-6 text-base font-bold text-black"
         >
-          Hanzo
+          Lynk &amp; Co 06
         </a>
 
         <div className="relative">
@@ -51,36 +51,29 @@ export function Nav() {
                 </a>
               ))}
               <a
-                href="https://www.framer.com/marketplace/templates/hanzo/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#lead-form"
+                onClick={() => setOpen(false)}
                 className="font-heading text-xl text-accent-orange"
               >
-                Get Template
+                Получить КП
               </a>
               <div className="mt-2 flex items-center gap-3">
                 <a
-                  href="https://x.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 text-black"
                   aria-label="X"
                 >
                   <X size={16} />
                 </a>
                 <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 text-black"
                   aria-label="LinkedIn"
                 >
                   <LinkedinIcon className="h-4 w-4" />
                 </a>
                 <a
-                  href="https://instagram.com/stfnco"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 text-black"
                   aria-label="Instagram"
                 >
