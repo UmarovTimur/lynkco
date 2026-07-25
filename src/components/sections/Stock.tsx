@@ -1,9 +1,29 @@
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 
-const SPECIAL_COLORS = [
-  { name: "Twilight Purple", swatch: "#5b3a72" },
-  { name: "Forest Green", swatch: "#2f4a3c" },
+interface ColorRow {
+  name: string;
+  swatch: string;
+  availability: string;
+  status: "Базовый" | "За доплату";
+}
+
+const COLORS: ColorRow[] = [
+  { name: "Белый", swatch: "#f2f2f2", availability: "Max, Ultra", status: "Базовый" },
+  { name: "Серый", swatch: "#8a8a8a", availability: "Max, Ultra", status: "Базовый" },
+  { name: "Бежевый", swatch: "#d8c9a8", availability: "Max, Ultra", status: "Базовый" },
+  {
+    name: "Фиолетовый (Twilight Purple)",
+    swatch: "#5b3a72",
+    availability: "Только Ultra",
+    status: "За доплату",
+  },
+  {
+    name: "Зелёный (Forest Green)",
+    swatch: "#2f4a3c",
+    availability: "Max, Ultra",
+    status: "За доплату",
+  },
 ];
 
 export function Stock() {
@@ -31,38 +51,60 @@ export function Stock() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.24} rotate={2}>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-relaxed text-black/60">
-            Доступны все заявленные цветовые варианты. Отдельные цвета кузова
-            —{" "}
-            {SPECIAL_COLORS.map((c, i) => (
-              <span key={c.name} className="font-medium text-black">
-                {c.name}
-                {i < SPECIAL_COLORS.length - 1 ? " и " : ""}
-              </span>
-            ))}{" "}
-            — поставляются на особых условиях, детали указываются в
-            коммерческом предложении.
-          </p>
+        <Reveal
+          delay={0.24}
+          rotate={2}
+          className="mx-auto mt-10 w-full max-w-2xl overflow-x-auto"
+        >
+          <table className="w-full min-w-[420px] border-collapse text-sm md:text-base">
+            <thead>
+              <tr className="border-b border-black/10">
+                <th className="py-3 text-left font-normal text-black/50">
+                  Цвет
+                </th>
+                <th className="py-3 text-left font-normal text-black/50">
+                  Доступность
+                </th>
+                <th className="py-3 text-right font-normal text-black/50">
+                  Статус
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {COLORS.map((c) => (
+                <tr key={c.name} className="border-b border-black/10">
+                  <th
+                    scope="row"
+                    className="flex items-center gap-2 py-4 pr-4 text-left font-normal text-black"
+                  >
+                    <span
+                      className="h-3 w-3 shrink-0 rounded-full border border-black/10"
+                      style={{ backgroundColor: c.swatch }}
+                      aria-hidden="true"
+                    />
+                    {c.name}
+                  </th>
+                  <td className="py-4 pr-4 text-left text-black/70">
+                    {c.availability}
+                  </td>
+                  <td className="py-4 text-right">
+                    <span
+                      className={
+                        c.status === "За доплату"
+                          ? "text-accent-orange"
+                          : "text-black/50"
+                      }
+                    >
+                      {c.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Reveal>
 
-        <Reveal delay={0.32} rotate={-3} className="mt-6 flex items-center justify-center gap-4">
-          {SPECIAL_COLORS.map((c) => (
-            <span
-              key={c.name}
-              className="flex items-center gap-2 rounded-full border border-black/10 px-3 py-1.5 text-xs text-black/60"
-            >
-              <span
-                className="h-3 w-3 rounded-full"
-                style={{ backgroundColor: c.swatch }}
-                aria-hidden="true"
-              />
-              {c.name}
-            </span>
-          ))}
-        </Reveal>
-
-        <Reveal delay={0.4} rotate={3} className="mt-8 flex justify-center">
+        <Reveal delay={0.32} rotate={3} className="mt-8 flex justify-center">
           <a
             href="#lead-form"
             className="flex h-[51px] items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90"

@@ -6,6 +6,7 @@ import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 import type { NavLink } from "@/types/content";
 
 const NAV_LINKS: NavLink[] = [
+  { label: "Характеристики", href: "#specs" },
   { label: "Комплектации", href: "#complectations" },
   { label: "География", href: "#geography" },
   { label: "Наличие", href: "#stock" },
