@@ -45,7 +45,12 @@ export function ValueProps() {
     >
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
         {VALUE_PROPS.map(({ title, description, icon: Icon }, i) => (
-          <Reveal key={title} delay={i * 0.08} className="flex flex-col gap-3">
+          <Reveal
+            key={title}
+            delay={i * 0.08}
+            rotate={i % 2 === 0 ? 3 : -3}
+            className="flex flex-col gap-3"
+          >
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-black">
               <Icon size={18} />
             </span>

@@ -9,37 +9,44 @@ const SPECIAL_COLORS = [
 export function Stock() {
   return (
     <section id="stock" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
-      <Reveal className="flex flex-col items-center">
-        <div className="mx-auto flex w-fit items-center gap-4">
+      <div className="flex flex-col items-center">
+        <Reveal rotate={-3} className="mx-auto flex w-fit items-center gap-4">
           <span className="h-px w-12 bg-black/10" aria-hidden="true" />
           <span className="font-serif text-2xl italic text-black/50">
             Наличие на складе
           </span>
           <span className="h-px w-12 bg-black/10" aria-hidden="true" />
-        </div>
+        </Reveal>
 
-        <h2 className="mt-4 text-center text-3xl font-normal text-black md:text-5xl">
-          Наличие на складе в Хоргосе
-        </h2>
+        <Reveal delay={0.08} rotate={3}>
+          <h2 className="mt-4 text-center text-3xl font-normal text-black md:text-5xl">
+            Наличие на складе в Хоргосе
+          </h2>
+        </Reveal>
 
-        <p className="mx-auto mt-6 max-w-2xl text-center text-sm font-medium text-black/70">
-          Наличие меняется ежедневно — уточняйте актуальный остаток перед
-          бронированием.
-        </p>
+        <Reveal delay={0.16} rotate={-2}>
+          <p className="mx-auto mt-6 max-w-2xl text-center text-sm font-medium text-black/70">
+            Наличие меняется ежедневно — уточняйте актуальный остаток перед
+            бронированием.
+          </p>
+        </Reveal>
 
-        <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-relaxed text-black/60">
-          Доступны все заявленные цветовые варианты. Отдельные цвета кузова —{" "}
-          {SPECIAL_COLORS.map((c, i) => (
-            <span key={c.name} className="font-medium text-black">
-              {c.name}
-              {i < SPECIAL_COLORS.length - 1 ? " и " : ""}
-            </span>
-          ))}{" "}
-          — поставляются на особых условиях, детали указываются в
-          коммерческом предложении.
-        </p>
+        <Reveal delay={0.24} rotate={2}>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-relaxed text-black/60">
+            Доступны все заявленные цветовые варианты. Отдельные цвета кузова
+            —{" "}
+            {SPECIAL_COLORS.map((c, i) => (
+              <span key={c.name} className="font-medium text-black">
+                {c.name}
+                {i < SPECIAL_COLORS.length - 1 ? " и " : ""}
+              </span>
+            ))}{" "}
+            — поставляются на особых условиях, детали указываются в
+            коммерческом предложении.
+          </p>
+        </Reveal>
 
-        <div className="mt-6 flex items-center justify-center gap-4">
+        <Reveal delay={0.32} rotate={-3} className="mt-6 flex items-center justify-center gap-4">
           {SPECIAL_COLORS.map((c) => (
             <span
               key={c.name}
@@ -53,9 +60,9 @@ export function Stock() {
               {c.name}
             </span>
           ))}
-        </div>
+        </Reveal>
 
-        <div className="mt-8 flex justify-center">
+        <Reveal delay={0.4} rotate={3} className="mt-8 flex justify-center">
           <a
             href="#lead-form"
             className="flex h-[51px] items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90"
@@ -63,8 +70,8 @@ export function Stock() {
             Забронировать автомобили
             <ArrowRight size={16} />
           </a>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
     </section>
   );
 }

@@ -51,18 +51,23 @@ export function LeadForm() {
       id="lead-form"
       className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]"
     >
-      <Reveal className="mx-auto max-w-3xl text-center">
-        <h2 className="text-3xl font-normal text-black md:text-5xl">
-          Получить коммерческое предложение
-        </h2>
-        <p className="mt-4 text-base text-black/60 md:text-lg">
-          Оставьте контакты — уточним детали и подготовим коммерческое
-          предложение. Отвечаем оперативно в рабочие дни.
-        </p>
-      </Reveal>
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal rotate={-3}>
+          <h2 className="text-3xl font-normal text-black md:text-5xl">
+            Получить коммерческое предложение
+          </h2>
+        </Reveal>
+        <Reveal delay={0.08} rotate={3}>
+          <p className="mt-4 text-base text-black/60 md:text-lg">
+            Оставьте контакты — уточним детали и подготовим коммерческое
+            предложение. Отвечаем оперативно в рабочие дни.
+          </p>
+        </Reveal>
+      </div>
 
       <Reveal
         delay={0.15}
+        rotate={-2}
         className="mx-auto mt-12 max-w-3xl rounded-[32px] bg-neutral-100 p-6 md:p-12"
       >
         {submitted ? (

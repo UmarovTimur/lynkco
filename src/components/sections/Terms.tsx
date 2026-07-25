@@ -39,7 +39,7 @@ const TERMS: TermItem[] = [
 export function Terms() {
   return (
     <section id="terms" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
-      <Reveal>
+      <Reveal rotate={-2}>
         <h2 className="text-center text-3xl font-normal text-black md:text-4xl">
           Условия и ответственность
         </h2>
@@ -50,6 +50,7 @@ export function Terms() {
           <Reveal
             key={term.label}
             delay={(i % 2) * 0.1}
+            rotate={i % 2 === 0 ? 2 : -2}
             className="border-t border-black/10 pt-4"
           >
             <p className="text-base text-black">

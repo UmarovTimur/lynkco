@@ -10,20 +10,28 @@ export function Hero() {
       className="flex w-full flex-col items-center justify-center px-[120px] max-lg:px-8 max-sm:px-4"
     >
       <div className="flex w-full max-w-[1440px] flex-col items-center gap-8 py-24 pt-[180px] pb-[118px] max-lg:pt-36 max-lg:pb-20 max-sm:pt-28 max-sm:pb-16">
-        <Reveal className="flex flex-col items-center gap-8">
+        <Reveal rotate={-2}>
           <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[rgb(12,179,0)]" />
             <span className="text-xs text-black">
               Прямые поставки по параллельному импорту
             </span>
           </div>
+        </Reveal>
 
-          <h1 className="max-w-4xl text-center font-sans text-5xl font-normal leading-[1.15] tracking-[-0.03em] text-black md:text-7xl lg:text-[88px] lg:tracking-[-0.04em]">
-            Lynk &amp; Co 06 —{" "}
-            <span className="text-black/35">компактный кроссовер</span> из
-            Китая для вас
-          </h1>
+        <h1 className="max-w-4xl text-center font-sans text-5xl font-normal leading-20 tracking-[-0.03em] text-black md:text-7xl lg:text-[88px] lg:tracking-[-0.04em]">
+          <Reveal as="span" delay={0.05} rotate={3} className="block">
+            Lynk &amp; Co 06
+          </Reveal>
+          <Reveal as="span" delay={0.15} rotate={-3} className="block text-black/35">
+            компактный кроссовер
+          </Reveal>
+          <Reveal as="span" delay={0.25} rotate={3} className="block">
+            из Китая для вас
+          </Reveal>
+        </h1>
 
+        <Reveal delay={0.35} rotate={-2}>
           <p className="max-w-xl text-center text-base leading-[1.7] text-black/50">
             Прямые поставки по параллельному импорту. Автомобили в наличии на
             складе в Хоргосе, отгрузка от одной единицы, доставка по странам
@@ -31,7 +39,7 @@ export function Hero() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.15} className="flex flex-col items-center gap-8">
+        <Reveal delay={0.45} rotate={2}>
           <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-black/60">
             {SPECS.map((spec, i) => (
               <span key={spec} className="flex items-center gap-3">
@@ -44,7 +52,9 @@ export function Hero() {
               </span>
             ))}
           </div>
+        </Reveal>
 
+        <Reveal delay={0.55} rotate={-2}>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
             <a
               href="#lead-form"
@@ -60,7 +70,9 @@ export function Hero() {
               Смотреть наличие на складе
             </a>
           </div>
+        </Reveal>
 
+        <Reveal delay={0.65} rotate={2}>
           <p className="max-w-lg text-center text-xs text-black/40">
             Цены и условия поставки предоставляем индивидуально по запросу от
             юридического лица.
