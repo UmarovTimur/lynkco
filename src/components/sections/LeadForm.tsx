@@ -22,20 +22,14 @@ const DELIVERY_TYPES = ["Автовозом", "Железной дорогой",
 
 const VOLUMES = ["1 автомобиль", "2–5", "6–10", "10+"];
 
+const MESSENGERS = ["WhatsApp", "Telegram", "Другое"];
+
 interface TextFieldConfig {
   name: string;
   label: string;
   type: "text" | "tel" | "email";
   required?: boolean;
 }
-
-const CONTACT_FIELDS: TextFieldConfig[] = [
-  { name: "company", label: "Компания", type: "text", required: true },
-  { name: "contactName", label: "Контактное лицо", type: "text", required: true },
-  { name: "phone", label: "Телефон", type: "tel", required: true },
-  { name: "email", label: "Email", type: "email", required: true },
-  { name: "messenger", label: "Мессенджер (WhatsApp / Telegram)", type: "text" },
-];
 
 const ORDER_TEXT_FIELDS: TextFieldConfig[] = [
   { name: "regNumber", label: "Рег. номер", type: "text", required: true },
@@ -78,22 +72,51 @@ export function LeadForm() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {CONTACT_FIELDS.map((field) => (
-              <label key={field.name} className="flex flex-col gap-2 text-sm">
-                <span className="font-medium text-black">
-                  {field.label}
-                  {field.required && (
-                    <span className="text-accent-orange"> *</span>
-                  )}
-                </span>
-                <input
-                  type={field.type}
-                  name={field.name}
-                  required={field.required}
-                  className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
-                />
-              </label>
-            ))}
+            <label className="flex flex-col gap-2 text-sm sm:col-span-2">
+              <span className="font-medium text-black">
+                Телефон <span className="text-accent-orange">*</span>
+              </span>
+              <input
+                type="tel"
+                name="phone"
+                required
+                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+              />
+            </label>
+
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="font-medium text-black">
+                Никнейм <span className="text-accent-orange">*</span>
+              </span>
+              <input
+                type="text"
+                name="nickname"
+                required
+                placeholder="@username"
+                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+              />
+            </label>
+
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="font-medium text-black">
+                Мессенджер <span className="text-accent-orange">*</span>
+              </span>
+              <select
+                name="messenger"
+                required
+                defaultValue=""
+                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+              >
+                <option value="" disabled>
+                  Выберите мессенджер
+                </option>
+                {MESSENGERS.map((messenger) => (
+                  <option key={messenger} value={messenger}>
+                    {messenger}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             {SHOW_ORDER_INFO && (
               <>
