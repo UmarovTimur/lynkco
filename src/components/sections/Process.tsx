@@ -27,14 +27,14 @@ const TESTIMONIALS: Testimonial[] = [
       "Working with Joris was a game-changer. He instantly understood our vision and translated it into a sleek, intuitive product. The process felt effortless, and the results exceeded our expectations.",
     name: "Sophie Lemaire",
     role: "Product Lead at Loomi",
-    avatarSrc: "/images/75ILrhKQhUkwU1dH15BUDezAQ.png",
+    avatarSrc: "/images/GQYbkjoIOqJZo9gC9bpE4YLn18.png",
   },
   {
     quote:
       "Joris brings clarity to chaos. His design work is not only beautiful but deeply strategic. He helped us rebrand from the ground up, and our audience response has been incredible.",
     name: "Milan Bakker",
     role: "Founder of Drifted Studio",
-    avatarSrc: "/images/EgbF2rgcHm4Q19cR6VXfj7f5awk.png",
+    avatarSrc: "/images/TjQr3Mj8oNK6Ndfogb5IMNxXGg.png",
   },
 ];
 
@@ -99,23 +99,6 @@ export function Process() {
             className={cn("absolute", CARD_LAYOUT[i])}
           />
         ))}
-
-        <Image
-          src="/images/GQYbkjoIOqJZo9gC9bpE4YLn18.png"
-          alt=""
-          width={150}
-          height={100}
-          className="pointer-events-none absolute left-[300px] top-[-24px] z-30 h-auto w-[150px]"
-          aria-hidden="true"
-        />
-        <Image
-          src="/images/TjQr3Mj8oNK6Ndfogb5IMNxXGg.png"
-          alt=""
-          width={150}
-          height={100}
-          className="pointer-events-none absolute left-[700px] top-[360px] z-30 h-auto w-[150px]"
-          aria-hidden="true"
-        />
       </div>
 
       <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-2 md:divide-x md:divide-black/10">

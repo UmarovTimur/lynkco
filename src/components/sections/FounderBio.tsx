@@ -33,9 +33,9 @@ export function FounderBio() {
             <Image
               src="/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
               alt="Joris van Dijk, Founder of Hanzo Studio"
-              width={708}
-              height={541}
-              className="h-full w-full object-cover"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
             />
           </div>
 

@@ -29,6 +29,7 @@ interface PlanContent {
   ctaLabel: string;
   testimonial: string;
   testimonialAttribution: string | null;
+  testimonialAvatar: string | null;
 }
 
 const PLANS: Record<PlanKey, PlanContent> = {
@@ -49,6 +50,7 @@ const PLANS: Record<PlanKey, PlanContent> = {
     testimonial:
       "Astrid's minimalist design approach transformed our brand. The simplicity and clarity she brought to our identity made us stand out in a crowded market. Our customers immediately noticed the difference.",
     testimonialAttribution: "Helena Moreau, Creative Director at Studio Novo",
+    testimonialAvatar: "/images/etglVFVv5e7VnmUVyHsNK3oyIbI.png",
   },
   custom: {
     price: "$11,500",
@@ -67,6 +69,7 @@ const PLANS: Record<PlanKey, PlanContent> = {
     testimonial:
       "Effortless process. Exceptional results. Working with Joris felt like having an in-house designer on speed dial.",
     testimonialAttribution: null,
+    testimonialAvatar: null,
   },
 };
 
@@ -146,14 +149,6 @@ export function Pricing() {
       </h2>
 
       <div className="relative mt-12 overflow-hidden rounded-[32px] bg-neutral-100 p-6 md:p-16">
-        <Image
-          src="/images/etglVFVv5e7VnmUVyHsNK3oyIbI.png"
-          alt=""
-          fill
-          aria-hidden
-          className="-z-10 object-cover opacity-20"
-        />
-
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <div className="flex flex-col">
             <PricingToggle plan={plan} onChange={setPlan} />
@@ -202,7 +197,16 @@ export function Pricing() {
             <blockquote className="mt-8 text-lg text-black">
               &ldquo;{content.testimonial}&rdquo;
               {content.testimonialAttribution && (
-                <footer className="mt-3 text-sm text-black/40">
+                <footer className="mt-3 flex items-center gap-3 text-sm text-black/40">
+                  {content.testimonialAvatar && (
+                    <Image
+                      src={content.testimonialAvatar}
+                      alt={content.testimonialAttribution}
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 rounded-full object-cover"
+                    />
+                  )}
                   {content.testimonialAttribution}
                 </footer>
               )}
