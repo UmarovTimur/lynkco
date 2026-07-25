@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { ReactLenis } from "lenis/react";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,7 +34,11 @@ export default function RootLayout({
       lang="ru"
       className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full min-w-[100] flex flex-col">
+        <ReactLenis root options={{ anchors: true, lerp: 0.1 }}>
+          {children}
+        </ReactLenis>
+      </body>
     </html>
   );
 }

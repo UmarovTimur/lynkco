@@ -19,7 +19,7 @@ export function Hero() {
           </div>
         </Reveal>
 
-        <h1 className="max-w-5xl text-center font-sans text-5xl font-bold text-black md:text-7xl lg:text-[88px] lg:tracking-[-0.04em]">
+        <h1 className="max-w-5xl text-center font-sans text-5xl font-bold text-black md:text-7xl lg:text-[88px]">
           <Reveal as="span" delay={0.05} rotate={3} className="block">
             Lynk &amp; Co 06
           </Reveal>

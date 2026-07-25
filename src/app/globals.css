@@ -135,12 +135,11 @@
   }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+/* Lenis (see layout.tsx) drives smooth scroll in JS; it disables itself
+   for prefers-reduced-motion via the options below. */
+html.lenis {
+  scroll-behavior: auto !important;
 }
