@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   axes: ["opsz"],
 });
 
-const instrumentSerif = Instrument_Serif({
+// Playfair Display replaces Instrument Serif: same "elegant italic accent" role,
+// but Instrument Serif has no Cyrillic glyphs at all (Latin/Latin-ext only),
+// so Russian eyebrow labels would silently fall back to a system serif.
+const instrumentSerif = Playfair_Display({
   variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
+  subsets: ["latin", "cyrillic"],
   style: ["normal", "italic"],
 });
 
