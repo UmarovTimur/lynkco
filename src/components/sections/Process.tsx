@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/Reveal";
+
 interface ProcessStep {
   index: number;
   title: string;
@@ -48,20 +50,22 @@ export function Process() {
       id="process"
       className="mx-auto max-w-[1440px] px-6 py-24 max-lg:px-8 md:px-16 md:py-32 lg:px-[120px]"
     >
-      <div className="mx-auto flex w-fit items-center gap-4">
+      <Reveal className="mx-auto flex w-fit items-center gap-4">
         <span className="h-px w-12 bg-black/10" aria-hidden="true" />
         <span className="font-serif text-2xl italic text-black/50">
           Схема поставки
         </span>
         <span className="h-px w-12 bg-black/10" aria-hidden="true" />
-      </div>
-      <h2 className="mt-4 text-center text-4xl font-normal text-black md:text-5xl">
-        Как проходит сделка
-      </h2>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <h2 className="mt-4 text-center text-4xl font-normal text-black md:text-5xl">
+          Как проходит сделка
+        </h2>
+      </Reveal>
 
       <div className="mt-16 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
-        {PROCESS_STEPS.map((step) => (
-          <div key={step.index} className="flex gap-5">
+        {PROCESS_STEPS.map((step, i) => (
+          <Reveal key={step.index} delay={(i % 2) * 0.1} className="flex gap-5">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-base font-medium text-white">
               {step.index}
             </span>
@@ -73,7 +77,7 @@ export function Process() {
                 {step.description}
               </p>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

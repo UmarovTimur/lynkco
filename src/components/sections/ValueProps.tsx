@@ -1,5 +1,6 @@
 import { PackageCheck, Truck, Car, ShieldCheck, Languages } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Reveal } from "@/components/Reveal";
 
 interface ValueProp {
   title: string;
@@ -43,8 +44,8 @@ export function ValueProps() {
       className="px-6 py-16 md:px-16 md:py-20 lg:px-[120px]"
     >
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
-        {VALUE_PROPS.map(({ title, description, icon: Icon }) => (
-          <div key={title} className="flex flex-col gap-3">
+        {VALUE_PROPS.map(({ title, description, icon: Icon }, i) => (
+          <Reveal key={title} delay={i * 0.08} className="flex flex-col gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-black">
               <Icon size={18} />
             </span>
@@ -52,7 +53,7 @@ export function ValueProps() {
               <span className="font-bold">{title}</span>{" "}
               <span className="text-black/60">{description}</span>
             </p>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/Reveal";
 
 interface FaqItem {
   question: string;
@@ -61,15 +62,17 @@ export function Faq() {
 
   return (
     <section id="faq" className="px-6 py-24 md:px-[120px]">
-      <p className="text-center font-serif text-2xl italic text-black/50">
-        FAQ
-      </p>
-      <h2 className="mt-4 text-center font-sans text-[32px] font-medium text-black md:text-[48px]">
-        Ответы на частые вопросы
-      </h2>
+      <Reveal>
+        <p className="text-center font-serif text-2xl italic text-black/50">
+          FAQ
+        </p>
+        <h2 className="mt-4 text-center font-sans text-[32px] font-medium text-black md:text-[48px]">
+          Ответы на частые вопросы
+        </h2>
+      </Reveal>
 
       <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
-        <div className="rounded-3xl bg-neutral-100 p-10">
+        <Reveal delay={0.1} className="rounded-3xl bg-neutral-100 p-10">
           <p className="text-lg text-black">
             <span className="font-bold">Остались вопросы?</span>{" "}
             <span className="font-normal">
@@ -84,9 +87,9 @@ export function Faq() {
             Получить коммерческое предложение
             <ArrowRight className="size-4" />
           </a>
-        </div>
+        </Reveal>
 
-        <div>
+        <Reveal delay={0.2}>
           {FAQ_ITEMS.map((item, index) => {
             const isOpen = openIndex === index;
             return (
@@ -114,7 +117,7 @@ export function Faq() {
               </div>
             );
           })}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

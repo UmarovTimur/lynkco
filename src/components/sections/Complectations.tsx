@@ -1,4 +1,5 @@
 import { ArrowRight, Palette } from "lucide-react";
+import { Reveal } from "@/components/Reveal";
 
 export function Complectations() {
   return (
@@ -6,7 +7,7 @@ export function Complectations() {
       id="complectations"
       className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]"
     >
-      <div className="mx-auto max-w-3xl rounded-[32px] bg-neutral-100 p-8 text-center md:p-16">
+      <Reveal className="mx-auto max-w-3xl rounded-[32px] bg-neutral-100 p-8 text-center md:p-16">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
           <Palette size={20} />
         </span>
@@ -29,7 +30,7 @@ export function Complectations() {
           Запросить условия
           <ArrowRight size={16} />
         </a>
-      </div>
+      </Reveal>
     </section>
   );
 }

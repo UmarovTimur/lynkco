@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { Reveal } from "@/components/Reveal";
 
 // Order-details fields (комплектация, страна, объём, тип доставки, рег.
 // номер, город) are hidden for now — form only asks for client contacts.
@@ -50,7 +51,7 @@ export function LeadForm() {
       id="lead-form"
       className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]"
     >
-      <div className="mx-auto max-w-3xl text-center">
+      <Reveal className="mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-normal text-black md:text-5xl">
           Получить коммерческое предложение
         </h2>
@@ -58,9 +59,12 @@ export function LeadForm() {
           Оставьте контакты — уточним детали и подготовим коммерческое
           предложение. Отвечаем оперативно в рабочие дни.
         </p>
-      </div>
+      </Reveal>
 
-      <div className="mx-auto mt-12 max-w-3xl rounded-[32px] bg-neutral-100 p-6 md:p-12">
+      <Reveal
+        delay={0.15}
+        className="mx-auto mt-12 max-w-3xl rounded-[32px] bg-neutral-100 p-6 md:p-12"
+      >
         {submitted ? (
           <div className="flex flex-col items-center gap-3 py-12 text-center">
             <CheckCircle2 className="size-10 text-black" />
@@ -205,7 +209,7 @@ export function LeadForm() {
             </button>
           </form>
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }
