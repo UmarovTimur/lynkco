@@ -24,7 +24,8 @@ export default function Home() {
 
       {/* Lynk & Co 06 content */}
       <Hero />
-      <ValueProps />
+      {/* <ValueProps /> */}
+      <AboutBento />
       <Specs />
       <Geography />
       <Complectations />
@@ -39,9 +40,8 @@ export default function Home() {
         Leftover template demo content (Hanzo portfolio placeholders) — kept
         per request, has no Lynk & Co equivalent yet. Grouped here rather
         than interspersed with real business content above.
-      */}
+        */}
       <Intro />
-      <AboutBento />
       <Work />
       <FounderBio />
       <Pricing />
