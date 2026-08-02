@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Local temp files
 temp/
+
+# Raw gallery source material — processed into public/ by scripts/process-gallery.mjs
+media-src/

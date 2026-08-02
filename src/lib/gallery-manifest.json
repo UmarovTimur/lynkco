@@ -1,0 +1,372 @@
+{
+  "gray": [
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-01.webp",
+      "thumb": "/images/gallery/gray/gray-01-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-02.webp",
+      "thumb": "/images/gallery/gray/gray-02-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-03.webp",
+      "thumb": "/images/gallery/gray/gray-03-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-04.webp",
+      "thumb": "/images/gallery/gray/gray-04-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-05.webp",
+      "thumb": "/images/gallery/gray/gray-05-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-06.webp",
+      "thumb": "/images/gallery/gray/gray-06-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-07.webp",
+      "thumb": "/images/gallery/gray/gray-07-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-08.webp",
+      "thumb": "/images/gallery/gray/gray-08-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-09.webp",
+      "thumb": "/images/gallery/gray/gray-09-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/gray/gray-10.webp",
+      "thumb": "/images/gallery/gray/gray-10-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "video",
+      "src": "/videos/gray-v01.mp4",
+      "thumb": "/images/gallery/gray/gray-v01-poster.webp",
+      "poster": "/images/gallery/gray/gray-v01-poster.webp",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "beige": [
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-01.webp",
+      "thumb": "/images/gallery/beige/beige-01-thumb.webp",
+      "width": 1279,
+      "height": 1706
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-02.webp",
+      "thumb": "/images/gallery/beige/beige-02-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-03.webp",
+      "thumb": "/images/gallery/beige/beige-03-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-04.webp",
+      "thumb": "/images/gallery/beige/beige-04-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-05.webp",
+      "thumb": "/images/gallery/beige/beige-05-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-06.webp",
+      "thumb": "/images/gallery/beige/beige-06-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-07.webp",
+      "thumb": "/images/gallery/beige/beige-07-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-08.webp",
+      "thumb": "/images/gallery/beige/beige-08-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-09.webp",
+      "thumb": "/images/gallery/beige/beige-09-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-10.webp",
+      "thumb": "/images/gallery/beige/beige-10-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/beige/beige-11.webp",
+      "thumb": "/images/gallery/beige/beige-11-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "video",
+      "src": "/videos/beige-v01.mp4",
+      "thumb": "/images/gallery/beige/beige-v01-poster.webp",
+      "poster": "/images/gallery/beige/beige-v01-poster.webp",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "green": [
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-01.webp",
+      "thumb": "/images/gallery/green/green-01-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-02.webp",
+      "thumb": "/images/gallery/green/green-02-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-03.webp",
+      "thumb": "/images/gallery/green/green-03-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-04.webp",
+      "thumb": "/images/gallery/green/green-04-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-05.webp",
+      "thumb": "/images/gallery/green/green-05-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-06.webp",
+      "thumb": "/images/gallery/green/green-06-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-07.webp",
+      "thumb": "/images/gallery/green/green-07-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-08.webp",
+      "thumb": "/images/gallery/green/green-08-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-09.webp",
+      "thumb": "/images/gallery/green/green-09-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-10.webp",
+      "thumb": "/images/gallery/green/green-10-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-11.webp",
+      "thumb": "/images/gallery/green/green-11-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/green/green-12.webp",
+      "thumb": "/images/gallery/green/green-12-thumb.webp",
+      "width": 1920,
+      "height": 1440
+    },
+    {
+      "type": "video",
+      "src": "/videos/green-v01.mp4",
+      "thumb": "/images/gallery/green/green-v01-poster.webp",
+      "poster": "/images/gallery/green/green-v01-poster.webp",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "type": "video",
+      "src": "/videos/green-v02.mp4",
+      "thumb": "/images/gallery/green/green-v02-poster.webp",
+      "poster": "/images/gallery/green/green-v02-poster.webp",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "white": [
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-01.webp",
+      "thumb": "/images/gallery/white/white-01-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-02.webp",
+      "thumb": "/images/gallery/white/white-02-thumb.webp",
+      "width": 1279,
+      "height": 1706
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-03.webp",
+      "thumb": "/images/gallery/white/white-03-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-04.webp",
+      "thumb": "/images/gallery/white/white-04-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-05.webp",
+      "thumb": "/images/gallery/white/white-05-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-06.webp",
+      "thumb": "/images/gallery/white/white-06-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-07.webp",
+      "thumb": "/images/gallery/white/white-07-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-08.webp",
+      "thumb": "/images/gallery/white/white-08-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-09.webp",
+      "thumb": "/images/gallery/white/white-09-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-10.webp",
+      "thumb": "/images/gallery/white/white-10-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-11.webp",
+      "thumb": "/images/gallery/white/white-11-thumb.webp",
+      "width": 1279,
+      "height": 1706
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-12.webp",
+      "thumb": "/images/gallery/white/white-12-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-13.webp",
+      "thumb": "/images/gallery/white/white-13-thumb.webp",
+      "width": 1279,
+      "height": 1706
+    },
+    {
+      "type": "video",
+      "src": "/videos/white-v01.mp4",
+      "thumb": "/images/gallery/white/white-v01-poster.webp",
+      "poster": "/images/gallery/white/white-v01-poster.webp",
+      "width": 1280,
+      "height": 720
+    }
+  ]
+}

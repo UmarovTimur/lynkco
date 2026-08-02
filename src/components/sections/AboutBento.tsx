@@ -8,8 +8,10 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
+import Link from "next/link";
 import { Folder } from "lucide-react";
 import type { BentoImage } from "@/types/content";
+import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 
 const COLUMN_ONE: BentoImage[] = [
   {
@@ -143,14 +145,22 @@ export function AboutBento() {
           </div>
         </motion.div>
 
-        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-black/40 backdrop-blur">
+        <Link
+          href="/gallery"
+          className="group absolute inset-0 z-10 flex flex-col items-center justify-center gap-3"
+        >
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-black/40 backdrop-blur transition-transform duration-300 group-hover:scale-110">
             <Folder size={24} className="text-white" />
           </span>
           <span className="text-base font-bold text-white">
-            See Recent Work
+            Смотреть галерею
           </span>
-        </div>
+          <span className="text-sm text-white/60">
+            {plural(PHOTO_COUNT, "фотография", "фотографии", "фотографий")}
+            {VIDEO_COUNT > 0 &&
+              ` · ${plural(VIDEO_COUNT, "видео", "видео", "видео")}`}
+          </span>
+        </Link>
       </div>
     </section>
   );
