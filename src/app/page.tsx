@@ -8,6 +8,7 @@ import { Equipment } from "@/components/sections/Equipment";
 import { Stock } from "@/components/sections/Stock";
 import { Process } from "@/components/sections/Process";
 import { Terms } from "@/components/sections/Terms";
+import { WholesalePricing } from "@/components/sections/WholesalePricing";
 import { Faq } from "@/components/sections/Faq";
 import { LeadForm } from "@/components/sections/LeadForm";
 import { Intro } from "@/components/sections/Intro";
@@ -19,7 +20,7 @@ import { CtaFooter } from "@/components/sections/CtaFooter";
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white">
+    <main className="min-h-screen overflow-x-hidden">
       <Nav />
 
       {/* Lynk & Co 06 content */}
@@ -28,11 +29,14 @@ export default function Home() {
       <AboutBento />
       <Specs />
       <Geography />
+      <Work />
       <Complectations />
+      <Pricing />
       <Equipment />
       <Stock />
       <Process />
       <Terms />
+      {/* <WholesalePricing /> */}
       <Faq />
       <LeadForm />
 
@@ -41,10 +45,8 @@ export default function Home() {
         per request, has no Lynk & Co equivalent yet. Grouped here rather
         than interspersed with real business content above.
         */}
-      <Intro />
-      <Work />
-      <FounderBio />
-      <Pricing />
+      {/* <Intro /> */}
+      {/* <FounderBio /> */}
 
       <CtaFooter />
     </main>
