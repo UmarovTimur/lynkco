@@ -53,7 +53,7 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(0.93 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0 0 0);
@@ -132,6 +132,26 @@
   }
   body {
     @apply bg-background text-foreground;
+    position: relative;
+    /* Soft white light source glowing in from the top-left corner, with
+       faint straight 45deg rays scattered across the whole page — kept
+       low-opacity so it reads as ambient light, not a pattern. Both layers
+       scroll with the page (not fixed to the viewport). */
+    background-image:
+      radial-gradient(
+        1400px 1000px at 0% 0%,
+        oklch(0.99 0 0 / 80%) 0%,
+        oklch(0.96 0 0 / 35%) 45%,
+        transparent 75%
+      ),
+      repeating-linear-gradient(
+        45deg,
+        oklch(1 0 0 / 0%) 0px,
+        oklch(1 0 0 / 14%) 46px,
+        oklch(1 0 0 / 0%) 100px,
+        oklch(1 0 0 / 0%) 170px
+      );
+    background-repeat: no-repeat, no-repeat;
   }
   html {
     @apply font-sans;
@@ -142,6 +162,84 @@
    for prefers-reduced-motion via the options below. */
 html.lenis {
   scroll-behavior: auto !important;
+}
+
+/* Light sepia + film-grain overlay, absolutely positioned over the full
+   scrollable page (see layout.tsx) — scrolls with content, not fixed to the
+   viewport. The noise PNG is blended twice: once against a warm tint to
+   colorize the grain, then the whole thing against the page via soft-light
+   at very low opacity so it reads as a faint vintage cast, not a filter. */
+.sepia-grain-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(120, 74, 30, 0.18), rgba(120, 74, 30, 0.18)),
+    url("/images/6mcf62RlDfRfU61Yg5vb2pefpi4.png");
+  background-repeat: repeat, repeat;
+  background-size: auto, 256px 256px;
+  background-blend-mode: normal, overlay;
+  mix-blend-mode: soft-light;
+  opacity: 0.22;
+  /* Jitter the noise tile between whole-pixel offsets so the grain shimmers
+     like film. steps() keeps it snapping frame-to-frame instead of sliding —
+     a smooth translation would read as a moving texture, not grain. */
+  animation: grain-drift 900ms steps(1, end) infinite;
+}
+
+@keyframes grain-drift {
+  0% {
+    background-position:
+      0 0,
+      0 0;
+  }
+  12.5% {
+    background-position:
+      0 0,
+      -32px 18px;
+  }
+  25% {
+    background-position:
+      0 0,
+      44px -24px;
+  }
+  37.5% {
+    background-position:
+      0 0,
+      -18px -40px;
+  }
+  50% {
+    background-position:
+      0 0,
+      26px 34px;
+  }
+  62.5% {
+    background-position:
+      0 0,
+      -48px 8px;
+  }
+  75% {
+    background-position:
+      0 0,
+      12px -14px;
+  }
+  87.5% {
+    background-position:
+      0 0,
+      -8px 46px;
+  }
+  100% {
+    background-position:
+      0 0,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sepia-grain-overlay {
+    animation: none;
+  }
 }
 
 /* Soft diagonal light-ray backdrop for the hero section. */

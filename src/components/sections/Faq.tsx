@@ -39,7 +39,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Какие документы нужны для регистрации?",
     answer:
-      "Состав документов зависит от страны ввоза. Для России и стран ЕАЭС основными являются СБКТС и ЭПТС. Мы консультируем по пакетам документов для каждой страны.",
+      "Состав документов зависит от страны ввоза. Для России и стран ЕАЭС основными являются СБКТС и ЭПТС. Их получение клиент организует самостоятельно — мы консультируем и рекомендуем проверенного партнёра «под ключ».",
   },
   {
     question: "Что с гарантией и запчастями?",
@@ -73,22 +73,31 @@ export function Faq() {
         </h2>
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
-        <Reveal delay={0.1} rotate={-2} className="rounded-3xl bg-neutral-100 p-10">
-          <p className="text-lg text-black">
-            <span className="font-bold">Остались вопросы?</span>{" "}
-            <span className="font-normal">
-              Оставьте заявку от юридического лица — ответим оперативно в
-              рабочие дни.
+      <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-[35fr_65fr] md:gap-16">
+        {/* self-start keeps this card at its content height — as a grid item it
+            would otherwise stretch to match the full height of the FAQ list. */}
+        <Reveal
+          delay={0.1}
+          rotate={-2}
+          className="self-start rounded-3xl bg-neutral-100 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] md:p-8"
+        >
+          <p className="text-lg leading-snug text-black">
+            <span className="font-bold">Остались вопросы?</span>
+            <br />
+            <span className="font-normal text-black/70">
+              Оставьте заявку от юридического лица
             </span>
           </p>
           <a
             href="#lead-form"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-white"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-black py-3 pr-5 pl-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             Получить коммерческое предложение
             <ArrowRight className="size-4" />
           </a>
+          <p className="mt-4 text-center text-sm text-black/40">
+            Отвечаем в рабочие дни
+          </p>
         </Reveal>
 
         <Reveal delay={0.2} rotate={2}>

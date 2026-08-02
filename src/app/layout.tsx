@@ -34,10 +34,11 @@ export default function RootLayout({
       lang="ru"
       className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full min-w-[100] flex flex-col">
+      <body className="min-h-full min-w-[375] flex flex-col">
         <ReactLenis root options={{ anchors: true, lerp: 0.1 }}>
           {children}
         </ReactLenis>
+        <div className="sepia-grain-overlay" aria-hidden="true" />
       </body>
     </html>
   );

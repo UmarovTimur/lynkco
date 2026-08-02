@@ -73,7 +73,7 @@ export function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="Toggle menu"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black"
+            className="flex h-11 w-11 items-center justify-center cursor-pointer rounded-full bg-white text-black"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>

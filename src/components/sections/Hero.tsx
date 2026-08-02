@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
-const SPECS = ["1.5T", "156 л.с.", "7DCT", "Передний привод"];
+const SPECS = ["B-SUV", "1.5T 156 л.с.", "7DCT", "L2 ADAS", "FWD"];
 
 const CHIP_IMAGES = ["/images/hero/car-4.png", "/images/hero/car-5.png"];
 
@@ -183,19 +183,19 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="bg-hero-rays flex w-full flex-col items-center justify-center px-[120px] max-lg:px-8 max-sm:px-4"
+      className="flex -mb-20 w-full flex-col items-center justify-center px-30 max-lg:px-8 max-sm:px-4"
     >
-      <div className="flex w-full max-w-[1440px] flex-col items-center gap-8 py-24 pt-[180px] pb-[118px] max-lg:pt-36 max-lg:pb-20 max-sm:pt-28 max-sm:pb-16">
+      <div className="flex w-full max-w-360 flex-col items-center gap-8 py-24 pt-45 pb-29.5 max-lg:pt-36 max-lg:pb-20 max-sm:pt-28 max-sm:pb-16">
         <Reveal rotate={-2}>
-          <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm">
+          <div className="flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-sm">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[rgb(12,179,0)]" />
-            <span className="text-xs text-black">
+            <span className="text-sm text-black">
               Прямые поставки по параллельному импорту
             </span>
           </div>
         </Reveal>
 
-        <h1 className="max-w-5xl text-center font-sans text-5xl font-bold text-black md:text-7xl lg:text-[88px]">
+        <h1 className="max-w-5xl text-center font-sans text-5xl font-bold text-black md:text-7xl lg:text-[100px]">
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
             <AnimatedLetters text="Lynk & Co 06" baseDelay={0.1} />
             <AnimatedChip delay={0.1 + "Lynk & Co 06".length * LETTER_STAGGER}>
@@ -216,11 +216,12 @@ export function Hero() {
         </h1>
 
         <Reveal delay={0.35} rotate={-2}>
-          <p className="max-w-xl text-center text-base leading-[1.7] text-black/50">
-            Прямые поставки по параллельному импорту. Автомобили в наличии на
-            складе в Хоргосе, отгрузка от одной единицы, доставка по странам
-            СНГ.
-          </p>
+          <div className="max-w-xl text-center text-base leading-[1.7] text-black/50">
+            Эксклюзивное предложение для новых партнеров
+            <p>
+              Склад Хоргос | Июль 2026
+            </p>
+          </div>
         </Reveal>
 
         <Reveal delay={0.45} rotate={2}>
