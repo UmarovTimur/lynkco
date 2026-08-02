@@ -15,7 +15,7 @@ const ROWS: ComparisonRow[] = [
   {
     label: "Цвета кузова (с чёрной крышей)",
     max: "Белый, серый, бежевый",
-    ultra: "Белый, серый, бежевый, фиолетовый",
+    ultra: "Белый, серый, бежевый + фиолетовый, зелёный",
   },
   {
     label: "Цвет салона",
@@ -23,14 +23,17 @@ const ROWS: ComparisonRow[] = [
     ultra: "Чёрный, серый (+ розово-белый с фиолетовым кузовом)",
   },
   { label: "Обогрев руля", max: false, ultra: true },
-  {
-    label: "Обогрев передних сидений с вентиляцией",
-    max: true,
-    ultra: true,
-  },
+  { label: "Вентиляция передних сидений", max: false, ultra: true },
   { label: "Память настроек водителя", max: false, ultra: true },
   { label: "Беспроводная зарядка", max: false, ultra: true },
   { label: "Автопарковочный ассистент", max: false, ultra: true },
+  { label: "ADAS уровня L2", max: true, ultra: true },
+  { label: "Панорамная крыша", max: true, ultra: true },
+  { label: "Электропривод багажника", max: true, ultra: true },
+  { label: "Светодиодная оптика", max: true, ultra: true },
+  { label: "6 подушек безопасности", max: true, ultra: true },
+  { label: "Круговой обзор", max: true, ultra: true },
+  { label: "Аудио 7.1, 14 динамиков", max: true, ultra: true },
 ];
 
 function Cell({ value }: { value: CellValue }) {

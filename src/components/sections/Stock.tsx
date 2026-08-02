@@ -5,7 +5,7 @@ interface ColorRow {
   name: string;
   swatch: string;
   availability: string;
-  status: "Базовый" | "За доплату";
+  status: string;
 }
 
 const COLORS: ColorRow[] = [
@@ -16,13 +16,13 @@ const COLORS: ColorRow[] = [
     name: "Фиолетовый (Twilight Purple)",
     swatch: "#5b3a72",
     availability: "Только Ultra",
-    status: "За доплату",
+    status: "+1 200 ¥",
   },
   {
     name: "Зелёный (Forest Green)",
     swatch: "#2f4a3c",
-    availability: "Max, Ultra",
-    status: "За доплату",
+    availability: "Только Ultra",
+    status: "+1 500 ¥",
   },
 ];
 
@@ -90,9 +90,9 @@ export function Stock() {
                   <td className="py-4 text-right">
                     <span
                       className={
-                        c.status === "За доплату"
-                          ? "text-accent-orange"
-                          : "text-black/50"
+                        c.status === "Базовый"
+                          ? "text-black/50"
+                          : "text-accent-orange"
                       }
                     >
                       {c.status}

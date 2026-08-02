@@ -1,234 +1,256 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import {
-  ArrowRight,
-  Award,
-  Cpu,
-  Code2,
-  ListChecks,
-  Palette,
-  Handshake,
-  Zap,
-  MessageCircle,
-  PackageCheck,
-  Plus,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
-type PlanKey = "monthly" | "custom";
+type StockKey = "retail" | "demo";
+type TrimKey = "max" | "ultra";
 
-interface PlanContent {
+interface TrimOffer {
+  name: string;
   price: string;
-  priceSuffix: string | null;
-  pricePrefix: string | null;
-  checklist: string[];
-  availability: string;
-  ctaLabel: string;
-  testimonial: string;
-  testimonialAttribution: string | null;
-  testimonialAvatar: string | null;
+  note: string;
+  highlights: string[];
+  popular: boolean;
 }
 
-const PLANS: Record<PlanKey, PlanContent> = {
-  monthly: {
-    price: "$7,500",
-    priceSuffix: "/mo",
-    pricePrefix: null,
-    checklist: [
-      "Unlimited design requests",
-      "Fast turnaround",
-      "Fixed monthly rate",
-      "Async communication",
-      "Flexible scope",
-      "Pause anytime",
-    ],
-    availability: "Booking Open — only 2 Spots Left",
-    ctaLabel: "Book Free Discovery Call",
-    testimonial:
-      "Astrid's minimalist design approach transformed our brand. The simplicity and clarity she brought to our identity made us stand out in a crowded market. Our customers immediately noticed the difference.",
-    testimonialAttribution: "Helena Moreau, Creative Director at Studio Novo",
-    testimonialAvatar: "/images/etglVFVv5e7VnmUVyHsNK3oyIbI.png",
+const OFFERS: Record<StockKey, Record<TrimKey, TrimOffer>> = {
+  retail: {
+    max: {
+      name: "Max — товарный",
+      price: "103 000 ¥",
+      note: "от 1 автомобиля",
+      highlights: [
+        "Диски 18″ (215/55 R18)",
+        "ADAS уровня L2",
+        "Панорамная крыша",
+        "Чёрная крыша в базе",
+        "3 цвета кузова",
+      ],
+      popular: false,
+    },
+    ultra: {
+      name: "Ultra — товарный",
+      price: "113 000 ¥",
+      note: "от 1 автомобиля",
+      highlights: [
+        "Диски 19″ (225/45 R19)",
+        "Все опции Max",
+        "Обогрев руля",
+        "Вентиляция передних сидений",
+        "Автопарковочный ассистент",
+        "Беспроводная зарядка",
+      ],
+      popular: true,
+    },
   },
-  custom: {
-    price: "$11,500",
-    priceSuffix: null,
-    pricePrefix: "from",
-    checklist: [
-      "Tailored scope & deliverables",
-      "One-off fee or milestone billing",
-      "End-to-end collaboration",
-      "High-impact execution",
-      "Workshops & reviews",
-      "Full documentation & assets",
-    ],
-    availability: "Booking Open — only 2 Spots Left",
-    ctaLabel: "Book Free Discovery Call",
-    testimonial:
-      "Effortless process. Exceptional results. Working with Joris felt like having an in-house designer on speed dial.",
-    testimonialAttribution: null,
-    testimonialAvatar: null,
+  demo: {
+    max: {
+      name: "Max — демо",
+      price: "96 000 ¥",
+      note: "при покупке от 2 а/м, 1 для шоурума",
+      highlights: [
+        "Та же комплектация Max",
+        "Специальная цена",
+        "Для демонстрации в салоне",
+      ],
+      popular: false,
+    },
+    ultra: {
+      name: "Ultra — демо",
+      price: "103 000 ¥",
+      note: "при покупке от 2 а/м, 1 для шоурума",
+      highlights: [
+        "Та же комплектация Ultra",
+        "Специальная цена",
+        "Для демонстрации в салоне",
+      ],
+      popular: false,
+    },
   },
 };
 
-const BADGES: { label: string; icon: LucideIcon }[] = [
-  { label: "Senior-level quality", icon: Award },
-  { label: "Systems thinking", icon: Cpu },
-  { label: "Developer-friendly", icon: Code2 },
-  { label: "Clear process", icon: ListChecks },
-  { label: "On-brand, every time", icon: Palette },
-  { label: "Reliable partner", icon: Handshake },
-  { label: "Fast execution", icon: Zap },
-  { label: "Thoughtful feedback", icon: MessageCircle },
-  { label: "Smooth handoff", icon: PackageCheck },
+const TERMS: string[] = [
+  "100% предоплата в юанях на банковский счёт в Китае до готовности к отгрузке",
+  "Доставка до СВХ Москвы с транспортной страховкой — за доплату",
+  "Доплата за фиолетовый (Twilight Purple) — +1 200 ¥, за зелёный (Forest Green) — +1 500 ¥",
+  "Клиент самостоятельно организует таможенное оформление и получение документов (СБКТС, ЭПТС)",
+  "Автомобили без гарантии, поставка запчастей на коммерческой основе",
 ];
 
-interface PricingToggleProps {
-  plan: PlanKey;
-  onChange: (plan: PlanKey) => void;
+interface StockToggleProps {
+  stock: StockKey;
+  onChange: (stock: StockKey) => void;
 }
 
-function PricingToggle({ plan, onChange }: PricingToggleProps) {
-  const isCustom = plan === "custom";
+function StockToggle({ stock, onChange }: StockToggleProps) {
+  const isDemo = stock === "demo";
 
   return (
     <div className="flex items-center gap-3">
       <button
         type="button"
-        onClick={() => onChange("monthly")}
+        onClick={() => onChange("retail")}
         className={cn(
           "text-sm font-medium transition-colors",
-          isCustom ? "text-black/25" : "text-black"
+          isDemo ? "text-black/25" : "text-black"
         )}
       >
-        Monthly
+        Товарный
       </button>
       <button
         type="button"
         role="switch"
-        aria-checked={isCustom}
-        aria-label="Toggle between monthly and custom pricing"
-        onClick={() => onChange(isCustom ? "monthly" : "custom")}
+        aria-checked={isDemo}
+        aria-label="Переключить между товарным автомобилем и демо-образцом"
+        onClick={() => onChange(isDemo ? "retail" : "demo")}
         className={cn(
-          "relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200",
-          isCustom ? "bg-accent-orange" : "bg-black/10"
+          "relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200",
+          isDemo ? "bg-accent-orange" : "bg-black/10"
         )}
       >
         <span
           className={cn(
             "absolute top-1/2 left-0.5 h-[18px] w-[18px] -translate-y-1/2 rounded-full bg-white transition-transform duration-200",
-            isCustom ? "translate-x-5" : "translate-x-0"
+            isDemo ? "translate-x-5" : "translate-x-0"
           )}
         />
       </button>
       <button
         type="button"
-        onClick={() => onChange("custom")}
+        onClick={() => onChange("demo")}
         className={cn(
           "text-sm font-medium transition-colors",
-          isCustom ? "text-black" : "text-black/25"
+          isDemo ? "text-black" : "text-black/25"
         )}
       >
-        Custom
+        Демо
       </button>
     </div>
   );
 }
 
+function OfferCard({ offer }: { offer: TrimOffer }) {
+  return (
+    <div
+      className={cn(
+        "relative flex flex-col rounded-2xl p-6 md:p-8",
+        offer.popular
+          ? "bg-black text-white"
+          : "bg-white text-black"
+      )}
+    >
+      {offer.popular && (
+        <span className="absolute -top-3 right-6 rounded-full bg-accent-orange px-3 py-1 text-xs font-medium text-white">
+          популярный
+        </span>
+      )}
+
+      <h3
+        className={cn(
+          "text-lg font-medium",
+          offer.popular ? "text-white" : "text-black"
+        )}
+      >
+        {offer.name}
+      </h3>
+
+      <p className="mt-4 text-4xl font-medium md:text-5xl">{offer.price}</p>
+      <p
+        className={cn(
+          "mt-2 text-sm",
+          offer.popular ? "text-white/50" : "text-black/40"
+        )}
+      >
+        {offer.note}
+      </p>
+
+      <ul className="mt-6 flex flex-col gap-3">
+        {offer.highlights.map((item) => (
+          <li key={item} className="flex items-start gap-3">
+            <Check
+              size={16}
+              className={cn(
+                "mt-0.5 shrink-0",
+                offer.popular ? "text-accent-orange" : "text-black/60"
+              )}
+            />
+            <span
+              className={cn(
+                "text-sm",
+                offer.popular ? "text-white/80" : "text-black/60"
+              )}
+            >
+              {item}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function Pricing() {
-  const [plan, setPlan] = useState<PlanKey>("monthly");
-  const content = PLANS[plan];
+  const [stock, setStock] = useState<StockKey>("retail");
+  const offers = OFFERS[stock];
 
   return (
-    <section id="pricing" className="px-6 py-24 md:px-16 lg:px-[120px]">
-      <p className="font-serif text-2xl italic text-black/50">Pricing</p>
-      <h2 className="mt-3 text-center text-4xl font-medium text-black md:text-5xl">
-        Fixed Price, Zero Limits
-      </h2>
+    <section id="pricing" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
+      <Reveal rotate={-3} className="mx-auto flex w-fit items-center gap-4">
+        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
+        <span className="font-serif text-2xl italic text-black/50">
+          Цены и условия
+        </span>
+        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
+      </Reveal>
 
-      <div className="relative mt-12 overflow-hidden rounded-[32px] bg-neutral-100 p-6 md:p-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <div className="flex flex-col">
-            <PricingToggle plan={plan} onChange={setPlan} />
+      <Reveal delay={0.08} rotate={3}>
+        <h2 className="mt-4 text-center text-3xl font-normal text-black md:text-4xl">
+          Max или Ultra — со склада в Хоргосе
+        </h2>
+      </Reveal>
 
-            <div className="mt-6 flex items-baseline gap-2">
-              {content.pricePrefix && (
-                <span className="text-2xl text-black/40">{content.pricePrefix}</span>
-              )}
-              <span className="text-6xl font-medium text-black md:text-7xl">
-                {content.price}
-              </span>
-              {content.priceSuffix && (
-                <span className="text-2xl text-black/40">{content.priceSuffix}</span>
-              )}
-            </div>
-
-            <p className="mt-8 flex items-center gap-2 text-sm text-black/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              {content.availability}
-            </p>
-
-            <a
-              href="#contact"
-              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-black py-3 pr-5 pl-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            >
-              {content.ctaLabel}
-              <ArrowRight className="size-4" />
-            </a>
-          </div>
-
-          <div>
-            <div className="rounded-2xl bg-white p-6 md:p-10">
-              <h3 className="text-2xl font-medium text-black">What&apos;s included</h3>
-              <ul className="mt-6 flex flex-col gap-4">
-                {content.checklist.map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="flex shrink-0 items-center justify-center rounded-full border border-black/15 bg-white p-1">
-                      <Plus className="size-4 text-black/60" />
-                    </span>
-                    <span className="text-base text-black/60">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <blockquote className="mt-8 text-lg text-black">
-              &ldquo;{content.testimonial}&rdquo;
-              {content.testimonialAttribution && (
-                <footer className="mt-3 flex items-center gap-3 text-sm text-black/40">
-                  {content.testimonialAvatar && (
-                    <Image
-                      src={content.testimonialAvatar}
-                      alt={content.testimonialAttribution}
-                      width={32}
-                      height={32}
-                      className="h-8 w-8 rounded-full object-cover"
-                    />
-                  )}
-                  {content.testimonialAttribution}
-                </footer>
-              )}
-            </blockquote>
-          </div>
+      <Reveal
+        delay={0.16}
+        rotate={-2}
+        className="relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-[32px] bg-neutral-100 p-6 md:p-12"
+      >
+        <div className="flex justify-center">
+          <StockToggle stock={stock} onChange={setStock} />
         </div>
-      </div>
 
-      <div className="mt-12 flex flex-nowrap items-center justify-center gap-6 overflow-hidden">
-        {BADGES.map(({ label, icon: Icon }, index) => (
-          <div
-            key={label}
-            className={cn(
-              "flex shrink-0 items-center gap-2 whitespace-nowrap",
-              index !== 0 && "border-l border-black/10 pl-6"
-            )}
-          >
-            <Icon className="size-4 text-black/40" />
-            <span className="text-sm text-black/40">{label}</span>
-          </div>
-        ))}
-      </div>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <OfferCard offer={offers.max} />
+          <OfferCard offer={offers.ultra} />
+        </div>
+
+        <div className="mt-10 border-t border-black/10 pt-6">
+          <p className="text-sm font-bold text-black">Условия поставки</p>
+          <ul className="mt-4 flex flex-col gap-2">
+            {TERMS.map((term) => (
+              <li key={term} className="flex items-start gap-3">
+                <span
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-black/30"
+                  aria-hidden="true"
+                />
+                <span className="text-sm text-black/60">{term}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.24} rotate={2} className="mt-10 flex justify-center">
+        <a
+          href="#lead-form"
+          className="inline-flex items-center gap-2 rounded-full bg-black py-3 pr-5 pl-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
+        >
+          Получить коммерческое предложение
+          <ArrowRight size={16} />
+        </a>
+      </Reveal>
     </section>
   );
 }

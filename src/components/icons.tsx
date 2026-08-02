@@ -19,6 +19,44 @@ export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+/**
+ * Lynk & Co wordmark, recreated as stroke-based geometric letterforms
+ * (Y and K drawn without their vertical stems, C/O as mirrored open arcs)
+ * to match the brand's minimal logotype.
+ */
+export function LynkCoLogo(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 300 60"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M10,10 L10,50 L34,50" />
+      <path d="M46,10 L58,34 L70,10" />
+      <path d="M84,50 L84,10 L108,50 L108,10" />
+      <path d="M146,10 L124,30 L146,50" />
+      <path d="M242.1,38.5 A20,20 0 1 1 242.1,21.5" />
+      <path d="M257.9,38.5 A20,20 0 1 0 257.9,21.5" />
+      <text
+        x="182"
+        y="46"
+        fontSize="46"
+        fontWeight="600"
+        stroke="none"
+        fill="currentColor"
+        textAnchor="middle"
+        fontFamily="var(--font-inter), sans-serif"
+      >
+        &amp;
+      </text>
+    </svg>
+  );
+}
+
 export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
