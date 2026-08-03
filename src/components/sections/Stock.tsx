@@ -8,7 +8,7 @@ interface ColorRow {
   status: string;
 }
 
-const COLORS: ColorRow[] = [
+const BODY_COLORS: ColorRow[] = [
   { name: "Белый", swatch: "#f2f2f2", availability: "Max, Ultra", status: "Базовый" },
   { name: "Серый", swatch: "#8a8a8a", availability: "Max, Ultra", status: "Базовый" },
   { name: "Бежевый", swatch: "#d8c9a8", availability: "Max, Ultra", status: "Базовый" },
@@ -25,6 +25,70 @@ const COLORS: ColorRow[] = [
     status: "+1 500 ¥",
   },
 ];
+
+const INTERIOR_COLORS: ColorRow[] = [
+  { name: "Чёрный", swatch: "#1e1e1e", availability: "Max, Ultra", status: "Базовый" },
+  { name: "Серый", swatch: "#9b9b9b", availability: "Max, Ultra", status: "Базовый" },
+  {
+    name: "Розово-белый",
+    swatch: "#efdada",
+    availability: "Только Ultra",
+    status: "С фиолетовым кузовом",
+  },
+];
+
+function ColorTable({
+  colors,
+  heading,
+}: {
+  colors: ColorRow[];
+  heading: string;
+}) {
+  return (
+    <table className="w-full min-w-[420px] border-collapse text-sm md:text-base">
+      <thead>
+        <tr className="border-b border-black/10">
+          <th className="py-3 text-left font-normal text-black/50">{heading}</th>
+          <th className="py-3 text-left font-normal text-black/50">
+            Доступность
+          </th>
+          <th className="py-3 text-right font-normal text-black/50">Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        {colors.map((c) => (
+          <tr key={c.name} className="border-b border-black/10">
+            <th
+              scope="row"
+              className="flex items-center gap-2 py-4 pr-4 text-left font-normal text-black"
+            >
+              <span
+                className="h-3 w-3 shrink-0 rounded-full border border-black/10"
+                style={{ backgroundColor: c.swatch }}
+                aria-hidden="true"
+              />
+              {c.name}
+            </th>
+            <td className="py-4 pr-4 text-left text-black/70">
+              {c.availability}
+            </td>
+            <td className="py-4 text-right">
+              <span
+                className={
+                  c.status === "Базовый"
+                    ? "text-black/50"
+                    : "text-accent-orange"
+                }
+              >
+                {c.status}
+              </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
 export function Stock() {
   return (
@@ -56,55 +120,18 @@ export function Stock() {
           rotate={2}
           className="mx-auto mt-10 w-full max-w-2xl overflow-x-auto"
         >
-          <table className="w-full min-w-[420px] border-collapse text-sm md:text-base">
-            <thead>
-              <tr className="border-b border-black/10">
-                <th className="py-3 text-left font-normal text-black/50">
-                  Цвет
-                </th>
-                <th className="py-3 text-left font-normal text-black/50">
-                  Доступность
-                </th>
-                <th className="py-3 text-right font-normal text-black/50">
-                  Статус
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {COLORS.map((c) => (
-                <tr key={c.name} className="border-b border-black/10">
-                  <th
-                    scope="row"
-                    className="flex items-center gap-2 py-4 pr-4 text-left font-normal text-black"
-                  >
-                    <span
-                      className="h-3 w-3 shrink-0 rounded-full border border-black/10"
-                      style={{ backgroundColor: c.swatch }}
-                      aria-hidden="true"
-                    />
-                    {c.name}
-                  </th>
-                  <td className="py-4 pr-4 text-left text-black/70">
-                    {c.availability}
-                  </td>
-                  <td className="py-4 text-right">
-                    <span
-                      className={
-                        c.status === "Базовый"
-                          ? "text-black/50"
-                          : "text-accent-orange"
-                      }
-                    >
-                      {c.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ColorTable colors={BODY_COLORS} heading="Цвет кузова" />
         </Reveal>
 
-        <Reveal delay={0.32} rotate={3} className="mt-8 flex justify-center">
+        <Reveal
+          delay={0.32}
+          rotate={-2}
+          className="mx-auto mt-10 w-full max-w-2xl overflow-x-auto"
+        >
+          <ColorTable colors={INTERIOR_COLORS} heading="Цвет салона" />
+        </Reveal>
+
+        <Reveal delay={0.4} rotate={3} className="mt-8 flex justify-center">
           <a
             href="#lead-form"
             className="flex h-[51px] items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90"

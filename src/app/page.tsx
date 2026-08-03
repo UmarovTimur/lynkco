@@ -23,17 +23,19 @@ export default function Home() {
     <main className="min-h-screen overflow-x-hidden">
       <Nav />
 
-      {/* Lynk & Co 06 content */}
+      {/* Lynk & Co 06 content — sales-funnel order: show the car (emotion) →
+          features → specs (rational) → trim choice → price → availability
+          (scarcity + booking CTA) → logistics/deal (risk removal) → FAQ. */}
       <Hero />
       {/* <ValueProps /> */}
       <AboutBento />
-      <Specs />
-      <Geography />
       <Work />
+      <Equipment />
+      <Specs />
       <Complectations />
       <Pricing />
-      <Equipment />
       <Stock />
+      <Geography />
       <Process />
       <Terms />
       {/* <WholesalePricing /> */}

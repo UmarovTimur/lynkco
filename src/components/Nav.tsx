@@ -9,8 +9,8 @@ import type { NavLink } from "@/types/content";
 const NAV_LINKS: NavLink[] = [
   { label: "Характеристики", href: "#specs" },
   { label: "Комплектации", href: "#complectations" },
-  { label: "География", href: "#geography" },
   { label: "Наличие", href: "#stock" },
+  { label: "География", href: "#geography" },
   { label: "Схема поставки", href: "#process" },
   { label: "FAQ", href: "#faq" },
   { label: "Заявка", href: "#lead-form" },
