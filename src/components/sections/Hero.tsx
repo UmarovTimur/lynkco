@@ -190,7 +190,7 @@ export function Hero() {
           <div className="flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-sm">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[rgb(12,179,0)]" />
             <span className="text-sm text-black">
-              Прямые поставки по параллельному импорту
+              Прямые поставки
             </span>
           </div>
         </Reveal>
