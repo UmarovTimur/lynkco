@@ -19,7 +19,7 @@ export default function GalleryPage() {
     <main className="min-h-screen overflow-x-hidden">
       <Nav />
 
-      <section className="px-6 pt-32 pb-16 md:px-16 md:pt-40 lg:px-[120px]">
+      <section className="px-6 pt-32 pb-16 md:px-16 md:pt-40 lg:px-30">
         <div className="mx-auto flex w-fit items-center gap-4">
           <span className="h-px w-12 bg-black/15" aria-hidden="true" />
           <span className="font-serif text-2xl italic text-black/50">
