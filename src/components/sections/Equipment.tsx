@@ -1,10 +1,4 @@
-import {
-  ShieldCheck,
-  ShieldHalf,
-  Armchair,
-  Volume2,
-  Sparkles,
-} from "lucide-react";
+import { Shield, Radar, Volume2, Sun, BadgePercent, Ruler } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
@@ -23,37 +17,46 @@ interface EquipmentCategory {
 
 const CATEGORIES: EquipmentCategory[] = [
   {
-    title: "Безопасность и помощь водителю",
+    title: "Прочный кузов",
     description:
-      "Контроль слепых зон, ассистент спуска с горы, удержание в полосе, экстренное автоторможение, парковка, круговой обзор, адаптивный круиз-контроль, ADAS уровня L2.",
-    icon: ShieldCheck,
+      "Доля высокопрочной стали и алюминиевых сплавов — 63%. 6 подушек безопасности, включая боковые шторки.",
+    icon: Shield,
     tilt: "-rotate-[1.4deg]",
   },
   {
-    title: "Пассивная безопасность",
+    title: "L2 ADAS",
     description:
-      "6 подушек безопасности, включая боковые шторки; каркас кузова — 63% высокопрочной стали и алюминиевых сплавов.",
-    icon: ShieldHalf,
+      "Адаптивный круиз-контроль, удержание в полосе, экстренное автоторможение, контроль слепых зон.",
+    icon: Radar,
     tilt: "rotate-[1.1deg]",
   },
   {
-    title: "Комфорт",
+    title: "Мультимедиа на русском",
     description:
-      "Обогрев боковых зеркал, обогрев заднего стекла, панорамная крыша, электропривод двери багажника.",
-    icon: Armchair,
+      "Система на русском языке. Аудио 7.1 с 14 динамиками. Беспроводная зарядка в комплектации Ultra.",
+    icon: Volume2,
     tilt: "-rotate-[0.8deg]",
   },
   {
-    title: "Мультимедиа",
-    description: "Система на русском языке, 14 динамиков, аудиосистема 7.1.",
-    icon: Volume2,
+    title: "Панорамная крыша",
+    description:
+      "Чёрная крыша включена в цену. Электропривод двери багажника. Полностью светодиодная оптика.",
+    icon: Sun,
     tilt: "rotate-[1.6deg]",
   },
   {
-    title: "Экстерьер",
-    description: "Полностью светодиодная оптика, чёрная крыша.",
-    icon: Sparkles,
+    title: "Льготный утильсбор",
+    description:
+      "Мощность 114 кВт (156 л.с.) — подпадает под льготный утилизационный сбор.",
+    icon: BadgePercent,
     tilt: "-rotate-[1.2deg]",
+  },
+  {
+    title: "Просторный салон",
+    description:
+      "Колёсная база 2640 мм — на 20–40 мм больше конкурентов. Объём багажника 353 л.",
+    icon: Ruler,
+    tilt: "rotate-[0.9deg]",
   },
 ];
 
@@ -78,7 +81,7 @@ export function Equipment() {
       </Reveal>
 
       <AnimatedHeading
-        text="Общее для обеих комплектаций"
+        text="Ключевые преимущества"
         className={SECTION_HEADING_CLASS}
         delay={0.08}
       />

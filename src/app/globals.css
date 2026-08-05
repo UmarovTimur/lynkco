@@ -96,6 +96,7 @@
 
 .dark {
   --background: oklch(0.145 0 0);
+  /* --background: black; */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -628,7 +629,54 @@ html[data-js="failed"] [data-reveal] {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Footer light shafts                                                        */
+/* Image loading placeholder                                                  */
+/* -------------------------------------------------------------------------- */
+
+/* A flat grey plate with a highlight crossing it periodically. The sweep is a
+   short part of a long cycle rather than a continuous scroll, so it reads as an
+   occasional glint on a still surface — a placeholder that is waiting, not a
+   progress bar claiming something is happening. */
+.img-shimmer {
+  overflow: hidden;
+  background-color: oklch(0.88 0 0);
+}
+
+.img-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Wider than the plate so the highlight is fully clear of one edge before it
+     starts onto the other; at 105deg it rakes across rather than running
+     straight down, which catches the eye at a glance. */
+  background-image: linear-gradient(
+    105deg,
+    rgb(255 255 255 / 0%) 35%,
+    rgb(255 255 255 / 55%) 50%,
+    rgb(255 255 255 / 0%) 65%
+  );
+  animation: img-shimmer-sweep 2.8s ease-in-out infinite;
+}
+
+@keyframes img-shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  /* Crosses in the first ~1.2s, then holds off-screen for the rest. */
+  45%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-shimmer::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Light shafts — footer panel and hero                                       */
 /* -------------------------------------------------------------------------- */
 
 /* The panel's own base: a soft lift toward the top-left corner, faded out
@@ -653,33 +701,176 @@ html[data-js="failed"] [data-reveal] {
   );
 }
 
-/* Each shaft layer is a white sheet that fades out toward the bottom, cut into
-   irregular vertical bands by its own mask, then skewed 45deg so the bands
-   read as diagonal light. Five of them at 5% opacity each: where bands happen
-   to overlap the light doubles up, which is what gives the uneven, non-
-   repeating look a single gradient can't.
-   
-   The layer is twice the panel width with the mask tiled at 50%, so one tile
-   spans exactly the panel and the skew's horizontal overhang stays covered.
-   Every mask starts and ends fully transparent, so the tiles meet at zero
-   alpha and the repeat leaves no seam. */
-.footer-ray {
+/* Both shaft layers paint the same way: a white sheet fading out toward the
+   bottom, cut into irregular vertical bands by its mask, then skewed 45deg so
+   the bands read as diagonal light. Five of them at low opacity each: where
+   bands happen to overlap the light doubles up, which is what gives the uneven,
+   non-repeating look a single gradient can't. Where they differ is geometry —
+   see the two blocks below. */
+.footer-ray,
+.page-ray {
   position: absolute;
-  inset: 0 -50%;
-  opacity: 0.05;
   transform: skewX(45deg);
-  transform-origin: top;
   background: linear-gradient(
     rgb(255 255 255) 0%,
-    rgb(255 255 255) 84%,
+    rgb(255 255 255) var(--ray-fade, 84%),
     rgb(255 255 255 / 0%) 100%
   );
   mask-image: var(--band);
+  mask-repeat: no-repeat;
+}
+
+/* The footer's sheets each span the whole panel: twice its width with the mask
+   tiled at 50%, so one tile covers the panel and the skew's horizontal overhang
+   stays covered. Every mask starts and ends fully transparent, so the tiles
+   meet at zero alpha and the repeat leaves no seam. Skewing from the top edge
+   keeps the sheet pinned to the top of the panel.
+
+   White on black: 5% a sheet is already plenty of contrast. */
+.footer-ray {
+  inset: 0 -50%;
+  transform-origin: top;
+  opacity: 0.05;
   mask-size: 50% 100%;
   mask-repeat: repeat-x;
 }
 
-.footer-ray-1 {
+/* The page's opening beams are discrete boxes rather than full-width sheets:
+   each is a tall, narrow box placed by hand, so their spacing across the width
+   is composed instead of falling out of a repeating period — which is what made
+   the first attempt read as oversized banding.
+
+   Each box is far taller than the band and starts above it, because skewX from
+   the box centre throws the bottom edge as far sideways as the box is tall.
+   That overhang is exactly what makes a beam cross the screen on a diagonal;
+   .page-rays clips whatever leaves the band. The mask spans the box once here,
+   so a beam's bands are sub-shafts within it.
+
+   The skew pivots on the box centre, which is why --beam-top is set so that
+   centre lands near the band's own vertical middle: sideways displacement is
+   zero there and grows with the distance from it, so a box centred well above
+   or below gets shifted bodily out of frame instead of crossing it.
+   --beam-x is where the beam's centre sits across the width, so half its own
+   width comes back off again in `left`.
+
+   These sheets sit on the grey page rather than black, so they need several
+   times the footer's 5% to register at all — but only up to a point. The beams
+   overlap, and past roughly a fifth the overlaps stack to near-white and flood
+   the page; this was 60% before it was measured against the real thing. */
+.page-ray {
+  top: var(--beam-top);
+  left: calc(var(--beam-x) - var(--beam-w) / 2);
+  width: var(--beam-w);
+  height: var(--beam-h);
+  mask-size: 100% 100%;
+  /* Two clocks per beam, both on their own period so no two beams are ever in
+     step: one creeps the shaft sideways, the other swells and dims it. The
+     negative delay starts each beam part-way into its cycle, otherwise all five
+     would begin dim and brighten together on first paint. */
+  animation:
+    beam-drift var(--beam-drift-dur) var(--beam-delay) ease-in-out infinite
+      alternate,
+    beam-breathe var(--beam-breathe-dur) var(--beam-delay) ease-in-out infinite
+      alternate;
+}
+
+/* `translate`, not a transform: the shared rule above already spends
+   `transform` on the skew, and these two compose rather than overwrite. */
+@keyframes beam-drift {
+  from {
+    translate: calc(var(--beam-shift) * -1) 0;
+  }
+  to {
+    translate: var(--beam-shift) 0;
+  }
+}
+
+/* White is the brightest a beam can get, and the page under it is already
+   oklch(0.86) — only 0.14 of lightness separates them, so contrast here is
+   bought by widening this range, not by picking a lighter colour. The floor
+   matters as much as the ceiling: taking it well below the visible threshold is
+   what makes the bright end read as a beam sweeping in rather than a panel that
+   is simply always on. */
+@keyframes beam-breathe {
+  from {
+    opacity: 0.06;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-ray {
+    animation: none;
+    opacity: 0.28;
+  }
+}
+
+/* Clustered toward the left rather than spread evenly across the width, and
+   wide enough to overlap heavily. Evenly spaced beams of similar width are
+   read as banding — the eye picks up the regular period long before it reads
+   "light". Overlapping them pools the light near one side, which is also where
+   the page's own corner glow comes from (.light-rays-backdrop). */
+/* --beam-top keeps each box's centre near 415px — the middle of a one-viewport
+   band — so growing --beam-h means moving the top up by half the difference.
+   Widening the beams also spreads their centres further apart, or the wider
+   boxes would simply swallow each other. */
+.page-ray:nth-child(1) {
+  --beam-w: 880px;
+  --beam-h: 1500px;
+  --beam-top: -335px;
+  --beam-x: -1.53%;
+  --beam-shift: 70px;
+  --beam-drift-dur: 5.5s;
+  --beam-breathe-dur: 4.5s;
+  --beam-delay: 0s;
+}
+.page-ray:nth-child(2) {
+  --beam-w: 780px;
+  --beam-h: 1380px;
+  --beam-top: -275px;
+  --beam-x: 13%;
+  --beam-shift: 95px;
+  --beam-drift-dur: 6s;
+  --beam-breathe-dur: 5.5s;
+  --beam-delay: -3s;
+}
+.page-ray:nth-child(3) {
+  --beam-w: 960px;
+  --beam-h: 1620px;
+  --beam-top: -395px;
+  --beam-x: 27%;
+  --beam-shift: 60px;
+  --beam-drift-dur: 8s;
+  --beam-breathe-dur: 4s;
+  --beam-delay: -5.5s;
+}
+.page-ray:nth-child(4) {
+  --beam-w: 700px;
+  --beam-h: 1280px;
+  --beam-top: -225px;
+  --beam-x: 41%;
+  --beam-shift: 110px;
+  --beam-drift-dur: 5s;
+  --beam-breathe-dur: 6s;
+  --beam-delay: -1.8s;
+}
+.page-ray:nth-child(5) {
+  --beam-w: 1050px;
+  --beam-h: 1450px;
+  --beam-top: -310px;
+  --beam-x: 56%;
+  --beam-shift: 80px;
+  --beam-drift-dur: 7.5s;
+  --beam-breathe-dur: 5s;
+  --beam-delay: -4.2s;
+}
+
+/* The band masks are shared by both layers — same irregular cuts, different
+   sheet colour and strength. Band 3 also stops its vertical fade higher up,
+   which travels with it as --ray-fade. */
+.ray-band-1 {
   --band: linear-gradient(
     90deg,
     rgb(0 0 0 / 0%) 0%,
@@ -692,7 +883,7 @@ html[data-js="failed"] [data-reveal] {
   );
 }
 
-.footer-ray-2 {
+.ray-band-2 {
   --band: linear-gradient(
     90deg,
     rgb(0 0 0 / 0%) 11.4%,
@@ -705,12 +896,8 @@ html[data-js="failed"] [data-reveal] {
 }
 
 /* Fades higher up than the rest, so this one reads as a shorter shaft. */
-.footer-ray-3 {
-  background: linear-gradient(
-    rgb(255 255 255) 0%,
-    rgb(255 255 255) 67%,
-    rgb(255 255 255 / 0%) 100%
-  );
+.ray-band-3 {
+  --ray-fade: 67%;
   --band: linear-gradient(
     90deg,
     rgb(0 0 0 / 0%) 9.81%,
@@ -725,7 +912,7 @@ html[data-js="failed"] [data-reveal] {
   );
 }
 
-.footer-ray-4 {
+.ray-band-4 {
   --band: linear-gradient(
     90deg,
     rgb(0 0 0 / 0%) 0%,
@@ -739,7 +926,7 @@ html[data-js="failed"] [data-reveal] {
   );
 }
 
-.footer-ray-5 {
+.ray-band-5 {
   --band: linear-gradient(
     90deg,
     rgb(0 0 0 / 0%) 0%,
@@ -752,5 +939,30 @@ html[data-js="failed"] [data-reveal] {
     rgb(0 0 0) 82.43%,
     rgb(0 0 0 / 47%) 88.67%,
     rgb(0 0 0 / 0%) 97.3%
+  );
+}
+
+/* The shaft layer that opens every page (see layout.tsx). It carries no base
+   gradient of its own — the page already has its corner glow from
+   .light-rays-backdrop, and a second one here would wash the headline out.
+
+   A band across the top of the document rather than a section background: one
+   viewport tall, sized against `body`, so it scrolls away with the content
+   instead of following the reader down. z-index -1 puts it behind everything
+   on the page while still clearing the background colour, matching
+   .light-rays-backdrop. The mask fades the shafts out before the band ends so
+   there's no edge where they stop. */
+.page-rays {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 100svh;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0) 0%,
+    rgb(0 0 0) 78%,
+    rgb(0 0 0 / 0%) 100%
   );
 }

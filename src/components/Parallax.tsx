@@ -39,19 +39,22 @@ export function Parallax({
   const ref = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Runs from the element first touching the bottom of the viewport to it
-  // sitting at the centre, so it has settled before the reader looks straight
-  // at it. Hooks must run unconditionally, hence this sits above the
-  // reduced-motion branch.
+  // Hooks must run unconditionally, hence this sits above the reduced-motion
+  // branch.
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "center center"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [-distance, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.85], [0, 1]);
+  // Everything lands by 40% of the pass, well before progress would reach 1.
+  // Blocks near the page bottom can never actually be scrolled to the middle
+  // of the screen — the page runs out first — so their progress tops out part
+  // way. Finishing early is what keeps the footer's bottom bar from sitting
+  // permanently blurred once you've scrolled as far as the page goes.
+  const y = useTransform(scrollYProgress, [0, 0.5], [-distance, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
   const filter = useTransform(
     scrollYProgress,
-    [0, 0.85],
+    [0, 0.4],
     [`blur(${blur}px)`, "blur(0px)"],
   );
 

@@ -14,13 +14,16 @@ export function CtaFooter() {
     // The section is only the frame: padding here is what lets the grey page
     // show as a border around the panel on every side.
     <section id="cta" className="p-3 sm:p-5">
-      <div className="relative flex min-h-[94svh] w-full flex-col items-center justify-center overflow-hidden rounded-[28px] bg-black px-[120px] py-24 text-center max-lg:px-8 max-sm:px-4 sm:rounded-[36px]">
+      {/* The panel's height has to subtract the frame padding around it,
+          otherwise section = panel + padding overshoots the viewport and the
+          top edge sits lower than the gap on the sides. */}
+      <div className="relative flex min-h-[calc(100svh_-_1rem)] w-full flex-col items-center justify-center overflow-hidden rounded-[28px] bg-black px-[120px] py-24 text-center max-lg:px-8 max-sm:px-4 sm:min-h-[calc(100svh_-_2.5rem)] sm:rounded-[36px]">
         <div aria-hidden className="footer-rays">
-          <span className="footer-ray footer-ray-1" />
-          <span className="footer-ray footer-ray-2" />
-          <span className="footer-ray footer-ray-3" />
-          <span className="footer-ray footer-ray-4" />
-          <span className="footer-ray footer-ray-5" />
+          <span className="footer-ray ray-band-1" />
+          <span className="footer-ray ray-band-2" />
+          <span className="footer-ray ray-band-3" />
+          <span className="footer-ray ray-band-4" />
+          <span className="footer-ray ray-band-5" />
         </div>
 
         {/* Every block drops in from above on scroll. The distances step down
@@ -34,13 +37,13 @@ export function CtaFooter() {
           </Parallax>
 
           <Parallax distance={140} blur={18} className="w-full">
-            <h2 className="mt-6 max-w-full text-center font-sans text-5xl leading-[1.05] font-bold tracking-[-0.03em] text-white sm:text-7xl md:text-8xl lg:text-[7rem]">
+            <h2 className="mt-6 max-w-full text-center font-sans text-7xl leading-[1.05] font-bold tracking-[-0.03em] text-white sm:text-7xl md:text-8xl lg:text-[7rem]">
               Остались <span className="text-white/40">вопросы?</span>
             </h2>
           </Parallax>
 
           <Parallax distance={140} blur={18}>
-            <p className="mt-4 max-w-md text-center text-base leading-[1.7] text-white/60">
+            <p className="mt-4 max-w-md text-center text-sm max-w-80vw leading-[1.7] text-white/60">
               Свяжитесь с нами — ответим оперативно в рабочие дни и подготовим
               коммерческое предложение под ваш объём и регион.
             </p>

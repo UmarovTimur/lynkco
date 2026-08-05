@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import { MediaImage } from "@/components/MediaImage";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useLenis } from "lenis/react";
@@ -31,7 +31,7 @@ function Thumb({
       onClick={onOpen}
       className="group relative aspect-[4/3] w-full cursor-pointer overflow-hidden rounded-2xl bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
     >
-      <Image
+      <MediaImage
         src={item.thumb}
         alt=""
         fill
@@ -152,7 +152,7 @@ function Lightbox({
               className="max-h-full max-w-full rounded-lg"
             />
           ) : (
-            <Image
+            <MediaImage
               key={item.src}
               src={item.src}
               alt=""
@@ -160,6 +160,11 @@ function Lightbox({
               height={item.height}
               sizes="100vw"
               className="max-h-full w-auto rounded-lg object-contain"
+              // The plate fills the whole stage here rather than tracking the
+              // photo — the photo's own dimensions aren't laid out until it
+              // loads. Toned right down so it doesn't glare out of the dark
+              // overlay.
+              shimmerClassName="rounded-lg bg-white/5 opacity-40"
               priority
             />
           )}

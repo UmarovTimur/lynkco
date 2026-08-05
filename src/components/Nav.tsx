@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { TransitionLink } from "@/components/PageTransition";
 import { Menu, X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 import type { NavLink } from "@/types/content";
@@ -61,12 +61,12 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-[120px] max-lg:px-8 max-sm:px-4">
-        <Link
+        <TransitionLink
           href="/#hero"
           className="flex h-11 items-center rounded-[22px] bg-white px-6 text-base font-bold text-black"
         >
           Lynk &amp; Co 06
-        </Link>
+        </TransitionLink>
 
         <div className="relative">
           <button

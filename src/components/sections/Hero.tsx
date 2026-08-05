@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import Image from "next/image";
+import { MediaImage } from "@/components/MediaImage";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
@@ -47,7 +47,7 @@ function HeroPhotoChip({ className }: { className?: string }) {
           exit={{ y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
         >
-          <Image
+          <MediaImage
             src={CHIP_IMAGES[index]}
             alt="Lynk & Co 06"
             fill
@@ -186,7 +186,7 @@ function HeroPhotoCarousel({ className }: { className?: string }) {
             className="relative h-full shrink-0"
             style={{ width: `${100 / LOOP_IMAGES.length}%` }}
           >
-            <Image
+            <MediaImage
               src={src}
               alt="Lynk & Co 06"
               fill

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { TransitionLink } from "@/components/PageTransition";
 import { Nav } from "@/components/Nav";
 import { GalleryBrowser } from "@/components/GalleryBrowser";
 import { LeadForm } from "@/components/sections/LeadForm";
@@ -61,7 +61,7 @@ export default function GalleryPage() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="aspect-[4/3] w-full animate-pulse rounded-2xl bg-neutral-200"
+                  className="img-shimmer relative aspect-[4/3] w-full rounded-2xl"
                 />
               ))}
             </div>
@@ -71,13 +71,13 @@ export default function GalleryPage() {
         </Suspense>
 
         <div className="mt-16 flex justify-center">
-          <Link
+          <TransitionLink
             href="/#about"
             className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-6 py-4 text-sm font-medium sm:pr-8 sm:pl-7 sm:text-base text-black transition-colors hover:bg-black/5"
           >
             <ArrowLeft size={16} />
             Вернуться к предложению
-          </Link>
+          </TransitionLink>
         </div>
       </section>
 

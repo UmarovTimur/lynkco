@@ -14,16 +14,6 @@ interface ComparisonRow {
 const ROWS: ComparisonRow[] = [
   { label: "Колёса", max: "18″", ultra: "19″" },
   { label: "Шины", max: "215/55 R18", ultra: "225/45 R19" },
-  {
-    label: "Цвета кузова (с чёрной крышей)",
-    max: "Белый, серый, бежевый",
-    ultra: "Белый, серый, бежевый + фиолетовый, зелёный",
-  },
-  {
-    label: "Цвет салона",
-    max: "Чёрный, серый",
-    ultra: "Чёрный, серый (+ розово-белый с фиолетовым кузовом)",
-  },
   { label: "Обогрев руля", max: false, ultra: true },
   { label: "Вентиляция передних сидений", max: false, ultra: true },
   { label: "Память настроек водителя", max: false, ultra: true },

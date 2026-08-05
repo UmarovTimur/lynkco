@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { ReactLenis } from "lenis/react";
+import { PageTransitionProvider } from "@/components/PageTransition";
 import { REVEAL_FALLBACK_SCRIPT } from "@/lib/reveal-fallback";
 import "./globals.css";
 
@@ -58,8 +59,22 @@ export default function RootLayout({
           <span className="light-rays-bundle light-rays-bundle-b" />
           <span className="light-rays-bundle light-rays-bundle-c" />
         </div>
+
+        {/* The big diagonal shafts every page opens on. They share their band
+            masks with the footer's (see .ray-band-* in globals.css) and live
+            here rather than in a section so each route gets the same opening,
+            not just the home page. */}
+        <div className="page-rays" aria-hidden="true">
+          <span className="page-ray ray-band-1" />
+          <span className="page-ray ray-band-2" />
+          <span className="page-ray ray-band-3" />
+          <span className="page-ray ray-band-4" />
+          <span className="page-ray ray-band-5" />
+        </div>
         <ReactLenis root options={{ anchors: true, lerp: 0.1 }}>
-          {children}
+          {/* Inside ReactLenis: the cover has to reset Lenis' scroll offset
+              itself once the new route commits behind it. */}
+          <PageTransitionProvider>{children}</PageTransitionProvider>
         </ReactLenis>
         <div className="sepia-grain-overlay" aria-hidden="true" />
       </body>

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { MediaImage } from "@/components/MediaImage";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
 import { SECTION_HEADING_CLASS } from "@/lib/typography";
@@ -88,7 +88,7 @@ export function Work() {
                   item.wide ? "aspect-[16/9]" : "aspect-[3/2]"
                 }`}
               >
-                <Image
+                <MediaImage
                   src={item.image}
                   alt={item.title}
                   fill

@@ -1,15 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
-import Link from "next/link";
 import { Folder } from "lucide-react";
+import { MediaImage } from "@/components/MediaImage";
+import { TransitionLink } from "@/components/PageTransition";
 import type { BentoImage } from "@/types/content";
 import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 
@@ -70,7 +70,7 @@ const COLUMN_TWO: BentoImage[] = [
 function BentoTile({ image }: { image: BentoImage }) {
   return (
     <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl">
-      <Image
+      <MediaImage
         src={image.src}
         alt={image.alt}
         fill
@@ -145,7 +145,7 @@ export function AboutBento() {
           </div>
         </motion.div>
 
-        <Link
+        <TransitionLink
           href="/gallery"
           className="group absolute inset-0 z-10 flex flex-col items-center justify-center gap-3"
         >
@@ -160,7 +160,7 @@ export function AboutBento() {
             {VIDEO_COUNT > 0 &&
               ` · ${plural(VIDEO_COUNT, "видео", "видео", "видео")}`}
           </span>
-        </Link>
+        </TransitionLink>
       </div>
     </section>
   );

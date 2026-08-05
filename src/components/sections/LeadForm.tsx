@@ -220,7 +220,7 @@ export function LeadForm() {
 
             <button
               type="submit"
-              className="glass-edge-button mt-2 flex h-14 items-center justify-center gap-2 rounded-full bg-black py-4 text-sm font-medium sm:text-base text-white transition-opacity hover:opacity-90 sm:col-span-2"
+              className="glass-edge-button mt-2 flex h-14 items-center justify-center gap-2 rounded-full bg-black py-4 text-base font-medium sm:text-base text-white transition-opacity hover:opacity-90 sm:col-span-2"
             >
               Отправить заявку
               <ArrowRight size={16} />

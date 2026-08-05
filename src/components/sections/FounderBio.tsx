@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { MediaImage } from "@/components/MediaImage";
 import { X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 
@@ -32,7 +32,7 @@ export function FounderBio() {
       <div className="mt-12 grid grid-cols-1 gap-16 md:grid-cols-2">
         <div>
           <div className="relative aspect-[708/541] w-full overflow-hidden rounded-2xl">
-            <Image
+            <MediaImage
               src="/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
               alt="Joris van Dijk, Founder of Hanzo Studio"
               fill
