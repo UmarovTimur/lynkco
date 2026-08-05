@@ -1,5 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
 
 interface ColorRow {
   name: string;
@@ -9,9 +11,24 @@ interface ColorRow {
 }
 
 const BODY_COLORS: ColorRow[] = [
-  { name: "Белый", swatch: "#f2f2f2", availability: "Max, Ultra", status: "Базовый" },
-  { name: "Серый", swatch: "#8a8a8a", availability: "Max, Ultra", status: "Базовый" },
-  { name: "Бежевый", swatch: "#d8c9a8", availability: "Max, Ultra", status: "Базовый" },
+  {
+    name: "Белый",
+    swatch: "#f2f2f2",
+    availability: "Max, Ultra",
+    status: "Базовый",
+  },
+  {
+    name: "Серый",
+    swatch: "#8a8a8a",
+    availability: "Max, Ultra",
+    status: "Базовый",
+  },
+  {
+    name: "Бежевый",
+    swatch: "#d8c9a8",
+    availability: "Max, Ultra",
+    status: "Базовый",
+  },
   {
     name: "Фиолетовый (Twilight Purple)",
     swatch: "#5b3a72",
@@ -27,8 +44,18 @@ const BODY_COLORS: ColorRow[] = [
 ];
 
 const INTERIOR_COLORS: ColorRow[] = [
-  { name: "Чёрный", swatch: "#1e1e1e", availability: "Max, Ultra", status: "Базовый" },
-  { name: "Серый", swatch: "#9b9b9b", availability: "Max, Ultra", status: "Базовый" },
+  {
+    name: "Чёрный",
+    swatch: "#1e1e1e",
+    availability: "Max, Ultra",
+    status: "Базовый",
+  },
+  {
+    name: "Серый",
+    swatch: "#9b9b9b",
+    availability: "Max, Ultra",
+    status: "Базовый",
+  },
   {
     name: "Розово-белый",
     swatch: "#efdada",
@@ -45,10 +72,12 @@ function ColorTable({
   heading: string;
 }) {
   return (
-    <table className="w-full min-w-[420px] border-collapse text-sm md:text-base">
+    <table className="w-full min-w-[420px] border-collapse text-sm sm:text-base md:text-lg">
       <thead>
         <tr className="border-b border-black/10">
-          <th className="py-3 text-left font-normal text-black/50">{heading}</th>
+          <th className="py-3 text-left font-normal text-black/50">
+            {heading}
+          </th>
           <th className="py-3 text-left font-normal text-black/50">
             Доступность
           </th>
@@ -95,21 +124,27 @@ export function Stock() {
     <section id="stock" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
       <div className="flex flex-col items-center">
         <Reveal rotate={-3} className="mx-auto flex w-fit items-center gap-4">
-          <span className="h-px w-12 bg-black/10" aria-hidden="true" />
-          <span className="font-serif text-2xl italic text-black/50">
+          <span
+            className="hidden h-px w-12 bg-black/10 sm:block"
+            aria-hidden="true"
+          />
+          <span className="font-serif text-2xl italic sm:text-3xl text-black/50">
             Наличие на складе
           </span>
-          <span className="h-px w-12 bg-black/10" aria-hidden="true" />
+          <span
+            className="hidden h-px w-12 bg-black/10 sm:block"
+            aria-hidden="true"
+          />
         </Reveal>
 
-        <Reveal delay={0.08} rotate={3}>
-          <h2 className="mt-4 text-center text-3xl font-normal text-black md:text-5xl">
-            Наличие на складе в Хоргосе
-          </h2>
-        </Reveal>
+        <AnimatedHeading
+          text="Наличие на складе в Хоргосе"
+          className={SECTION_HEADING_CLASS}
+          delay={0.08}
+        />
 
         <Reveal delay={0.16} rotate={-2}>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm font-medium text-black/70">
+          <p className="mx-auto mt-6 max-w-2xl text-center text-base font-medium text-black/70">
             Наличие меняется ежедневно — уточняйте актуальный остаток перед
             бронированием.
           </p>
@@ -134,7 +169,7 @@ export function Stock() {
         <Reveal delay={0.4} rotate={3} className="mt-8 flex justify-center">
           <a
             href="#lead-form"
-            className="flex h-[51px] items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="glass-edge-button flex h-14 items-center gap-2 rounded-full bg-black px-6 py-4 text-sm font-medium sm:pr-7 sm:pl-8 sm:text-base text-white transition-opacity hover:opacity-90"
           >
             Забронировать автомобили
             <ArrowRight size={16} />

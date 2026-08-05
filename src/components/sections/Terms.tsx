@@ -1,4 +1,7 @@
 import { Reveal } from "@/components/Reveal";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 interface TermItem {
   label: string;
@@ -39,11 +42,10 @@ const TERMS: TermItem[] = [
 export function Terms() {
   return (
     <section id="terms" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
-      <Reveal rotate={-2}>
-        <h2 className="text-center text-3xl font-normal text-black md:text-4xl">
-          Условия и ответственность
-        </h2>
-      </Reveal>
+      <AnimatedHeading
+        text="Условия и ответственность"
+        className={cn(SECTION_HEADING_CLASS, "mt-0")}
+      />
 
       <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2">
         {TERMS.map((term, i) => (
@@ -53,7 +55,7 @@ export function Terms() {
             rotate={i % 2 === 0 ? 2 : -2}
             className="border-t border-black/10 pt-4"
           >
-            <p className="text-base text-black">
+            <p className="text-base text-black sm:text-lg">
               <span className="font-bold">{term.label}</span>{" "}
               <span className="text-black/60">— {term.description}</span>
             </p>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useLenis } from "lenis/react";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import {
   ALL_ITEMS,
@@ -62,6 +63,7 @@ function Lightbox({
   onStep: (delta: number) => void;
 }) {
   const shouldReduceMotion = useReducedMotion();
+  const lenis = useLenis();
   const item = items[index];
 
   useEffect(() => {
@@ -71,20 +73,41 @@ function Lightbox({
       if (e.key === "ArrowRight") onStep(1);
     };
     window.addEventListener("keydown", onKey);
-    // Lock background scroll while the lightbox owns the viewport.
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    // Locking background scroll takes both halves:
+    //
+    // 1. Lenis (see layout.tsx) drives scrolling from JS, so it keeps moving
+    //    the page no matter what `overflow` says — it has to be paused.
+    // 2. `html` is the scrolling element here, not `body` (body is `min-h-full`
+    //    inside an `h-full` html), so an overflow lock on body does nothing.
+    //    Removing the scrollbar also reflows the page, so its width is handed
+    //    back as padding to keep the content from jumping sideways.
+    lenis?.stop();
+
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    const prevPadding = root.style.paddingRight;
+    const scrollbar = window.innerWidth - root.clientWidth;
+    root.style.overflow = "hidden";
+    if (scrollbar > 0) root.style.paddingRight = `${scrollbar}px`;
+
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+      lenis?.start();
+      root.style.overflow = prevOverflow;
+      root.style.paddingRight = prevPadding;
     };
-  }, [onClose, onStep]);
+  }, [onClose, onStep, lenis]);
 
   if (!item) return null;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex flex-col bg-black/95 backdrop-blur-sm"
+      // overscroll-contain stops touch rubber-banding from reaching the page
+      // behind; data-lenis-prevent keeps Lenis off this subtree even if
+      // something restarts it while the lightbox is open.
+      data-lenis-prevent
+      className="fixed inset-0 z-[100] flex flex-col overscroll-contain bg-black/95 backdrop-blur-sm"
       initial={shouldReduceMotion ? undefined : { opacity: 0 }}
       animate={shouldReduceMotion ? undefined : { opacity: 1 }}
       exit={shouldReduceMotion ? undefined : { opacity: 0 }}

@@ -7,10 +7,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), "Inter Placeholder", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-inter), "Inter Placeholder", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-heading: var(--font-sans);
-  --font-serif: var(--font-instrument-serif), "Instrument Serif Placeholder", serif;
+  --font-serif:
+    var(--font-instrument-serif), "Instrument Serif Placeholder", serif;
   --color-accent-orange: var(--accent-orange);
   --color-dark-section: var(--dark-section);
   --color-dark-section-foreground: var(--dark-section-foreground);
@@ -53,7 +55,7 @@
 }
 
 :root {
-  --background: oklch(0.93 0 0);
+  --background: oklch(0.86 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0 0 0);
@@ -68,8 +70,8 @@
   --accent: oklch(0.961 0 0);
   --accent-foreground: oklch(0 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.88 0 0);
+  --border: oklch(0.78 0 0);
+  --input: oklch(0.78 0 0);
   --ring: oklch(0.708 0 0);
   /* Hanzo brand accent — orange/red used for CTAs, active toggle, links */
   --accent-orange: oklch(0.63 0.24 33);
@@ -133,25 +135,6 @@
   body {
     @apply bg-background text-foreground;
     position: relative;
-    /* Soft white light source glowing in from the top-left corner, with
-       faint straight 45deg rays scattered across the whole page — kept
-       low-opacity so it reads as ambient light, not a pattern. Both layers
-       scroll with the page (not fixed to the viewport). */
-    background-image:
-      radial-gradient(
-        1400px 1000px at 0% 0%,
-        oklch(0.99 0 0 / 80%) 0%,
-        oklch(0.96 0 0 / 35%) 45%,
-        transparent 75%
-      ),
-      repeating-linear-gradient(
-        45deg,
-        oklch(1 0 0 / 0%) 0px,
-        oklch(1 0 0 / 14%) 46px,
-        oklch(1 0 0 / 0%) 100px,
-        oklch(1 0 0 / 0%) 170px
-      );
-    background-repeat: no-repeat, no-repeat;
   }
   html {
     @apply font-sans;
@@ -162,6 +145,339 @@
    for prefers-reduced-motion via the options below. */
 html.lenis {
   scroll-behavior: auto !important;
+}
+
+/* Soft white light source glowing in from the top-left corner, with faint
+   straight 45deg rays scattered across the whole page — kept low-opacity so it
+   reads as ambient light, not a pattern.
+
+   This lives on its own absolutely-positioned layer rather than on `body`
+   because <html> is `h-full` (see layout.tsx): a body background propagates to
+   the canvas but is still *sized and positioned* against the root element's
+   box, so with `no-repeat` the gradients only ever painted over the first
+   viewport-height of the page and everything below it got flat colour. Sized
+   against `body` instead, the layer spans the whole scrollable page, and it
+   scrolls with the content rather than being pinned to the viewport.
+
+   z-index -1 keeps it above the (canvas-propagated) background colour but
+   behind all page content. */
+.light-rays-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Clips the oversized, drifting ray bundles inside. */
+  overflow: hidden;
+  background-image: radial-gradient(
+    1400px 1000px at 0% 0%,
+    oklch(0.99 0 0 / 80%) 0%,
+    oklch(0.96 0 0 / 35%) 45%,
+    transparent 75%
+  );
+  background-repeat: no-repeat;
+}
+
+/* The rays themselves, split across three sibling layers (see layout.tsx) so
+   each bundle can break up, dim and drift on its own clock.
+
+   Why three bundles rather than one gradient:
+
+   - their periods (760 / 520 / 350px) share no common factor, so the combined
+     figure only truly repeats after their LCM — far taller than any page;
+   - their angles differ by a couple of degrees, so bundles slowly drift in and
+     out of phase across the width instead of marching in lockstep;
+   - each period holds shafts of different widths and alphas (a broad soft one,
+     a hairline, a bright wide one), so no two neighbouring rays match;
+   - each carries its own irregular vertical mask, so every block of the page
+     catches a different amount of light instead of being lit identically.
+
+   Where bundles happen to overlap you get an occasional brighter shaft, which
+   is what sells it as light rather than as a texture.
+
+   Each bundle is two nested layers, because they need two independent masks
+   and a parent mask multiplies into its subtree:
+
+     .light-rays-bundle          vertical block falloff  + sideways drift
+     .light-rays-bundle::before  the rays and their breaks + fade + travel
+
+   Both overhang their box (and .light-rays-backdrop clips the lot) by more
+   than the largest animation amplitude, so no drift can pull an edge in. */
+.light-rays-bundle {
+  position: absolute;
+  inset: -220px;
+  /* Pin the mask to one tile the size of the layer: the initial `repeat` would
+     tile this gradient and band the page, and it also keeps the ::before
+     overhang below clipped out. */
+  mask-image: var(--ray-block-mask);
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  animation: ray-drift var(--ray-drift-dur) ease-in-out infinite alternate;
+}
+
+/* A `repeating-linear-gradient` stripe is infinitely long, which is what made
+   the rays read as ruled lines. These two masks run *along* the rays rather
+   than across them, so they cut each shaft into segments with soft ends.
+
+   Two of them, a few degrees apart and on different periods, because a single
+   one would cut every parallel ray at the same offset — one clean band shearing
+   across the whole bundle. Crossed at an angle, their dim zones land at a
+   different point on each ray, so the breaks stagger the way real shafts do. */
+.light-rays-bundle::before {
+  content: "";
+  position: absolute;
+  inset: -420px;
+  background-image: var(--ray-pattern);
+  mask-image: var(--ray-break-a), var(--ray-break-b);
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  animation:
+    ray-fade var(--ray-fade-dur) ease-in-out infinite alternate,
+    ray-travel var(--ray-travel-dur) ease-in-out infinite alternate;
+}
+
+.light-rays-bundle-a {
+  --ray-pattern: repeating-linear-gradient(
+    45deg,
+    oklch(1 0 0 / 0%) 0px,
+    oklch(1 0 0 / 0%) 42px,
+    oklch(1 0 0 / 22%) 84px,
+    oklch(1 0 0 / 0%) 155px,
+    oklch(1 0 0 / 0%) 240px,
+    oklch(1 0 0 / 12%) 256px,
+    oklch(1 0 0 / 0%) 282px,
+    oklch(1 0 0 / 0%) 398px,
+    oklch(1 0 0 / 28%) 456px,
+    oklch(1 0 0 / 0%) 546px,
+    oklch(1 0 0 / 0%) 650px,
+    oklch(1 0 0 / 10%) 664px,
+    oklch(1 0 0 / 0%) 682px,
+    oklch(1 0 0 / 0%) 760px
+  );
+  --ray-block-mask: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 100%) 0%,
+    rgb(0 0 0 / 70%) 6%,
+    rgb(0 0 0 / 95%) 13%,
+    rgb(0 0 0 / 60%) 21%,
+    rgb(0 0 0 / 85%) 27%,
+    rgb(0 0 0 / 100%) 34%,
+    rgb(0 0 0 / 65%) 42%,
+    rgb(0 0 0 / 90%) 49%,
+    rgb(0 0 0 / 58%) 57%,
+    rgb(0 0 0 / 95%) 64%,
+    rgb(0 0 0 / 75%) 71%,
+    rgb(0 0 0 / 100%) 78%,
+    rgb(0 0 0 / 62%) 85%,
+    rgb(0 0 0 / 88%) 92%,
+    rgb(0 0 0 / 72%) 100%
+  );
+  /* 135deg — square along the 45deg rays. */
+  --ray-break-a: repeating-linear-gradient(
+    135deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 340px,
+    rgb(0 0 0 / 12%) 580px,
+    rgb(0 0 0 / 8%) 756px,
+    rgb(0 0 0 / 100%) 1030px,
+    rgb(0 0 0 / 100%) 1256px,
+    rgb(0 0 0 / 32%) 1450px,
+    rgb(0 0 0 / 100%) 1690px,
+    rgb(0 0 0 / 100%) 1900px
+  );
+  --ray-break-b: repeating-linear-gradient(
+    128deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 242px,
+    rgb(0 0 0 / 24%) 452px,
+    rgb(0 0 0 / 100%) 694px,
+    rgb(0 0 0 / 100%) 904px,
+    rgb(0 0 0 / 16%) 1098px,
+    rgb(0 0 0 / 100%) 1340px
+  );
+  --ray-fade-floor: 0.18;
+  --ray-fade-dur: 5s;
+  --ray-drift-dur: 9s;
+  --ray-drift-x: 54px;
+  --ray-drift-y: -21px;
+  --ray-travel-dur: 10s;
+  --ray-travel-x: 230px;
+  --ray-travel-y: 230px;
+}
+
+.light-rays-bundle-b {
+  --ray-pattern: repeating-linear-gradient(
+    43.2deg,
+    oklch(1 0 0 / 0%) 0px,
+    oklch(1 0 0 / 0%) 30px,
+    oklch(1 0 0 / 17%) 72px,
+    oklch(1 0 0 / 0%) 134px,
+    oklch(1 0 0 / 0%) 226px,
+    oklch(1 0 0 / 9%) 242px,
+    oklch(1 0 0 / 0%) 266px,
+    oklch(1 0 0 / 0%) 350px,
+    oklch(1 0 0 / 20%) 400px,
+    oklch(1 0 0 / 0%) 476px,
+    oklch(1 0 0 / 0%) 520px
+  );
+  --ray-block-mask: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 78%) 0%,
+    rgb(0 0 0 / 100%) 9%,
+    rgb(0 0 0 / 62%) 16%,
+    rgb(0 0 0 / 88%) 24%,
+    rgb(0 0 0 / 56%) 31%,
+    rgb(0 0 0 / 96%) 39%,
+    rgb(0 0 0 / 70%) 46%,
+    rgb(0 0 0 / 100%) 54%,
+    rgb(0 0 0 / 60%) 61%,
+    rgb(0 0 0 / 82%) 68%,
+    rgb(0 0 0 / 100%) 75%,
+    rgb(0 0 0 / 58%) 82%,
+    rgb(0 0 0 / 92%) 89%,
+    rgb(0 0 0 / 66%) 96%,
+    rgb(0 0 0 / 100%) 100%
+  );
+  /* 133.2deg — square along the 43.2deg rays. */
+  --ray-break-a: repeating-linear-gradient(
+    133.2deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 274px,
+    rgb(0 0 0 / 10%) 484px,
+    rgb(0 0 0 / 100%) 726px,
+    rgb(0 0 0 / 100%) 982px,
+    rgb(0 0 0 / 28%) 1160px,
+    rgb(0 0 0 / 100%) 1416px,
+    rgb(0 0 0 / 100%) 1560px
+  );
+  --ray-break-b: repeating-linear-gradient(
+    140deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 208px,
+    rgb(0 0 0 / 18%) 416px,
+    rgb(0 0 0 / 100%) 640px,
+    rgb(0 0 0 / 100%) 832px,
+    rgb(0 0 0 / 30%) 1024px,
+    rgb(0 0 0 / 100%) 1264px,
+    rgb(0 0 0 / 100%) 2100px
+  );
+  --ray-fade-floor: 0.12;
+  --ray-fade-dur: 6.5s;
+  --ray-drift-dur: 12s;
+  --ray-drift-x: -42px;
+  --ray-drift-y: 29px;
+  --ray-travel-dur: 14s;
+  --ray-travel-x: -190px;
+  --ray-travel-y: -202px;
+}
+
+.light-rays-bundle-c {
+  --ray-pattern: repeating-linear-gradient(
+    47.4deg,
+    oklch(1 0 0 / 0%) 0px,
+    oklch(1 0 0 / 0%) 50px,
+    oklch(1 0 0 / 12%) 70px,
+    oklch(1 0 0 / 0%) 113px,
+    oklch(1 0 0 / 0%) 219px,
+    oklch(1 0 0 / 7%) 232px,
+    oklch(1 0 0 / 0%) 252px,
+    oklch(1 0 0 / 0%) 350px
+  );
+  --ray-block-mask: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 92%) 0%,
+    rgb(0 0 0 / 58%) 5%,
+    rgb(0 0 0 / 100%) 12%,
+    rgb(0 0 0 / 72%) 19%,
+    rgb(0 0 0 / 55%) 26%,
+    rgb(0 0 0 / 92%) 33%,
+    rgb(0 0 0 / 100%) 41%,
+    rgb(0 0 0 / 66%) 48%,
+    rgb(0 0 0 / 86%) 55%,
+    rgb(0 0 0 / 60%) 63%,
+    rgb(0 0 0 / 100%) 70%,
+    rgb(0 0 0 / 78%) 77%,
+    rgb(0 0 0 / 57%) 84%,
+    rgb(0 0 0 / 95%) 91%,
+    rgb(0 0 0 / 70%) 100%
+  );
+  /* 137.4deg — square along the 47.4deg rays. */
+  --ray-break-a: repeating-linear-gradient(
+    137.4deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 194px,
+    rgb(0 0 0 / 6%) 402px,
+    rgb(0 0 0 / 100%) 626px,
+    rgb(0 0 0 / 100%) 754px,
+    rgb(0 0 0 / 26%) 930px,
+    rgb(0 0 0 / 100%) 1124px,
+    rgb(0 0 0 / 100%) 1220px
+  );
+  --ray-break-b: repeating-linear-gradient(
+    131deg,
+    rgb(0 0 0 / 100%) 0px,
+    rgb(0 0 0 / 100%) 306px,
+    rgb(0 0 0 / 20%) 530px,
+    rgb(0 0 0 / 100%) 770px,
+    rgb(0 0 0 / 100%) 1026px,
+    rgb(0 0 0 / 34%) 1204px,
+    rgb(0 0 0 / 100%) 1444px,
+    rgb(0 0 0 / 100%) 1780px
+  );
+  --ray-fade-floor: 0.25;
+  --ray-fade-dur: 8s;
+  --ray-drift-dur: 8s;
+  --ray-drift-x: 30px;
+  --ray-drift-y: 18px;
+  --ray-travel-dur: 12s;
+  --ray-travel-x: 160px;
+  --ray-travel-y: 150px;
+}
+
+/* Each bundle breathes between full strength and its own floor. The periods
+   (5 / 6.5 / 8s) are mutually prime-ish, so the bundles never line up: rays
+   contributed by a dimming bundle read as individual shafts guttering out
+   while the rest hold steady. */
+@keyframes ray-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: var(--ray-fade-floor);
+  }
+}
+
+/* Drift moves the bundle sideways across the rays, so the shafts themselves
+   creep. Kept the smaller of the two motions — this is the only one that
+   shifts ray *positions*. */
+@keyframes ray-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--ray-drift-x), var(--ray-drift-y), 0);
+  }
+}
+
+/* Travel slides the layer *along* the rays. A stripe is invariant along its own
+   length, so the shafts don't appear to move at all — only the breaks in them
+   do, running up and down each shaft. That's what reads as segments guttering
+   out and rekindling, and it's why the amplitude can be large without the
+   background ever looking like it's sliding. */
+@keyframes ray-travel {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--ray-travel-x), var(--ray-travel-y), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light-rays-bundle,
+  .light-rays-bundle::before {
+    animation: none;
+  }
 }
 
 /* Light sepia + film-grain overlay, absolutely positioned over the full
@@ -178,7 +494,9 @@ html.lenis {
     linear-gradient(rgba(120, 74, 30, 0.18), rgba(120, 74, 30, 0.18)),
     url("/images/6mcf62RlDfRfU61Yg5vb2pefpi4.png");
   background-repeat: repeat, repeat;
-  background-size: auto, 256px 256px;
+  background-size:
+    auto,
+    256px 256px;
   background-blend-mode: normal, overlay;
   mix-blend-mode: soft-light;
   opacity: 0.22;
@@ -242,21 +560,197 @@ html.lenis {
   }
 }
 
-/* Soft diagonal light-ray backdrop for the hero section. */
-.bg-hero-rays {
-  background-color: oklch(0.9 0 0);
-  background-image:
-    radial-gradient(
-      120% 100% at 50% -10%,
-      oklch(0.99 0 0) 0%,
-      oklch(0.94 0 0) 55%,
-      oklch(0.88 0 0) 100%
-    ),
-    repeating-linear-gradient(
-      100deg,
-      oklch(1 0 0 / 0%) 0px,
-      oklch(1 0 0 / 55%) 60px,
-      oklch(1 0 0 / 0%) 150px,
-      oklch(1 0 0 / 0%) 230px
-    );
+/* -------------------------------------------------------------------------- */
+/* Liquid-glass edges                                                         */
+/* -------------------------------------------------------------------------- */
+
+/* For surfaces sitting directly on the page background: a translucent white
+   halo a few pixels wide, a hairline rim, and a small lift.
+   
+   Apply only to the OUTERMOST card of a group. Nested cards (the offer cards
+   inside the pricing panel, the inputs inside the lead form, the icon discs
+   inside the equipment cards) stay flat — two halos inside one another stack
+   into a muddy double rim and lose the single-pane-of-glass read.
+
+   The halo is white, so it only registers against the grey page. Don't reuse
+   this on anything nested in a white or neutral-100 surface, where it would
+   simply disappear — that's what .glass-edge-button is for. */
+.glass-edge {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 40%),
+    0 0 0 1px oklch(1 0 0 / 50%),
+    0 0 0 10px oklch(1 0 0 / 34%),
+    0 2px 4px oklch(0 0 0 / 5%),
+    0 14px 32px -12px oklch(0 0 0 / 18%);
+}
+
+/* Buttons carry the same glass language as the cards: a top sheen and a lift,
+   plus the same translucent white halo — tighter than the cards' since the
+   pills are so much smaller.
+
+   The halo is white, so it shows on the grey page and reads brightest on the
+   dark footer panel; on a button sitting inside a near-white card it simply
+   goes quiet, which is the acceptable trade for one consistent treatment. */
+.glass-edge-button {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 22%),
+    inset 0 0 0 1px oklch(1 0 0 / 10%),
+    0 0 0 1px oklch(1 0 0 / 45%),
+    0 0 0 7px oklch(1 0 0 / 30%),
+    0 1px 2px oklch(0 0 0 / 20%),
+    0 6px 16px -6px oklch(0 0 0 / 35%);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Entrance-animation fallback                                                */
+/* -------------------------------------------------------------------------- */
+
+/* Motion renders each animated element's `initial` state into the server HTML
+   as an inline style, so everything ships at opacity 0 and only appears once
+   the bundle hydrates. When that never happens — JS disabled, or a mobile
+   connection that drops the bundle — the page renders blank.
+
+   These rules undo the hidden state in exactly those two cases: no `data-js`
+   at all (the inline head script never ran, so scripting is off) and
+   `data-js="failed"` (the script ran but React didn't mount in time). See
+   lib/reveal-fallback.ts for the state machine.
+
+   !important is required, not stylistic: it has to beat Motion's inline
+   styles, which are otherwise unreachable from a stylesheet. */
+html:not([data-js]) [data-reveal],
+html[data-js="failed"] [data-reveal] {
+  opacity: 1 !important;
+  translate: none !important;
+  rotate: none !important;
+  scale: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Footer light shafts                                                        */
+/* -------------------------------------------------------------------------- */
+
+/* The panel's own base: a soft lift toward the top-left corner, faded out
+   again by a radial mask so the bottom-right settles into flat black. The
+   mask also applies to the shafts below, since they're children — that's what
+   keeps the light from running all the way into the far corner. */
+.footer-rays {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(
+    100% 100% at 0% 0%,
+    oklch(0.32 0 0) 0%,
+    oklch(0 0 0) 100%
+  );
+  mask-image: radial-gradient(
+    125% 100% at 0% 0%,
+    rgb(0 0 0) 0%,
+    rgb(0 0 0 / 22%) 88%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}
+
+/* Each shaft layer is a white sheet that fades out toward the bottom, cut into
+   irregular vertical bands by its own mask, then skewed 45deg so the bands
+   read as diagonal light. Five of them at 5% opacity each: where bands happen
+   to overlap the light doubles up, which is what gives the uneven, non-
+   repeating look a single gradient can't.
+   
+   The layer is twice the panel width with the mask tiled at 50%, so one tile
+   spans exactly the panel and the skew's horizontal overhang stays covered.
+   Every mask starts and ends fully transparent, so the tiles meet at zero
+   alpha and the repeat leaves no seam. */
+.footer-ray {
+  position: absolute;
+  inset: 0 -50%;
+  opacity: 0.05;
+  transform: skewX(45deg);
+  transform-origin: top;
+  background: linear-gradient(
+    rgb(255 255 255) 0%,
+    rgb(255 255 255) 84%,
+    rgb(255 255 255 / 0%) 100%
+  );
+  mask-image: var(--band);
+  mask-size: 50% 100%;
+  mask-repeat: repeat-x;
+}
+
+.footer-ray-1 {
+  --band: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0%) 0%,
+    rgb(0 0 0) 20.04%,
+    rgb(0 0 0 / 0%) 36.18%,
+    rgb(0 0 0) 55.41%,
+    rgb(0 0 0 / 13%) 67.12%,
+    rgb(0 0 0) 78.23%,
+    rgb(0 0 0 / 0%) 97.3%
+  );
+}
+
+.footer-ray-2 {
+  --band: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0%) 11.4%,
+    rgb(0 0 0) 25.56%,
+    rgb(0 0 0 / 55%) 41.7%,
+    rgb(0 0 0 / 13%) 67.12%,
+    rgb(0 0 0) 78.23%,
+    rgb(0 0 0 / 0%) 97.3%
+  );
+}
+
+/* Fades higher up than the rest, so this one reads as a shorter shaft. */
+.footer-ray-3 {
+  background: linear-gradient(
+    rgb(255 255 255) 0%,
+    rgb(255 255 255) 67%,
+    rgb(255 255 255 / 0%) 100%
+  );
+  --band: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0%) 9.81%,
+    rgb(0 0 0) 20.04%,
+    rgb(0 0 0 / 55%) 28.59%,
+    rgb(0 0 0 / 42%) 40.09%,
+    rgb(0 0 0) 48.65%,
+    rgb(0 0 0 / 27%) 54.5%,
+    rgb(0 0 0 / 13%) 78.58%,
+    rgb(0 0 0) 88.55%,
+    rgb(0 0 0 / 0%) 97.3%
+  );
+}
+
+.footer-ray-4 {
+  --band: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0%) 0%,
+    rgb(0 0 0) 17.66%,
+    rgb(0 0 0 / 55%) 26.64%,
+    rgb(0 0 0) 35.23%,
+    rgb(0 0 0 / 0%) 47.7%,
+    rgb(0 0 0 / 13%) 69.18%,
+    rgb(0 0 0) 79.15%,
+    rgb(0 0 0 / 0%) 97.3%
+  );
+}
+
+.footer-ray-5 {
+  --band: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0%) 0%,
+    rgb(0 0 0) 20.04%,
+    rgb(0 0 0 / 55%) 27.58%,
+    rgb(0 0 0) 42.34%,
+    rgb(0 0 0 / 0%) 48.6%,
+    rgb(0 0 0 / 13%) 67.12%,
+    rgb(0 0 0) 74.95%,
+    rgb(0 0 0) 82.43%,
+    rgb(0 0 0 / 47%) 88.67%,
+    rgb(0 0 0 / 0%) 97.3%
+  );
 }

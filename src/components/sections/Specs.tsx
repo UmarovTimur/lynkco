@@ -32,15 +32,21 @@ export function Specs() {
   return (
     <section id="specs" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
       <Reveal rotate={-3} className="mx-auto flex w-fit items-center gap-4">
-        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
-        <span className="font-serif text-2xl italic text-black/50">
+        <span
+          className="hidden h-px w-12 bg-black/10 sm:block"
+          aria-hidden="true"
+        />
+        <span className="font-serif text-2xl italic sm:text-3xl text-black/50">
           Технические характеристики
         </span>
-        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
+        <span
+          className="hidden h-px w-12 bg-black/10 sm:block"
+          aria-hidden="true"
+        />
       </Reveal>
 
       <Reveal delay={0.1} rotate={3} className="mx-auto mt-12 max-w-3xl">
-        <table className="w-full border-collapse text-sm md:text-base">
+        <table className="w-full border-collapse text-sm sm:text-base md:text-lg">
           <tbody>
             {SPECS.map((row) => (
               <tr key={row.label} className="border-b border-black/10">
@@ -60,7 +66,7 @@ export function Specs() {
       </Reveal>
 
       <Reveal delay={0.2} rotate={-2}>
-        <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-black/40">
+        <p className="mx-auto mt-8 max-w-2xl text-center text-base text-black/40">
           База 2640 мм — на 20–40 мм больше, чем у большинства конкурентов в
           классе. Версия 114 кВт (156 л.с.) подпадает под льготный
           утилизационный сбор.

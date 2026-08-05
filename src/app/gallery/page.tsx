@@ -7,6 +7,8 @@ import { GalleryBrowser } from "@/components/GalleryBrowser";
 import { LeadForm } from "@/components/sections/LeadForm";
 import { CtaFooter } from "@/components/sections/CtaFooter";
 import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
 
 export const metadata: Metadata = {
   title: "Галерея Lynk & Co 06 — фото и видео со склада в Хоргосе",
@@ -21,16 +23,24 @@ export default function GalleryPage() {
 
       <section className="px-6 pt-32 pb-16 md:px-16 md:pt-40 lg:px-30">
         <div className="mx-auto flex w-fit items-center gap-4">
-          <span className="h-px w-12 bg-black/15" aria-hidden="true" />
-          <span className="font-serif text-2xl italic text-black/50">
+          <span
+            className="hidden h-px w-12 bg-black/15 sm:block"
+            aria-hidden="true"
+          />
+          <span className="font-serif text-2xl italic sm:text-3xl text-black/50">
             Галерея
           </span>
-          <span className="h-px w-12 bg-black/15" aria-hidden="true" />
+          <span
+            className="hidden h-px w-12 bg-black/15 sm:block"
+            aria-hidden="true"
+          />
         </div>
 
-        <h1 className="mt-4 text-center text-3xl font-normal text-black md:text-5xl">
-          Галерея Lynk &amp; Co 06
-        </h1>
+        <AnimatedHeading
+          as="h1"
+          text="Галерея Lynk & Co 06"
+          className={SECTION_HEADING_CLASS}
+        />
 
         <p className="mt-3 text-center text-lg text-black/60 md:text-xl">
           Фото и видео реальных автомобилей со склада в Хоргосе
@@ -63,7 +73,7 @@ export default function GalleryPage() {
         <div className="mt-16 flex justify-center">
           <Link
             href="/#about"
-            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white py-3 pr-6 pl-5 text-sm font-medium text-black transition-colors hover:bg-black/5"
+            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-6 py-4 text-sm font-medium sm:pr-8 sm:pl-7 sm:text-base text-black transition-colors hover:bg-black/5"
           >
             <ArrowLeft size={16} />
             Вернуться к предложению

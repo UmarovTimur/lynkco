@@ -21,7 +21,9 @@ export function FounderBio() {
       id="about-1"
       className="mx-auto max-w-[1440px] px-6 py-24 md:px-16 md:py-32 lg:px-[120px]"
     >
-      <p className="font-serif text-2xl italic text-black/50">Our Projects</p>
+      <p className="font-serif text-2xl italic sm:text-3xl text-black/50">
+        Our Projects
+      </p>
       <h2 className="mt-4 text-4xl md:text-5xl">
         <span className="text-black">Pushing boundaries</span>{" "}
         <span className="text-black/40">since 2011</span>
@@ -59,10 +61,10 @@ export function FounderBio() {
         <div>
           <p className="max-w-md text-base leading-relaxed text-black/70 md:text-lg">
             Joris van Dijk is a Dutch designer known for his minimalist,
-            expressive digital work. He helps startups and studios create
-            clean interfaces and strong branding. Based in Utrecht, he blends
-            function with emotion — and often spends his free time cycling or
-            exploring generative art.
+            expressive digital work. He helps startups and studios create clean
+            interfaces and strong branding. Based in Utrecht, he blends function
+            with emotion — and often spends his free time cycling or exploring
+            generative art.
           </p>
 
           <div className="mt-8">
@@ -72,7 +74,9 @@ export function FounderBio() {
                 className="flex items-center justify-between border-t border-black/10 py-4 text-sm"
               >
                 <span className="text-black">{item.role}</span>
-                <span className="text-center text-black/50">{item.company}</span>
+                <span className="text-center text-black/50">
+                  {item.company}
+                </span>
                 <span className="text-right text-black/50">{item.period}</span>
               </div>
             ))}

@@ -1,7 +1,14 @@
 "use client";
 
 import { motion, useInView, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { markHydrated } from "@/lib/reveal-fallback";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 
 interface RevealProps {
   children: ReactNode;
@@ -29,6 +36,9 @@ export function Reveal({
   const [forceShow, setForceShow] = useState(false);
 
   useEffect(() => {
+    // Reaching this proves the bundle hydrated, so the CSS force-show
+    // fallback must stand down (see lib/reveal-fallback.ts).
+    markHydrated();
     // Safety net: content must never stay permanently hidden if the
     // intersection observer doesn't fire for some reason (backgrounded
     // tab, unusual browser state, etc).
@@ -44,12 +54,17 @@ export function Reveal({
   const visible = isInView || forceShow;
   const hidden = { opacity: 0, y: 24, rotate, filter: "blur(8px)" };
   const shown = { opacity: 1, y: 0, rotate: 0, filter: "blur(0px)" };
-  const transition = { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const };
+  const transition = {
+    duration: 0.7,
+    delay,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
 
   if (as === "span") {
     return (
       <motion.span
         ref={ref as RefObject<HTMLSpanElement>}
+        data-reveal
         className={className}
         initial={hidden}
         animate={visible ? shown : hidden}
@@ -63,6 +78,7 @@ export function Reveal({
   return (
     <motion.div
       ref={ref as RefObject<HTMLDivElement>}
+      data-reveal
       className={className}
       initial={hidden}
       animate={visible ? shown : hidden}

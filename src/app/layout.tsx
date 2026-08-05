@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import { ReactLenis } from "lenis/react";
+import { REVEAL_FALLBACK_SCRIPT } from "@/lib/reveal-fallback";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,11 +32,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // The fallback script stamps data-js onto <html> before React boots, so the
+    // server markup and the hydrating client disagree on this element's
+    // attributes by design.
     <html
       lang="ru"
       className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full min-w-[375] flex flex-col">
+      {/* No min-width floor: any value above the real device width (430px was
+          wider than an iPhone 12/13/14 at 390px) makes the body overflow the
+          screen, so the phone zooms out to fit and the page never fills the
+          viewport. The layout is responsive on its own down to ~320px. */}
+      <body className="flex min-h-full flex-col">
+        {/* beforeInteractive so it runs ahead of first paint and ahead of the
+            app bundle — the whole point is to cover the bundle not arriving.
+            Routed through next/script rather than a bare <script> tag, which
+            React refuses to execute from inside a component tree. */}
+        <Script id="reveal-fallback" strategy="beforeInteractive">
+          {REVEAL_FALLBACK_SCRIPT}
+        </Script>
+
+        <div className="light-rays-backdrop" aria-hidden="true">
+          <span className="light-rays-bundle light-rays-bundle-a" />
+          <span className="light-rays-bundle light-rays-bundle-b" />
+          <span className="light-rays-bundle light-rays-bundle-c" />
+        </div>
         <ReactLenis root options={{ anchors: true, lerp: 0.1 }}>
           {children}
         </ReactLenis>

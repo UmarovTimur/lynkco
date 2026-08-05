@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/Reveal";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
 
 interface FaqItem {
   question: string;
@@ -63,15 +65,15 @@ export function Faq() {
   return (
     <section id="faq" className="px-6 py-24 md:px-[120px]">
       <Reveal rotate={-3}>
-        <p className="text-center font-serif text-2xl italic text-black/50">
+        <p className="text-center font-serif text-2xl italic sm:text-3xl text-black/50">
           FAQ
         </p>
       </Reveal>
-      <Reveal delay={0.08} rotate={3}>
-        <h2 className="mt-4 text-center font-sans text-[32px] font-medium text-black md:text-[48px]">
-          Ответы на частые вопросы
-        </h2>
-      </Reveal>
+      <AnimatedHeading
+        text="Ответы на частые вопросы"
+        className={SECTION_HEADING_CLASS}
+        delay={0.08}
+      />
 
       <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-[35fr_65fr] md:gap-16">
         {/* self-start keeps this card at its content height — as a grid item it
@@ -79,7 +81,7 @@ export function Faq() {
         <Reveal
           delay={0.1}
           rotate={-2}
-          className="self-start rounded-3xl bg-neutral-100 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] md:p-8"
+          className="glass-edge self-start rounded-3xl bg-neutral-100 p-6 md:p-8"
         >
           <p className="text-lg leading-snug text-black">
             <span className="font-bold">Остались вопросы?</span>
@@ -90,12 +92,15 @@ export function Faq() {
           </p>
           <a
             href="#lead-form"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-black py-3 pr-5 pl-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="glass-edge-button mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-black px-6 py-4 text-center text-sm font-medium text-white transition-opacity hover:opacity-90 sm:pr-7 sm:pl-8 sm:text-base"
           >
             Получить коммерческое предложение
-            <ArrowRight className="size-4" />
+            {/* This label can't fit one line inside the sidebar card at phone
+                widths; hiding the arrow lets the two wrapped lines sit centred
+                instead of being shoved left by an icon pinned to the edge. */}
+            <ArrowRight className="hidden size-4 sm:block" />
           </a>
-          <p className="mt-4 text-center text-sm text-black/40">
+          <p className="mt-4 text-center text-base text-black/40">
             Отвечаем в рабочие дни
           </p>
         </Reveal>
@@ -116,7 +121,7 @@ export function Faq() {
                   <Plus
                     className={cn(
                       "mt-1 size-5 shrink-0 text-accent-orange transition-transform duration-200",
-                      isOpen && "rotate-45"
+                      isOpen && "rotate-45",
                     )}
                   />
                 </div>

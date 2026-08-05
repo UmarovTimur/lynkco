@@ -3,6 +3,9 @@
 import { useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 // Order-details fields (комплектация, страна, объём, тип доставки, рег.
 // номер, город) are hidden for now — form only asks for client contacts.
@@ -19,7 +22,12 @@ const COUNTRIES = [
   "Другое",
 ];
 
-const DELIVERY_TYPES = ["Автовозом", "Железной дорогой", "Морем", "Уточню позже"];
+const DELIVERY_TYPES = [
+  "Автовозом",
+  "Железной дорогой",
+  "Морем",
+  "Уточню позже",
+];
 
 const VOLUMES = ["1 автомобиль", "2–5", "6–10", "10+"];
 
@@ -52,11 +60,10 @@ export function LeadForm() {
       className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]"
     >
       <div className="mx-auto max-w-3xl text-center">
-        <Reveal rotate={-3}>
-          <h2 className="text-3xl font-normal text-black md:text-5xl">
-            Получить коммерческое предложение
-          </h2>
-        </Reveal>
+        <AnimatedHeading
+          text="Получить коммерческое предложение"
+          className={cn(SECTION_HEADING_CLASS, "mt-0")}
+        />
         <Reveal delay={0.08} rotate={3}>
           <p className="mt-4 text-base text-black/60 md:text-lg">
             Оставьте контакты — уточним детали и подготовим коммерческое
@@ -68,19 +75,22 @@ export function LeadForm() {
       <Reveal
         delay={0.15}
         rotate={-2}
-        className="mx-auto mt-12 max-w-3xl rounded-[32px] bg-neutral-100 p-6 md:p-12"
+        className="glass-edge mx-auto mt-12 max-w-3xl rounded-[32px] bg-neutral-100 p-6 md:p-12"
       >
         {submitted ? (
           <div className="flex flex-col items-center gap-3 py-12 text-center">
             <CheckCircle2 className="size-10 text-black" />
             <p className="text-lg font-bold text-black">Заявка отправлена</p>
-            <p className="max-w-sm text-sm text-black/60">
+            <p className="max-w-sm text-base text-black/60">
               Спасибо! Мы свяжемся с вами в ближайшее рабочее время для
               уточнения деталей и подготовки коммерческого предложения.
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2"
+          >
             <label className="flex flex-col gap-2 text-sm sm:col-span-2">
               <span className="font-medium text-black">
                 Телефон <span className="text-accent-orange">*</span>
@@ -89,7 +99,7 @@ export function LeadForm() {
                 type="tel"
                 name="phone"
                 required
-                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
               />
             </label>
 
@@ -102,7 +112,7 @@ export function LeadForm() {
                 name="nickname"
                 required
                 placeholder="@username"
-                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
               />
             </label>
 
@@ -114,7 +124,7 @@ export function LeadForm() {
                 name="messenger"
                 required
                 defaultValue=""
-                className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
               >
                 <option value="" disabled>
                   Выберите мессенджер
@@ -130,7 +140,10 @@ export function LeadForm() {
             {SHOW_ORDER_INFO && (
               <>
                 {ORDER_TEXT_FIELDS.map((field) => (
-                  <label key={field.name} className="flex flex-col gap-2 text-sm">
+                  <label
+                    key={field.name}
+                    className="flex flex-col gap-2 text-sm"
+                  >
                     <span className="font-medium text-black">
                       {field.label}
                       {field.required && (
@@ -141,7 +154,7 @@ export function LeadForm() {
                       type={field.type}
                       name={field.name}
                       required={field.required}
-                      className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                      className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
                     />
                   </label>
                 ))}
@@ -154,7 +167,7 @@ export function LeadForm() {
                     name="country"
                     required
                     defaultValue=""
-                    className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                    className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
                   >
                     <option value="" disabled>
                       Выберите страну
@@ -172,7 +185,7 @@ export function LeadForm() {
                   <select
                     name="volume"
                     defaultValue=""
-                    className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                    className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
                   >
                     <option value="" disabled>
                       Выберите объём
@@ -190,7 +203,7 @@ export function LeadForm() {
                   <select
                     name="deliveryType"
                     defaultValue=""
-                    className="rounded-xl border border-black/10 bg-white px-4 py-3 text-black outline-none focus:border-black/30"
+                    className="rounded-xl border border-black/10 bg-white px-5 py-4 text-base text-black outline-none focus:border-black/30"
                   >
                     <option value="" disabled>
                       Выберите тип доставки
@@ -207,7 +220,7 @@ export function LeadForm() {
 
             <button
               type="submit"
-              className="mt-2 flex h-[51px] items-center justify-center gap-2 rounded-full bg-black py-3 text-sm font-medium text-white transition-opacity hover:opacity-90 sm:col-span-2"
+              className="glass-edge-button mt-2 flex h-14 items-center justify-center gap-2 rounded-full bg-black py-4 text-sm font-medium sm:text-base text-white transition-opacity hover:opacity-90 sm:col-span-2"
             >
               Отправить заявку
               <ArrowRight size={16} />

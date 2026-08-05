@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { SECTION_HEADING_CLASS } from "@/lib/typography";
 
 type StockKey = "retail" | "demo";
 type TrimKey = "max" | "ultra";
@@ -89,13 +91,13 @@ function StockToggle({ stock, onChange }: StockToggleProps) {
   const isDemo = stock === "demo";
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       <button
         type="button"
         onClick={() => onChange("retail")}
         className={cn(
-          "text-sm font-medium transition-colors",
-          isDemo ? "text-black/25" : "text-black"
+          "text-lg font-medium transition-colors",
+          isDemo ? "text-black/25" : "text-black",
         )}
       >
         Товарный
@@ -108,13 +110,13 @@ function StockToggle({ stock, onChange }: StockToggleProps) {
         onClick={() => onChange(isDemo ? "retail" : "demo")}
         className={cn(
           "relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200",
-          isDemo ? "bg-accent-orange" : "bg-black/10"
+          isDemo ? "bg-accent-orange" : "bg-black/10",
         )}
       >
         <span
           className={cn(
             "absolute top-1/2 left-0.5 h-[18px] w-[18px] -translate-y-1/2 rounded-full bg-white transition-transform duration-200",
-            isDemo ? "translate-x-5" : "translate-x-0"
+            isDemo ? "translate-x-5" : "translate-x-0",
           )}
         />
       </button>
@@ -122,8 +124,8 @@ function StockToggle({ stock, onChange }: StockToggleProps) {
         type="button"
         onClick={() => onChange("demo")}
         className={cn(
-          "text-sm font-medium transition-colors",
-          isDemo ? "text-black" : "text-black/25"
+          "text-lg font-medium transition-colors",
+          isDemo ? "text-black" : "text-black/25",
         )}
       >
         Демо
@@ -137,21 +139,19 @@ function OfferCard({ offer }: { offer: TrimOffer }) {
     <div
       className={cn(
         "relative flex flex-col rounded-2xl p-6 md:p-8",
-        offer.popular
-          ? "bg-black text-white"
-          : "bg-white text-black"
+        offer.popular ? "bg-black text-white" : "bg-white text-black",
       )}
     >
       {offer.popular && (
-        <span className="absolute -top-3 right-6 rounded-full bg-accent-orange px-3 py-1 text-xs font-medium text-white">
+        <span className="absolute -top-3 right-6 rounded-full bg-accent-orange px-4 py-1.5 text-sm font-medium text-white">
           популярный
         </span>
       )}
 
       <h3
         className={cn(
-          "text-lg font-medium",
-          offer.popular ? "text-white" : "text-black"
+          "text-xl font-medium",
+          offer.popular ? "text-white" : "text-black",
         )}
       >
         {offer.name}
@@ -160,8 +160,8 @@ function OfferCard({ offer }: { offer: TrimOffer }) {
       <p className="mt-4 text-4xl font-medium md:text-5xl">{offer.price}</p>
       <p
         className={cn(
-          "mt-2 text-sm",
-          offer.popular ? "text-white/50" : "text-black/40"
+          "mt-2 text-base",
+          offer.popular ? "text-white/50" : "text-black/40",
         )}
       >
         {offer.note}
@@ -171,16 +171,16 @@ function OfferCard({ offer }: { offer: TrimOffer }) {
         {offer.highlights.map((item) => (
           <li key={item} className="flex items-start gap-3">
             <Check
-              size={16}
+              size={18}
               className={cn(
                 "mt-0.5 shrink-0",
-                offer.popular ? "text-accent-orange" : "text-black/60"
+                offer.popular ? "text-accent-orange" : "text-black/60",
               )}
             />
             <span
               className={cn(
-                "text-sm",
-                offer.popular ? "text-white/80" : "text-black/60"
+                "text-base",
+                offer.popular ? "text-white/80" : "text-black/60",
               )}
             >
               {item}
@@ -197,25 +197,34 @@ export function Pricing() {
   const offers = OFFERS[stock];
 
   return (
-    <section id="pricing" className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]">
+    <section
+      id="pricing"
+      className="px-6 py-16 md:px-16 md:py-24 lg:px-[120px]"
+    >
       <Reveal rotate={-3} className="mx-auto flex w-fit items-center gap-4">
-        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
-        <span className="font-serif text-2xl italic text-black/50">
+        <span
+          className="hidden h-px w-12 bg-black/10 sm:block"
+          aria-hidden="true"
+        />
+        <span className="font-serif text-2xl italic sm:text-3xl text-black/50">
           Цены и условия
         </span>
-        <span className="h-px w-12 bg-black/10" aria-hidden="true" />
+        <span
+          className="hidden h-px w-12 bg-black/10 sm:block"
+          aria-hidden="true"
+        />
       </Reveal>
 
-      <Reveal delay={0.08} rotate={3}>
-        <h2 className="mt-4 text-center text-3xl font-normal text-black md:text-4xl">
-          Max или Ultra — со склада в Хоргосе
-        </h2>
-      </Reveal>
+      <AnimatedHeading
+        text="Max или Ultra"
+        className={SECTION_HEADING_CLASS}
+        delay={0.08}
+      />
 
       <Reveal
         delay={0.16}
         rotate={-2}
-        className="relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-[32px] bg-neutral-100 p-6 md:p-12"
+        className="glass-edge relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-[32px] bg-neutral-100 p-6 md:p-12"
       >
         <div className="flex justify-center">
           <StockToggle stock={stock} onChange={setStock} />
@@ -227,7 +236,7 @@ export function Pricing() {
         </div>
 
         <div className="mt-10 border-t border-black/10 pt-6">
-          <p className="text-sm font-bold text-black">Условия поставки</p>
+          <p className="text-base font-bold text-black">Условия поставки</p>
           <ul className="mt-4 flex flex-col gap-2">
             {TERMS.map((term) => (
               <li key={term} className="flex items-start gap-3">
@@ -235,7 +244,7 @@ export function Pricing() {
                   className="mt-2 h-1 w-1 shrink-0 rounded-full bg-black/30"
                   aria-hidden="true"
                 />
-                <span className="text-sm text-black/60">{term}</span>
+                <span className="text-base text-black/60">{term}</span>
               </li>
             ))}
           </ul>
@@ -245,7 +254,7 @@ export function Pricing() {
       <Reveal delay={0.24} rotate={2} className="mt-10 flex justify-center">
         <a
           href="#lead-form"
-          className="inline-flex items-center gap-2 rounded-full bg-black py-3 pr-5 pl-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="glass-edge-button inline-flex items-center gap-2 rounded-full bg-black px-6 py-4 text-sm font-medium sm:pr-7 sm:pl-8 sm:text-base text-white transition-opacity hover:opacity-90"
         >
           Получить коммерческое предложение
           <ArrowRight size={16} />

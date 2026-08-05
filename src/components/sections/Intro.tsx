@@ -1,5 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Grid2x2, Layers, PenTool, Search, Sparkles, Target } from "lucide-react";
+import {
+  Grid2x2,
+  Layers,
+  PenTool,
+  Search,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SkillBadge {
@@ -73,7 +80,9 @@ function SkillBadgePill({ badge }: { badge: SkillBadge }) {
       >
         <Icon className="h-4.5 w-4.5" strokeWidth={2} />
       </span>
-      <span className="text-base whitespace-nowrap text-black">{badge.label}</span>
+      <span className="text-base whitespace-nowrap text-black">
+        {badge.label}
+      </span>
     </div>
   );
 }
@@ -92,8 +101,8 @@ export function Intro() {
 
         <div className="relative mt-10 w-full max-w-[1160px] md:mt-16">
           <p className="mx-auto max-w-[700px] text-center text-3xl leading-[1.4] font-sans tracking-[-0.04em] text-black md:text-4xl lg:text-[44px]">
-            We help startups and enterprise to establish an emotional
-            connection between their products and happy engaged{" "}
+            We help startups and enterprise to establish an emotional connection
+            between their products and happy engaged{" "}
             <span className="text-black/30">customers</span>
           </p>
 

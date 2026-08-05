@@ -3,10 +3,7 @@ import type { SVGProps } from "react";
 export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <path
-        d="M6.94 8.5H3.56V20.5H6.94V8.5Z"
-        fill="currentColor"
-      />
+      <path d="M6.94 8.5H3.56V20.5H6.94V8.5Z" fill="currentColor" />
       <path
         d="M5.25 7C6.35 7 7.25 6.1 7.25 5C7.25 3.9 6.35 3 5.25 3C4.15 3 3.25 3.9 3.25 5C3.25 6.1 4.15 7 5.25 7Z"
         fill="currentColor"
@@ -60,7 +57,15 @@ export function LynkCoLogo(props: SVGProps<SVGSVGElement>) {
 export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.8" />
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
       <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.8" />
       <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
     </svg>

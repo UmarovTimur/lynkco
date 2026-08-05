@@ -11,8 +11,7 @@ interface ValueProp {
 const VALUE_PROPS: ValueProp[] = [
   {
     title: "В наличии сейчас",
-    description:
-      "автомобили на складе партнёра в Хоргосе, готовы к отгрузке.",
+    description: "автомобили на складе партнёра в Хоргосе, готовы к отгрузке.",
     icon: PackageCheck,
   },
   {

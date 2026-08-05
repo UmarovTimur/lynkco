@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
@@ -22,7 +22,7 @@ const CHIP_CLASS =
 
 // Shared by both hero chips so they always render at the same size.
 const CHIP_SIZE_CLASS =
-  "h-11 w-[72px] sm:h-16 sm:w-[100px] md:h-20 md:w-[126px] lg:h-24 lg:w-[152px]";
+  "h-13 w-[84px] sm:h-20 sm:w-[124px] md:h-24 md:w-[152px] lg:h-26 lg:w-[168px]";
 
 function HeroPhotoChip({ className }: { className?: string }) {
   const [index, setIndex] = useState(0);
@@ -84,22 +84,42 @@ function AnimatedLetters({
     return <span className={className}>{text}</span>;
   }
 
+  const words = text.split(" ");
+  // Character offset each word starts at (+1 for the space), so the stagger
+  // keeps running left-to-right across word boundaries.
+  const offsets = words.map((_, i) =>
+    words.slice(0, i).reduce((n, word) => n + word.length + 1, 0),
+  );
+
   return (
     <span className={className}>
-      {Array.from(text).map((char, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          initial={{ opacity: 0, y: "70%" }}
-          animate={{ opacity: 1, y: "0%" }}
-          transition={{
-            duration: 0.45,
-            delay: baseDelay + (startIndex + i) * LETTER_STAGGER,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          {char === " " ? " " : char}
-        </motion.span>
+      {words.map((word, w) => (
+        // Characters are grouped into a nowrap span per word, with the space
+        // left outside it as the only wrap opportunity. Bare inline-block
+        // characters turn every letter into a wrap point, which shattered
+        // "\u0434\u043b\u044f \u0430\u0432\u0442\u043e\u0441\u0430\u043b\u043e\u043d\u043e\u0432" mid-word at mobile widths.
+        <Fragment key={w}>
+          <span className="inline-block whitespace-nowrap">
+            {Array.from(word).map((char, i) => (
+              <motion.span
+                key={i}
+                data-reveal
+                className="inline-block"
+                initial={{ opacity: 0, y: "70%" }}
+                animate={{ opacity: 1, y: "0%" }}
+                transition={{
+                  duration: 0.45,
+                  delay:
+                    baseDelay + (startIndex + offsets[w] + i) * LETTER_STAGGER,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </span>
+          {w < words.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </span>
   );
@@ -118,6 +138,7 @@ function AnimatedChip({
 
   return (
     <motion.span
+      data-reveal
       className={cn("inline-block", className)}
       initial={shouldReduceMotion ? undefined : { opacity: 0, y: "70%" }}
       animate={shouldReduceMotion ? undefined : { opacity: 1, y: "0%" }}
@@ -153,10 +174,10 @@ function HeroPhotoCarousel({ className }: { className?: string }) {
           shouldReduceMotion
             ? undefined
             : {
-              duration: STRIP_IMAGES.length * 3,
-              ease: "linear",
-              repeat: Infinity,
-            }
+                duration: STRIP_IMAGES.length * 3,
+                ease: "linear",
+                repeat: Infinity,
+              }
         }
       >
         {LOOP_IMAGES.map((src, i) => (
@@ -181,51 +202,72 @@ function HeroPhotoCarousel({ className }: { className?: string }) {
 
 export function Hero() {
   return (
+    // Deliberately short of a full screen: the next section should crest the
+    // fold so the page reads as scrollable. Height is viewport-relative rather
+    // than a stack of fixed paddings (which made the hero 113% of the screen on
+    // a laptop and pushed everything below it out of sight), and `svh` keeps
+    // mobile browser chrome from stretching it back past the fold.
     <section
       id="hero"
-      className="flex -mb-20 w-full flex-col items-center justify-center px-30 max-lg:px-8 max-sm:px-4"
+      className="-mb-10 flex min-h-[92svh] w-full flex-col items-center justify-center px-30 pt-24 sm:-mb-20 sm:pt-0 max-lg:px-8 max-sm:px-4"
     >
-      <div className="flex w-full max-w-360 flex-col items-center gap-8 py-24 pt-45 pb-29.5 max-lg:pt-36 max-lg:pb-20 max-sm:pt-28 max-sm:pb-16">
+      <div className="flex w-full max-w-360 flex-col items-center gap-8 py-8 max-sm:gap-6 max-sm:pt-6 max-sm:pb-20">
         <Reveal rotate={-2}>
           <div className="flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-sm">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[rgb(12,179,0)]" />
-            <span className="text-sm text-black">
-              Прямые поставки
+            {/* Live-status dot: a steady core with a ring pinging out of it,
+                so "прямые поставки" reads as something currently running. */}
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 animate-ping rounded-full bg-[rgb(12,179,0)] opacity-75 motion-reduce:animate-none"
+              />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-[rgb(12,179,0)]" />
             </span>
+            <span className="text-base text-black">Прямые поставки</span>
           </div>
         </Reveal>
 
-        <h1 className="max-w-5xl text-center font-sans text-5xl font-bold text-black md:text-7xl lg:text-[100px]">
+        <h1 className="max-w-6xl text-center font-sans text-[2.75rem] leading-[0.92] font-bold text-black sm:text-6xl md:text-8xl lg:text-[110px]">
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
             <AnimatedLetters text="Lynk & Co 06" baseDelay={0.1} />
             <AnimatedChip delay={0.1 + "Lynk & Co 06".length * LETTER_STAGGER}>
               <HeroPhotoChip className="rotate-3" />
             </AnimatedChip>
-          </span>
-          <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
-            <AnimatedLetters text="из Китая" baseDelay={0.65} />
-            <AnimatedChip delay={0.65 + "из Китая".length * LETTER_STAGGER}>
+            {/* Phones keep both chips together on the first line; from sm up
+                the carousel leads the second line instead. The two rows are
+                separate flex containers, so `order` can't move one element
+                between them — it's rendered in both slots and each is hidden
+                at the breakpoint where it doesn't belong. `display: none` keeps
+                the inactive one out of the accessibility tree too, so only one
+                is ever present as far as a screen reader is concerned. */}
+            <AnimatedChip
+              delay={0.65 + "из Китая".length * LETTER_STAGGER}
+              className="sm:hidden"
+            >
               <HeroPhotoCarousel className="-rotate-3" />
             </AnimatedChip>
-            <AnimatedLetters
-              text="для вас"
-              baseDelay={0.65}
-              startIndex={"из Китая".length}
-            />
+          </span>
+          <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
+            <AnimatedChip
+              delay={0.65 + "из Китая".length * LETTER_STAGGER}
+              className="hidden sm:inline-block"
+            >
+              <HeroPhotoCarousel className="-rotate-3" />
+            </AnimatedChip>
+            <AnimatedLetters text="из Китая для" baseDelay={0.65} />
+            <AnimatedLetters text="автосалонов" baseDelay={0.65} />
           </span>
         </h1>
 
         <Reveal delay={0.35} rotate={-2}>
-          <div className="max-w-xl text-center text-base leading-[1.7] text-black/50">
+          <div className="max-w-xl text-center text-base leading-[1.7] text-black/50 sm:text-lg">
             Эксклюзивное предложение для новых партнеров
-            <p>
-              Склад Хоргос | Июль 2026
-            </p>
+            <p>Склад Хоргос | Июль 2026</p>
           </div>
         </Reveal>
-
+        {/* 
         <Reveal delay={0.45} rotate={2}>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-black/60">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-base text-black/60">
             {SPECS.map((spec, i) => (
               <span key={spec} className="flex items-center gap-3">
                 <span className="font-medium text-black">{spec}</span>
@@ -238,19 +280,19 @@ export function Hero() {
             ))}
           </div>
         </Reveal>
-
+ */}
         <Reveal delay={0.55} rotate={-2}>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
             <a
               href="#lead-form"
-              className="flex h-[51px] items-center gap-2 rounded-full bg-black py-3 pl-6 pr-5 text-sm font-medium text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
+              className="glass-edge-button flex h-14 items-center gap-2 rounded-full bg-black px-6 py-4 text-sm font-medium sm:pr-7 sm:pl-8 sm:text-base text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
             >
               Получить коммерческое предложение
               <ArrowRight size={16} />
             </a>
             <a
               href="#stock"
-              className="flex h-[51px] items-center gap-2 rounded-full border border-black/15 bg-white py-3 pl-6 pr-5 text-sm font-medium text-black transition-colors hover:bg-black/5"
+              className="flex h-14 items-center gap-2 rounded-full border border-black/15 bg-white px-6 py-4 text-sm font-medium sm:pr-7 sm:pl-8 sm:text-base text-black transition-colors hover:bg-black/5"
             >
               Смотреть наличие на складе
             </a>
@@ -258,7 +300,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={0.65} rotate={2}>
-          <p className="max-w-lg text-center text-xs text-black/40">
+          <p className="max-w-lg text-center text-sm text-black/40">
             Цены и условия поставки предоставляем индивидуально по запросу от
             юридического лица.
           </p>

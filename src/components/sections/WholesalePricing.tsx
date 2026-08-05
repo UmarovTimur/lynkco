@@ -9,7 +9,12 @@ interface PriceRow {
 }
 
 const ROWS: PriceRow[] = [
-  { model: "Lynk & Co", purpose: "Товарный а/м", max: "103 000 CNY", ultra: "113 000 CNY" },
+  {
+    model: "Lynk & Co",
+    purpose: "Товарный а/м",
+    max: "103 000 CNY",
+    ultra: "113 000 CNY",
+  },
   {
     model: "06 (версия для экспорта)",
     purpose: "Демонстрационный образец (1 ед.)",
