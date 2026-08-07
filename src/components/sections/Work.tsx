@@ -15,7 +15,7 @@ interface GalleryItem {
 /** Photography extracted from the official HMR presentation deck (20.07.2026). */
 const GALLERY: GalleryItem[] = [
   {
-    title: "Lynk & Co 06",
+    title: "Lynk & Co 06",
     caption: "Белый — базовый цвет для Max и Ultra",
     image: "/images/gallery/06-white-coast.webp",
     wide: true,
@@ -70,7 +70,7 @@ export function Work() {
       </Reveal>
 
       <AnimatedHeading
-        text="Как выглядит Lynk & Co 06"
+        text="Как выглядит Lynk & Co 06"
         className={SECTION_HEADING_CLASS}
         delay={0.08}
       />

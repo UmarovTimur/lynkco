@@ -123,7 +123,7 @@ export function PageTransitionProvider({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Lynk &amp; Co 06
+              Lynk&nbsp;&amp;&nbsp;Co&nbsp;06
             </motion.span>
           </motion.div>
         )}

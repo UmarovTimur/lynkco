@@ -65,7 +65,7 @@ export function Nav() {
           href="/#hero"
           className="flex h-11 items-center rounded-[22px] bg-white px-6 text-base font-bold text-black"
         >
-          Lynk &amp; Co 06
+          Lynk&nbsp;&amp;&nbsp;Co&nbsp;06
         </TransitionLink>
 
         <div className="relative">

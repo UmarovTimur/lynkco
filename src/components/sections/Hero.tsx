@@ -229,8 +229,8 @@ export function Hero() {
 
         <h1 className="max-w-6xl text-center font-sans text-[2.75rem] leading-[0.92] font-bold text-black sm:text-6xl md:text-8xl lg:text-[110px]">
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
-            <AnimatedLetters text="Lynk & Co 06" baseDelay={0.1} />
-            <AnimatedChip delay={0.1 + "Lynk & Co 06".length * LETTER_STAGGER}>
+            <AnimatedLetters text="Lynk & Co 06" baseDelay={0.1} />
+            <AnimatedChip delay={0.1 + "Lynk & Co 06".length * LETTER_STAGGER}>
               <HeroPhotoChip className="rotate-3" />
             </AnimatedChip>
             {/* Phones keep both chips together on the first line; from sm up

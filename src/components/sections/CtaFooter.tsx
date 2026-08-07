@@ -62,7 +62,7 @@ export function CtaFooter() {
           <Parallax distance={36} blur={6} className="w-full">
             <div className="mt-24 flex w-full flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
               <span className="text-base text-white">
-                © Lynk & Co 06 Import, 2025
+                © Lynk&nbsp;&amp;&nbsp;Co&nbsp;06 Import, 2025
               </span>
 
               <div className="flex items-center gap-3">

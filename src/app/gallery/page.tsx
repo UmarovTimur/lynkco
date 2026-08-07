@@ -55,7 +55,7 @@ export default function GalleryPage() {
 
         <AnimatedHeading
           as="h1"
-          text="Галерея Lynk & Co 06"
+          text="Галерея Lynk & Co 06"
           className={SECTION_HEADING_CLASS}
         />
 
