@@ -1,8 +1,34 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  output: "standalone",
+  // Pure static site: `next build` writes a self-contained `out/` that nginx
+  // can serve straight off disk, with no Node process behind it.
+  //
+  // Nothing here needs a server — no route handlers, no server actions, no
+  // cookies()/headers(), no runtime fetch, no dynamic routes. Both pages were
+  // already prerendered under `standalone`; the Node process existed only to
+  // run the image optimizer.
+  //
+  // nginx needs one rule to match this, because `trailingSlash` is left at its
+  // default and routes are emitted as `/gallery.html` rather than
+  // `/gallery/index.html`:
+  //
+  //   location / { try_files $uri $uri.html $uri/ =404; }
+  //   error_page 404 /404.html;
+  output: "export",
+
+  images: {
+    // A static export has no image server, so `next/image` cannot resize
+    // anything at request time — this makes that explicit instead of failing
+    // the build. What the browser gets is exactly the file in public/, which is
+    // why scripts/optimize-static-images.mjs now caps those files at the sizes
+    // the layout actually paints (see the header comment there).
+    //
+    // The trade-off this accepts: no srcset, so a phone downloads the same file
+    // as a desktop. That is affordable only because the sources are now
+    // 12-120KB. Re-check it before adding any full-bleed image.
+    unoptimized: true,
+  },
   // Lets the dev server (HMR websocket, RSC, etc.) be accessed through the
   // ngrok tunnel used for mobile/remote preview — without this, Next.js
   // blocks cross-origin dev requests and client-side hydration breaks for

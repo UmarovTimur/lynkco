@@ -6,6 +6,7 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "motion/react";
 import { Folder } from "lucide-react";
 import { MediaImage } from "@/components/MediaImage";
@@ -15,25 +16,25 @@ import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 
 const COLUMN_ONE: BentoImage[] = [
   {
-    src: "/images/about/1/1.png",
+    src: "/images/about/1/1.webp",
     alt: "Lynk & Co 06 — экстерьер, фото со склада 1",
     width: 1706,
     height: 1279,
   },
   {
-    src: "/images/about/1/2.png",
+    src: "/images/about/1/2.webp",
     alt: "Lynk & Co 06 — экстерьер, фото со склада 2",
     width: 1706,
     height: 1279,
   },
   {
-    src: "/images/about/1/3.png",
+    src: "/images/about/1/3.webp",
     alt: "Lynk & Co 06 — экстерьер, фото со склада 3",
     width: 1706,
     height: 1279,
   },
   {
-    src: "/images/about/1/4.png",
+    src: "/images/about/1/4.webp",
     alt: "Lynk & Co 06 — экстерьер, фото со склада 4",
     width: 4096,
     height: 3072,
@@ -42,25 +43,25 @@ const COLUMN_ONE: BentoImage[] = [
 
 const COLUMN_TWO: BentoImage[] = [
   {
-    src: "/images/about/2/1.png",
+    src: "/images/about/2/1.webp",
     alt: "Lynk & Co 06 — интерьер, фото 1",
     width: 4096,
     height: 3072,
   },
   {
-    src: "/images/about/2/2.png",
+    src: "/images/about/2/2.webp",
     alt: "Lynk & Co 06 — интерьер, фото 2",
     width: 1279,
     height: 1706,
   },
   {
-    src: "/images/about/2/3.png",
+    src: "/images/about/2/3.webp",
     alt: "Lynk & Co 06 — интерьер, фото 3",
     width: 1706,
     height: 1279,
   },
   {
-    src: "/images/about/2/4.png",
+    src: "/images/about/2/4.webp",
     alt: "Lynk & Co 06 — интерьер, фото 4",
     width: 1706,
     height: 1279,
@@ -84,9 +85,12 @@ function BentoTile({ image }: { image: BentoImage }) {
 function BentoCarouselColumn({
   images,
   secondsPerImage,
+  parallaxY,
 }: {
   images: BentoImage[];
   secondsPerImage: number;
+  /** Per-column offset, on top of the whole layer's. See AboutBento. */
+  parallaxY?: MotionValue<string>;
 }) {
   const shouldReduceMotion = useReducedMotion();
   // Doubled so the column can scroll exactly one full set and loop back to
@@ -97,7 +101,13 @@ function BentoCarouselColumn({
   const duration = images.length * secondsPerImage;
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    // The parallax offset sits on this wrapper rather than on the scrolling
+    // strip inside it: the strip owns `y` for its own infinite loop, and a
+    // second `y` on the same element would overwrite the loop.
+    <motion.div
+      className="relative h-full w-full overflow-hidden"
+      style={shouldReduceMotion || !parallaxY ? undefined : { y: parallaxY }}
+    >
       <motion.div
         className="flex flex-col gap-12"
         animate={shouldReduceMotion ? undefined : { y: ["0%", "-50%"] }}
@@ -111,7 +121,7 @@ function BentoCarouselColumn({
           <BentoTile key={`${image.src}-${i}`} image={image} />
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -122,12 +132,23 @@ export function AboutBento() {
     target: cardRef,
     offset: ["start end", "end start"],
   });
-  // Inner layer drifts top-to-bottom relative to the (static) card frame as
-  // the section scrolls through the viewport. It's sized taller than the
-  // card (overscan on top+bottom) so it fully covers the card at both ends
-  // of the travel range — only the card's own overflow-hidden clips it, no
-  // card background ever shows through the gap.
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ["-8vh", "8vh"]);
+  // The inner layer drifts against the (static) card frame as the section
+  // crosses the viewport. It is sized taller than the card — overscan top and
+  // bottom — so it still covers the card at both ends of its travel; only the
+  // card's own overflow-hidden clips it, and no card background is ever
+  // exposed. Overscan must therefore stay above the largest total offset any
+  // child can reach: 16vh here plus 5vh of column differential = 21vh, against
+  // 24vh of overscan below.
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["-16vh", "16vh"]);
+
+  // The two columns additionally move against *each other*, not just against
+  // the frame. One shared offset moves the whole layer as a single flat plane,
+  // which the eye reads as the card sliding rather than as depth; splitting the
+  // rates gives the columns different apparent distances. Opposite signs, so
+  // the differential is visible even when the shared offset is near zero at
+  // mid-scroll.
+  const columnOneY = useTransform(scrollYProgress, [0, 1], ["-5vh", "5vh"]);
+  const columnTwoY = useTransform(scrollYProgress, [0, 1], ["4vh", "-4vh"]);
 
   return (
     <section id="about" className="px-[120px] py-24 max-lg:px-8 max-sm:px-4">
@@ -137,11 +158,19 @@ export function AboutBento() {
       >
         <motion.div
           style={shouldReduceMotion ? undefined : { y: parallaxY }}
-          className="absolute inset-x-0 -top-[10vh] -bottom-[10vh] grid grid-cols-1 gap-12 p-12 md:grid-cols-2"
+          className="absolute inset-x-0 -top-[24vh] -bottom-[24vh] grid grid-cols-1 gap-12 p-12 md:grid-cols-2"
         >
-          <BentoCarouselColumn images={COLUMN_ONE} secondsPerImage={9} />
+          <BentoCarouselColumn
+            images={COLUMN_ONE}
+            secondsPerImage={9}
+            parallaxY={columnOneY}
+          />
           <div className="hidden h-full md:block">
-            <BentoCarouselColumn images={COLUMN_TWO} secondsPerImage={6} />
+            <BentoCarouselColumn
+              images={COLUMN_TWO}
+              secondsPerImage={6}
+              parallaxY={columnTwoY}
+            />
           </div>
         </motion.div>
 

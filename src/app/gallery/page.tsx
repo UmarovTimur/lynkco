@@ -10,10 +10,27 @@ import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
 import { SECTION_HEADING_CLASS } from "@/lib/typography";
 
+const TITLE = "Галерея Lynk & Co 06 — фото и видео со склада в Хоргосе";
+const DESCRIPTION =
+  "Фотографии и видео Lynk & Co 06 со склада в Хоргосе: все доступные цвета кузова, интерьер, комплектации Max и Ultra.";
+
 export const metadata: Metadata = {
-  title: "Галерея Lynk & Co 06 — фото и видео со склада в Хоргосе",
-  description:
-    "Фотографии и видео Lynk & Co 06 со склада в Хоргосе: все доступные цвета кузова, интерьер, комплектации Max и Ultra.",
+  title: TITLE,
+  description: DESCRIPTION,
+  // Explicit, because the colour filter is a query parameter (?c=white). Every
+  // filtered view is the same document with a different client-side filter
+  // applied, so they must all point back here or they compete with each other
+  // in the index as near-duplicates.
+  alternates: {
+    canonical: "/gallery",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: "/gallery",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function GalleryPage() {

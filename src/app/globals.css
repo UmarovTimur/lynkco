@@ -212,7 +212,27 @@ html.lenis {
   mask-image: var(--ray-block-mask);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
-  animation: ray-drift var(--ray-drift-dur) ease-in-out infinite alternate;
+  /* Motion channels live on *separate* CSS properties rather than one
+     `transform`. `translate` and `rotate` are independent properties that fold
+     into the same matrix, so each can run on its own clock without the second
+     animation overwriting the first — and both still animate off the main
+     thread, unlike animating a custom property that a `transform` reads.
+
+     `translate` carries TWO animations at once, summed by
+     `animation-composition: add`. That is the whole trick — see the keyframe
+     block below for why one animation could not do this smoothly. */
+  animation:
+    ray-sway var(--ray-sway-dur) var(--ray-sway-delay) ease-in-out infinite
+      alternate,
+    ray-gust var(--ray-gust-dur) var(--ray-gust-delay) ease-in-out infinite
+      alternate,
+    ray-canopy var(--ray-canopy-dur) var(--ray-canopy-delay) ease-in-out
+      infinite alternate;
+  /* The two `translate` animations add instead of the later one replacing the
+     earlier; `rotate` has no competition so it stays `replace`. Where this is
+     unsupported the last translate animation simply wins — the rays lose their
+     gust envelope but keep moving, which is a tolerable floor. */
+  animation-composition: add, add, replace;
 }
 
 /* A `repeating-linear-gradient` stripe is infinitely long, which is what made
@@ -232,9 +252,20 @@ html.lenis {
   mask-composite: intersect;
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+  /* Same shape as the parent: `translate` carries two summed oscillations (the
+     breaks running along the shafts, plus a slower swell), `rotate` the
+     shimmer, `opacity` the dappling. Every one of them is a plain two-keyframe
+     alternate — see the keyframe block for why. */
   animation:
-    ray-fade var(--ray-fade-dur) ease-in-out infinite alternate,
-    ray-travel var(--ray-travel-dur) ease-in-out infinite alternate;
+    ray-travel var(--ray-travel-dur) var(--ray-travel-delay) ease-in-out
+      infinite alternate,
+    ray-surge var(--ray-surge-dur) var(--ray-surge-delay) ease-in-out infinite
+      alternate,
+    ray-flutter var(--ray-flutter-dur) var(--ray-flutter-delay) ease-in-out
+      infinite alternate,
+    ray-dapple var(--ray-fade-dur) var(--ray-dapple-delay) ease-in-out infinite
+      alternate;
+  animation-composition: add, add, replace, replace;
 }
 
 .light-rays-bundle-a {
@@ -242,16 +273,16 @@ html.lenis {
     45deg,
     oklch(1 0 0 / 0%) 0px,
     oklch(1 0 0 / 0%) 42px,
-    oklch(1 0 0 / 22%) 84px,
+    oklch(1 0 0 / 32%) 84px,
     oklch(1 0 0 / 0%) 155px,
     oklch(1 0 0 / 0%) 240px,
-    oklch(1 0 0 / 12%) 256px,
+    oklch(1 0 0 / 17%) 256px,
     oklch(1 0 0 / 0%) 282px,
     oklch(1 0 0 / 0%) 398px,
-    oklch(1 0 0 / 28%) 456px,
+    oklch(1 0 0 / 41%) 456px,
     oklch(1 0 0 / 0%) 546px,
     oklch(1 0 0 / 0%) 650px,
-    oklch(1 0 0 / 10%) 664px,
+    oklch(1 0 0 / 14%) 664px,
     oklch(1 0 0 / 0%) 682px,
     oklch(1 0 0 / 0%) 760px
   );
@@ -296,14 +327,41 @@ html.lenis {
     rgb(0 0 0 / 16%) 1098px,
     rgb(0 0 0 / 100%) 1340px
   );
+  /* Durations are deliberately long and mutually indivisible (13/19/23/17s).
+     The old 5–10s periods were short enough that a single gust filled the
+     whole cycle, which put the loop back on the surface; stretched out, one
+     cycle holds several gusts of different sizes. Negative delays start every
+     channel part-way in, so nothing begins from rest on first paint and the
+     three bundles are already out of phase with each other. */
+  /* translate = sway(19s) + gust(13s)  ->  gust envelope every ~41s.
+     Amplitudes are halves of the old single-channel figure, so the summed
+     peak lands in the same place it always did. */
+  --ray-sway-dur: 19s;
+  --ray-sway-delay: 0s;
+  --ray-sway-x: 30px;
+  --ray-sway-y: -12px;
+  --ray-gust-dur: 13s;
+  --ray-gust-delay: -4s;
+  --ray-gust-x: 22px;
+  --ray-gust-y: -9px;
+  --ray-canopy-dur: 23s;
+  --ray-canopy-delay: -7s;
+  --ray-canopy-a: 0.34deg;
+  /* travel = travel(17s) + surge(11s)  ->  envelope every ~31s */
+  --ray-travel-dur: 17s;
+  --ray-travel-delay: -5s;
+  --ray-travel-x: 130px;
+  --ray-travel-y: 130px;
+  --ray-surge-dur: 11s;
+  --ray-surge-delay: -3s;
+  --ray-surge-x: 85px;
+  --ray-surge-y: 85px;
+  --ray-flutter-dur: 6.5s;
+  --ray-flutter-delay: -2.1s;
+  --ray-flutter-a: 0.06deg;
   --ray-fade-floor: 0.18;
-  --ray-fade-dur: 5s;
-  --ray-drift-dur: 9s;
-  --ray-drift-x: 54px;
-  --ray-drift-y: -21px;
-  --ray-travel-dur: 10s;
-  --ray-travel-x: 230px;
-  --ray-travel-y: 230px;
+  --ray-fade-dur: 13s;
+  --ray-dapple-delay: -4s;
 }
 
 .light-rays-bundle-b {
@@ -311,13 +369,13 @@ html.lenis {
     43.2deg,
     oklch(1 0 0 / 0%) 0px,
     oklch(1 0 0 / 0%) 30px,
-    oklch(1 0 0 / 17%) 72px,
+    oklch(1 0 0 / 25%) 72px,
     oklch(1 0 0 / 0%) 134px,
     oklch(1 0 0 / 0%) 226px,
-    oklch(1 0 0 / 9%) 242px,
+    oklch(1 0 0 / 13%) 242px,
     oklch(1 0 0 / 0%) 266px,
     oklch(1 0 0 / 0%) 350px,
-    oklch(1 0 0 / 20%) 400px,
+    oklch(1 0 0 / 29%) 400px,
     oklch(1 0 0 / 0%) 476px,
     oklch(1 0 0 / 0%) 520px
   );
@@ -362,14 +420,38 @@ html.lenis {
     rgb(0 0 0 / 100%) 1264px,
     rgb(0 0 0 / 100%) 2100px
   );
+  /* Every channel here leans the opposite way to bundle A — negative drift,
+     negative pivot, negative flutter. Two bundles swaying against each other is
+     what a canopy does; two swaying together is a slideshow panning. */
+  /* translate = sway(27s) + gust(17s)  ->  envelope every ~69s, the slowest
+     of the three. Every amplitude is negative: this bundle leans against
+     bundle A, which is what a canopy does and a panning slideshow does not. */
+  --ray-sway-dur: 27s;
+  --ray-sway-delay: -11s;
+  --ray-sway-x: -24px;
+  --ray-sway-y: 17px;
+  --ray-gust-dur: 17s;
+  --ray-gust-delay: -6s;
+  --ray-gust-x: -17px;
+  --ray-gust-y: 12px;
+  --ray-canopy-dur: 31s;
+  --ray-canopy-delay: -13s;
+  --ray-canopy-a: -0.26deg;
+  /* travel = travel(21s) + surge(13s)  ->  envelope every ~34s */
+  --ray-travel-dur: 21s;
+  --ray-travel-delay: -8s;
+  --ray-travel-x: -108px;
+  --ray-travel-y: -115px;
+  --ray-surge-dur: 13s;
+  --ray-surge-delay: -9s;
+  --ray-surge-x: -70px;
+  --ray-surge-y: -75px;
+  --ray-flutter-dur: 8.5s;
+  --ray-flutter-delay: -5.3s;
+  --ray-flutter-a: -0.045deg;
   --ray-fade-floor: 0.12;
-  --ray-fade-dur: 6.5s;
-  --ray-drift-dur: 12s;
-  --ray-drift-x: -42px;
-  --ray-drift-y: 29px;
-  --ray-travel-dur: 14s;
-  --ray-travel-x: -190px;
-  --ray-travel-y: -202px;
+  --ray-fade-dur: 17s;
+  --ray-dapple-delay: -9s;
 }
 
 .light-rays-bundle-c {
@@ -377,10 +459,10 @@ html.lenis {
     47.4deg,
     oklch(1 0 0 / 0%) 0px,
     oklch(1 0 0 / 0%) 50px,
-    oklch(1 0 0 / 12%) 70px,
+    oklch(1 0 0 / 17%) 70px,
     oklch(1 0 0 / 0%) 113px,
     oklch(1 0 0 / 0%) 219px,
-    oklch(1 0 0 / 7%) 232px,
+    oklch(1 0 0 / 10%) 232px,
     oklch(1 0 0 / 0%) 252px,
     oklch(1 0 0 / 0%) 350px
   );
@@ -425,38 +507,116 @@ html.lenis {
     rgb(0 0 0 / 100%) 1444px,
     rgb(0 0 0 / 100%) 1780px
   );
+  /* The lightest and quickest bundle: smallest sway, but the fastest flutter
+     and the widest of the three ray periods. It supplies most of the
+     high-frequency shimmer the other two are too slow to carry. */
+  /* translate = sway(23s) + gust(15s)  ->  envelope every ~43s */
+  --ray-sway-dur: 23s;
+  --ray-sway-delay: -5s;
+  --ray-sway-x: 17px;
+  --ray-sway-y: 10px;
+  --ray-gust-dur: 15s;
+  --ray-gust-delay: -2s;
+  --ray-gust-x: 12px;
+  --ray-gust-y: 7px;
+  --ray-canopy-dur: 19s;
+  --ray-canopy-delay: -3s;
+  --ray-canopy-a: 0.19deg;
+  /* travel = travel(14s) + surge(9s)  ->  envelope every ~25s, the shortest of
+     the three, which is what makes this bundle the liveliest. */
+  --ray-travel-dur: 14s;
+  --ray-travel-delay: -2s;
+  --ray-travel-x: 90px;
+  --ray-travel-y: 85px;
+  --ray-surge-dur: 9s;
+  --ray-surge-delay: -6s;
+  --ray-surge-x: 60px;
+  --ray-surge-y: 56px;
+  --ray-flutter-dur: 5.5s;
+  --ray-flutter-delay: -1.3s;
+  --ray-flutter-a: 0.07deg;
   --ray-fade-floor: 0.25;
-  --ray-fade-dur: 8s;
-  --ray-drift-dur: 8s;
-  --ray-drift-x: 30px;
-  --ray-drift-y: 18px;
-  --ray-travel-dur: 12s;
-  --ray-travel-x: 160px;
-  --ray-travel-y: 150px;
+  --ray-fade-dur: 11s;
+  --ray-dapple-delay: -6.5s;
 }
 
-/* Each bundle breathes between full strength and its own floor. The periods
-   (5 / 6.5 / 8s) are mutually prime-ish, so the bundles never line up: rays
-   contributed by a dimming bundle read as individual shafts guttering out
-   while the rest hold steady. */
-@keyframes ray-fade {
+/* ── Wind ──────────────────────────────────────────────────────────────────
+   How this reads as wind without reading as a metronome — and, just as
+   importantly, without reading as a stutter.
+
+   THE FIRST ATTEMPT, AND WHY IT WAS WRONG
+
+   A `from`/`to` pair on `ease-in-out ... alternate` is a smooth oscillation,
+   but a single one of them is transparently periodic: the eye locks onto the
+   beat within two cycles. The obvious fix — many keyframes at irregular offsets
+   with irregular amplitudes — kills the periodicity and introduces something
+   worse. `ease-in-out` is applied *per segment*, so velocity is driven to zero
+   at every single stop. Fifteen stops in a cycle means the layer stops dead
+   fifteen times, and at any stop where the direction reverses it stops dead and
+   then snaps back the other way. That is a stutter, not a gust, and no amount
+   of retiming fixes it: the discontinuity is in the easing model, not the
+   numbers.
+
+   Switching those to `linear` removes the dead stops but replaces them with
+   sharp corners at every direction change — smooth in position, discontinuous
+   in velocity. Better, still visibly mechanical.
+
+   WHAT IS HERE INSTEAD
+
+   Each channel is back to a plain two-keyframe `alternate` oscillation, which
+   is smooth everywhere by construction — it has no intermediate stops to snap
+   at, and the one place velocity does reach zero is the turning point, where a
+   pendulum stops too, so it looks right.
+
+   The periodicity is broken by *summing two of them* on the same property at
+   different periods, via `animation-composition: add`:
+
+     translate = sway(19s) + gust(13s)
+
+   Two oscillators at nearby-but-coprime periods beat against each other. Their
+   sum swells and fades on an envelope of 1/(1/13 - 1/19) ≈ 41s — long, smooth
+   gusts with genuine lulls between them — while staying infinitely
+   differentiable, because a sum of smooth curves is smooth. Every bundle uses a
+   different pair, so no two beat together either.
+
+   That is the whole design: irregularity from interference, not from hand-typed
+   keyframe ladders. */
+
+/* Branch-scale sway — the slow, wide half of the translate sum. Written about
+   zero (-A to +A) rather than 0 to A, so that when the two summed channels are
+   added neither one biases the layer off-centre. */
+@keyframes ray-sway {
   from {
-    opacity: 1;
+    translate: calc(var(--ray-sway-x) * -1) calc(var(--ray-sway-y) * -1);
   }
   to {
-    opacity: var(--ray-fade-floor);
+    translate: var(--ray-sway-x) var(--ray-sway-y);
   }
 }
 
-/* Drift moves the bundle sideways across the rays, so the shafts themselves
-   creep. Kept the smaller of the two motions — this is the only one that
-   shifts ray *positions*. */
-@keyframes ray-drift {
+/* The faster, smaller half. Its period is deliberately close to the sway's —
+   that closeness is what makes the beat envelope long and the gusts legible.
+   Push them far apart and the sum just looks like jitter on a slow drift. */
+@keyframes ray-gust {
   from {
-    transform: translate3d(0, 0, 0);
+    translate: calc(var(--ray-gust-x) * -1) calc(var(--ray-gust-y) * -1);
   }
   to {
-    transform: translate3d(var(--ray-drift-x), var(--ray-drift-y), 0);
+    translate: var(--ray-gust-x) var(--ray-gust-y);
+  }
+}
+
+/* The canopy overhead shifting: a fraction of a degree, but it pivots the whole
+   fan of shafts at once, which is the cue that sells "these are coming through
+   something that is itself moving" rather than "these are sliding". Kept under
+   1deg — the layer only overhangs its box by 220px, and a larger pivot would
+   swing an edge into frame. */
+@keyframes ray-canopy {
+  from {
+    rotate: calc(var(--ray-canopy-a) * -1);
+  }
+  to {
+    rotate: var(--ray-canopy-a);
   }
 }
 
@@ -467,10 +627,47 @@ html.lenis {
    background ever looking like it's sliding. */
 @keyframes ray-travel {
   from {
-    transform: translate3d(0, 0, 0);
+    translate: calc(var(--ray-travel-x) * -1) calc(var(--ray-travel-y) * -1);
   }
   to {
-    transform: translate3d(var(--ray-travel-x), var(--ray-travel-y), 0);
+    translate: var(--ray-travel-x) var(--ray-travel-y);
+  }
+}
+
+/* The second half of the ::before translate sum, so the breaks race and stall
+   on their own envelope instead of sweeping at a constant rate. */
+@keyframes ray-surge {
+  from {
+    translate: calc(var(--ray-surge-x) * -1) calc(var(--ray-surge-y) * -1);
+  }
+  to {
+    translate: var(--ray-surge-x) var(--ray-surge-y);
+  }
+}
+
+/* Shimmer: the quickest channel, and tiny. `::before` overhangs its box by
+   420px, so on a tall viewport the far edge sits ~1200px off the pivot, where
+   even a tenth of a degree still walks the shafts a couple of pixels sideways.
+   It rides on top of the parent's slow sway, and that ratio between a small
+   fast tremor and a large slow one is most of what reads as foliage. */
+@keyframes ray-flutter {
+  from {
+    rotate: calc(var(--ray-flutter-a) * -1);
+  }
+  to {
+    rotate: var(--ray-flutter-a);
+  }
+}
+
+/* Dappling: light coming and going as gaps in the foliage open and close. Each
+   bundle dims to its own floor, so a bundle guttering out reads as individual
+   shafts fading while the others hold. */
+@keyframes ray-dapple {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: var(--ray-fade-floor);
   }
 }
 
@@ -626,6 +823,11 @@ html[data-js="failed"] [data-reveal] {
   scale: none !important;
   transform: none !important;
   filter: none !important;
+  /* ImageReveal hides its frame by clipping it shut rather than by fading it,
+     so the reset has to undo that too — otherwise a bundle that never arrives
+     leaves the gallery photographs clipped to nothing while every other
+     animated element recovers. */
+  clip-path: none !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -763,19 +965,32 @@ html[data-js="failed"] [data-reveal] {
   width: var(--beam-w);
   height: var(--beam-h);
   mask-size: 100% 100%;
-  /* Two clocks per beam, both on their own period so no two beams are ever in
-     step: one creeps the shaft sideways, the other swells and dims it. The
-     negative delay starts each beam part-way into its cycle, otherwise all five
-     would begin dim and brighten together on first paint. */
+  /* Four clocks per beam, each with its *own* delay. They used to share one
+     `--beam-delay`, which locked drift and dimming together within a beam:
+     every shaft reached its brightest at exactly the far end of its travel,
+     five times over, and the eye reads that pairing as one mechanism ticking.
+
+     `translate` again carries two summed oscillations rather than one
+     many-stopped ladder — same reasoning as the bundles above, and the same
+     reason: per-segment easing on a multi-stop ladder stops the beam dead at
+     every stop. Five beams times five periods means no two are ever in step. */
   animation:
     beam-drift var(--beam-drift-dur) var(--beam-delay) ease-in-out infinite
       alternate,
-    beam-breathe var(--beam-breathe-dur) var(--beam-delay) ease-in-out infinite
-      alternate;
+    beam-gust var(--beam-gust-dur) var(--beam-gust-delay) ease-in-out infinite
+      alternate,
+    beam-sway var(--beam-sway-dur) var(--beam-sway-delay) ease-in-out infinite
+      alternate,
+    beam-dapple var(--beam-breathe-dur) var(--beam-dapple-delay) ease-in-out
+      infinite alternate;
+  animation-composition: add, add, replace, replace;
 }
 
-/* `translate`, not a transform: the shared rule above already spends
-   `transform` on the skew, and these two compose rather than overwrite. */
+/* `translate` and `rotate`, not `transform`: the shared rule above already
+   spends `transform` on the skew, and the individual properties compose with it
+   (translate -> rotate -> skew) rather than overwriting it.
+
+   The wide, slow half of each beam's sideways travel. */
 @keyframes beam-drift {
   from {
     translate: calc(var(--beam-shift) * -1) 0;
@@ -785,25 +1000,54 @@ html[data-js="failed"] [data-reveal] {
   }
 }
 
+/* The narrow, quicker half. Summed with beam-drift it gives each beam a gust
+   envelope tens of seconds long, so a shaft crosses fast on one pass and barely
+   moves on the next without ever changing speed abruptly. */
+@keyframes beam-gust {
+  from {
+    translate: calc(var(--beam-gust) * -1) 0;
+  }
+  to {
+    translate: var(--beam-gust) 0;
+  }
+}
+
+/* The pivot. Under half a degree, but these boxes are ~1500px tall and the
+   rotation is applied about their centre, so the far end still travels several
+   pixels — enough that a beam leans into a gust instead of sliding rigidly.
+   Alternating sign per beam (below) keeps neighbours leaning against each
+   other. */
+@keyframes beam-sway {
+  from {
+    rotate: calc(var(--beam-rot) * -1);
+  }
+  to {
+    rotate: var(--beam-rot);
+  }
+}
+
 /* White is the brightest a beam can get, and the page under it is already
    oklch(0.86) — only 0.14 of lightness separates them, so contrast here is
    bought by widening this range, not by picking a lighter colour. The floor
-   matters as much as the ceiling: taking it well below the visible threshold is
-   what makes the bright end read as a beam sweeping in rather than a panel that
-   is simply always on. */
-@keyframes beam-breathe {
+   matters as much as the ceiling: taking it below the visible threshold is what
+   makes the bright end read as a beam sweeping in rather than a panel that is
+   simply always on. */
+@keyframes beam-dapple {
   from {
-    opacity: 0.06;
+    opacity: var(--beam-dim);
   }
   to {
-    opacity: 0.5;
+    opacity: var(--beam-bright);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .page-ray {
     animation: none;
-    opacity: 0.28;
+    /* Roughly the mean of the beam-dapple curve, so a reader who opts out of
+       motion sees beams of the same weight as everyone else — not dimmer ones.
+       Moved with the curve when it was brightened. */
+    opacity: 0.36;
   }
 }
 
@@ -821,50 +1065,100 @@ html[data-js="failed"] [data-reveal] {
   --beam-h: 1500px;
   --beam-top: -335px;
   --beam-x: -1.53%;
-  --beam-shift: 70px;
-  --beam-drift-dur: 5.5s;
-  --beam-breathe-dur: 4.5s;
+  /* travel = drift(17s) + gust(11s), summed */
+  --beam-shift: 42px;
+  --beam-drift-dur: 17s;
   --beam-delay: 0s;
+  --beam-gust: 28px;
+  --beam-gust-dur: 11s;
+  --beam-gust-delay: -4s;
+  --beam-rot: 0.5deg;
+  --beam-sway-dur: 21s;
+  --beam-sway-delay: -6s;
+  --beam-dim: 0.15;
+  --beam-bright: 0.58;
+  --beam-breathe-dur: 13s;
+  --beam-dapple-delay: -3s;
 }
 .page-ray:nth-child(2) {
   --beam-w: 780px;
   --beam-h: 1380px;
   --beam-top: -275px;
   --beam-x: 13%;
-  --beam-shift: 95px;
-  --beam-drift-dur: 6s;
-  --beam-breathe-dur: 5.5s;
-  --beam-delay: -3s;
+  /* travel = drift(23s) + gust(15s), summed */
+  --beam-shift: 57px;
+  --beam-drift-dur: 23s;
+  --beam-delay: -9s;
+  --beam-gust: 38px;
+  --beam-gust-dur: 15s;
+  --beam-gust-delay: -2s;
+  --beam-rot: -0.42deg;
+  --beam-sway-dur: 15s;
+  --beam-sway-delay: -2s;
+  --beam-dim: 0.12;
+  --beam-bright: 0.55;
+  --beam-breathe-dur: 17s;
+  --beam-dapple-delay: -8s;
 }
 .page-ray:nth-child(3) {
   --beam-w: 960px;
   --beam-h: 1620px;
   --beam-top: -395px;
   --beam-x: 27%;
-  --beam-shift: 60px;
-  --beam-drift-dur: 8s;
-  --beam-breathe-dur: 4s;
-  --beam-delay: -5.5s;
+  /* travel = drift(19s) + gust(13s), summed */
+  --beam-shift: 36px;
+  --beam-drift-dur: 19s;
+  --beam-delay: -13s;
+  --beam-gust: 24px;
+  --beam-gust-dur: 13s;
+  --beam-gust-delay: -7s;
+  --beam-rot: 0.66deg;
+  --beam-sway-dur: 27s;
+  --beam-sway-delay: -11s;
+  --beam-dim: 0.18;
+  --beam-bright: 0.6;
+  --beam-breathe-dur: 11s;
+  --beam-dapple-delay: -5s;
 }
 .page-ray:nth-child(4) {
   --beam-w: 700px;
   --beam-h: 1280px;
   --beam-top: -225px;
   --beam-x: 41%;
-  --beam-shift: 110px;
-  --beam-drift-dur: 5s;
-  --beam-breathe-dur: 6s;
-  --beam-delay: -1.8s;
+  /* travel = drift(26s) + gust(17s), summed */
+  --beam-shift: 66px;
+  --beam-drift-dur: 26s;
+  --beam-delay: -4s;
+  --beam-gust: 44px;
+  --beam-gust-dur: 17s;
+  --beam-gust-delay: -12s;
+  --beam-rot: -0.55deg;
+  --beam-sway-dur: 18s;
+  --beam-sway-delay: -14s;
+  --beam-dim: 0.14;
+  --beam-bright: 0.56;
+  --beam-breathe-dur: 19s;
+  --beam-dapple-delay: -11s;
 }
 .page-ray:nth-child(5) {
   --beam-w: 1050px;
   --beam-h: 1450px;
   --beam-top: -310px;
   --beam-x: 56%;
-  --beam-shift: 80px;
-  --beam-drift-dur: 7.5s;
-  --beam-breathe-dur: 5s;
-  --beam-delay: -4.2s;
+  /* travel = drift(21s) + gust(14s), summed */
+  --beam-shift: 48px;
+  --beam-drift-dur: 21s;
+  --beam-delay: -16s;
+  --beam-gust: 32px;
+  --beam-gust-dur: 14s;
+  --beam-gust-delay: -5s;
+  --beam-rot: 0.38deg;
+  --beam-sway-dur: 24s;
+  --beam-sway-delay: -8s;
+  --beam-dim: 0.16;
+  --beam-bright: 0.58;
+  --beam-breathe-dur: 15s;
+  --beam-dapple-delay: -6s;
 }
 
 /* The band masks are shared by both layers — same irregular cuts, different
@@ -965,4 +1259,231 @@ html[data-js="failed"] [data-reveal] {
     rgb(0 0 0) 78%,
     rgb(0 0 0 / 0%) 100%
   );
+}
+
+/* ── Opening panel ─────────────────────────────────────────────────────────
+   Covers the window between first paint and hydration. See SiteLoader.tsx for
+   why it is plain CSS, and lib/reveal-fallback.ts for the state machine that
+   raises and lowers it.
+
+   z-index 100 rather than a larger number: the only things it has to sit above
+   are the nav (z-50) and the page transition cover. */
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--background);
+  /* The fade is on opacity only; `visibility` is what actually takes it out of
+     the hit-testing tree, delayed by the length of the fade so it doesn't
+     vanish mid-transition. */
+  transition:
+    opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.72s;
+}
+
+/* Scripting is off: the inline script never ran, so nothing exists that could
+   ever dismiss this panel. It must not render at all — the force-show rules
+   above have already made the real content visible. */
+html:not([data-loader]) .site-loader {
+  display: none;
+}
+
+html[data-loader="done"] .site-loader {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The shafts are the footer's, imported wholesale (see SiteLoader.tsx), so the
+   geometry, the band masks and the dark ground all come for free and there is
+   one definition of "a shaft of light" in this codebase rather than two.
+
+   Two things are layered on top of the footer's own rules, and only inside the
+   loader:
+
+   1. A slow sweep. The footer's shafts are static because the section scrolls
+      past them; a loading panel is stationary, and a stationary panel needs
+      motion or it reads as a frozen screenshot.
+   2. A little more presence. 5% is calibrated for a shaft the reader glances at
+      behind footer copy — here it is most of what there is to look at. */
+/* `.footer-rays` carries its own dark radial ground, because in the footer it
+   *is* the panel. Here the panel is the page grey, so that ground is dropped
+   and replaced with the same corner glow `.light-rays-backdrop` gives every
+   page — the loader then reads as the site's own backdrop rather than as a
+   panel borrowed from somewhere else.
+
+   The mask is kept: it pools the shafts toward the top-left and fades them out
+   before the opposite corner, which is where the glow is anyway. */
+.site-loader .footer-rays {
+  background: radial-gradient(
+    1400px 1000px at 0% 0%,
+    oklch(0.99 0 0 / 80%) 0%,
+    oklch(0.96 0 0 / 35%) 45%,
+    transparent 75%
+  );
+  background-repeat: no-repeat;
+  /* The footer's own mask drops to 22% alpha by 88% of its radius, which on
+     black still leaves a readable shaft but on grey extinguishes them over most
+     of the panel — there is far less headroom to lose. Relaxed to 58% so the
+     shafts survive across the screen; it still pools them toward the top-left
+     corner, which is where the glow is. */
+  mask-image: radial-gradient(
+    125% 100% at 0% 0%,
+    rgb(0 0 0) 0%,
+    rgb(0 0 0 / 58%) 88%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}
+
+.site-loader .footer-ray {
+  /* 0.05 in the footer, four times that here. These are white sheets, and the
+     footer puts them on black where 5% is already plenty of contrast; against
+     oklch(0.86) there is barely any headroom above the background, so the same
+     sheet has to be pushed far harder to register at all. This is the same
+     range `.page-ray` uses for white shafts on the grey page, where its beams
+     run up to 0.58. */
+  opacity: 0.45;
+  animation: loader-ray-sweep var(--sweep-dur) var(--sweep-delay) ease-in-out
+    infinite alternate;
+}
+
+/* Periods share no common factor, so the five sheets never re-form the same
+   figure twice — the same reasoning as the page's own beams. */
+.site-loader .footer-ray:nth-child(1) {
+  --sweep-x: 38px;
+  --sweep-dur: 6.5s;
+  --sweep-delay: 0s;
+}
+.site-loader .footer-ray:nth-child(2) {
+  --sweep-x: -29px;
+  --sweep-dur: 8.5s;
+  --sweep-delay: -2.4s;
+}
+.site-loader .footer-ray:nth-child(3) {
+  --sweep-x: 46px;
+  --sweep-dur: 7.1s;
+  --sweep-delay: -4.6s;
+}
+.site-loader .footer-ray:nth-child(4) {
+  --sweep-x: -34px;
+  --sweep-dur: 9.7s;
+  --sweep-delay: -1.8s;
+}
+.site-loader .footer-ray:nth-child(5) {
+  --sweep-x: 40px;
+  --sweep-dur: 5.9s;
+  --sweep-delay: -3.3s;
+}
+
+/* `translate`, not `transform`: `.footer-ray` already spends `transform` on its
+   45deg skew, and these compose rather than overwrite it. */
+@keyframes loader-ray-sweep {
+  from {
+    translate: calc(var(--sweep-x) * -1) 0;
+  }
+  to {
+    translate: var(--sweep-x) 0;
+  }
+}
+
+.site-loader-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 0 1.5rem;
+}
+
+/* The wordmark, with a highlight travelling across the letters — light passing
+   over lettering, which is the same idea as the shafts behind it.
+   `background-clip: text` paints the gradient through the glyphs; the sweep is
+   an animated background-position, so no extra element is needed.
+
+   The highlight is a mid-grey, not white: the panel behind is oklch(0.86), so
+   a white peak would erase the letters rather than gleam across them. */
+.site-loader-word {
+  font-size: clamp(1.75rem, 7vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* The gleam peaks at a mid-grey rather than white: the panel behind is
+     oklch(0.86), so a white peak would erase the letters into the background
+     instead of running a highlight across them. */
+  background-image: linear-gradient(
+    100deg,
+    oklch(0 0 0) 0%,
+    oklch(0 0 0) 38%,
+    oklch(0.62 0 0) 50%,
+    oklch(0 0 0) 62%,
+    oklch(0 0 0) 100%
+  );
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: loader-word-gleam 2.1s ease-in-out infinite;
+}
+
+@keyframes loader-word-gleam {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -30% 0;
+  }
+}
+
+/* Indeterminate progress. Deliberately not a percentage: nothing here knows how
+   much of the bundle has arrived, and a bar that fakes a number is worse than
+   one that honestly just says "working". */
+.site-loader-track {
+  position: relative;
+  width: min(210px, 46vw);
+  height: 2px;
+  overflow: hidden;
+  border-radius: 1px;
+  background: oklch(0 0 0 / 10%);
+}
+
+.site-loader-bar {
+  position: absolute;
+  inset-block: 0;
+  width: 42%;
+  border-radius: inherit;
+  background: oklch(0 0 0 / 55%);
+  animation: loader-bar-run 1.35s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes loader-bar-run {
+  from {
+    left: -42%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+/* Reduced motion: the panel still does its job — it covers the unhydrated
+   page — but nothing inside it moves. The bar becomes a static filled track so
+   it doesn't read as broken. */
+@media (prefers-reduced-motion: reduce) {
+  .site-loader .footer-ray,
+  .site-loader-word,
+  .site-loader-bar {
+    animation: none;
+  }
+  .site-loader-word {
+    background-image: none;
+    color: oklch(0 0 0);
+  }
+  .site-loader-bar {
+    left: 0;
+    width: 100%;
+    background: oklch(0 0 0 / 25%);
+  }
 }

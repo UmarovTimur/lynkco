@@ -21,10 +21,26 @@ A reusable template for reverse-engineering any website into a clean, modern Nex
 
 ## Commands
 - `npm run dev` — Start dev server
-- `npm run build` — Production build
+- `npm run build` — Static export into `out/` (see Deployment below)
 - `npm run lint` — ESLint check
 - `npm run typecheck` — TypeScript check
 - `npm run check` — Run lint + typecheck + build
+- `npm run optimize:images` — Shrink hand-placed images in `public/images/` to the sizes the layout paints, and write the OG card. Run it after adding images outside the gallery.
+
+## Deployment
+This site is a **static export** (`output: "export"`), served by nginx off disk — there is no Node process in production.
+
+What that costs, and what it means when editing:
+- **`next/image` cannot resize anything.** `images.unoptimized` is on, so the file in `public/` is byte-for-byte what the browser downloads, and there is no `srcset`. Any new image must be pre-sized — add its directory to `TARGETS` in `scripts/optimize-static-images.mjs` and run `npm run optimize:images`.
+- **No server features.** Route handlers that read the request, server actions, `cookies()`, `headers()`, middleware/proxy, redirects/rewrites/headers in config, and ISR are all unavailable — the build fails rather than degrading.
+- **Metadata routes need `export const dynamic = "force-static"`.** `sitemap.ts` and `robots.ts` compile to Route Handlers, which are no longer cached by default; without that line `npm run build` errors out.
+- **`NEXT_PUBLIC_SITE_URL` is baked in at build time** (see `.env.example` and `src/lib/site.ts`). Changing the domain means rebuilding.
+
+nginx needs one rule, because routes are emitted as `/gallery.html` rather than `/gallery/index.html`:
+```nginx
+location / { try_files $uri $uri.html $uri/ =404; }
+error_page 404 /404.html;
+```
 
 ## Code Style
 - TypeScript strict mode, no `any`

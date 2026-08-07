@@ -27,16 +27,42 @@
 const HYDRATION_GRACE_MS = 4000;
 
 /**
- * Inlined into <head> as a blocking script so it runs before first paint —
- * it must set `pending` before the browser paints, or the fallback rules
- * would flash the content visible on every load.
+ * How long the loader stays up at minimum, even if React is ready sooner.
+ *
+ * Without a floor the loader is worse than none at all: on a warm cache
+ * hydration lands in ~200ms, so the panel would appear and vanish as a single
+ * frame of flicker. This holds it just long enough to read as a deliberate
+ * opening rather than a glitch, and it is spent on work that is genuinely
+ * happening — fonts and hero images are still arriving at that point.
+ */
+const LOADER_MIN_MS = 900;
+
+/**
+ * A second, independent state attribute (`data-loader`), because the loader and
+ * the force-show fallback answer different questions and must be allowed to
+ * disagree:
+ *
+ *   data-js     "is Motion in charge of visibility?"  — flips the instant React
+ *               mounts, because delaying it would leave content stuck hidden
+ *   data-loader "is the opening panel still up?"      — flips only once React
+ *               is ready AND the minimum hold has elapsed
+ *
+ *   (no attribute)  scripting is off — the panel must never render, or it would
+ *                   cover the page forever with nothing able to remove it
+ *   "visible"       panel is up
+ *   "done"          panel fades out
  */
 export const REVEAL_FALLBACK_SCRIPT = `
 (function () {
   var el = document.documentElement;
   el.dataset.js = "pending";
+  el.dataset.loader = "visible";
+  window.__loaderStart = Date.now();
   setTimeout(function () {
     if (el.dataset.js === "pending") el.dataset.js = "failed";
+    // Unconditionally, even on "failed": a bundle that never arrived is
+    // exactly when the reader must not be left staring at a loading panel.
+    el.dataset.loader = "done";
   }, ${HYDRATION_GRACE_MS});
 })();
 `;
@@ -48,5 +74,20 @@ export const REVEAL_FALLBACK_SCRIPT = `
  */
 export function markHydrated() {
   if (typeof document === "undefined") return;
-  document.documentElement.dataset.js = "ok";
+  const el = document.documentElement;
+  el.dataset.js = "ok";
+
+  if (el.dataset.loader !== "visible") return;
+
+  // Serve out the rest of the minimum hold. `__loaderStart` is set by the
+  // inline script above; if it is somehow missing, dismiss immediately rather
+  // than inventing a delay the reader did not ask for.
+  const start = (window as unknown as { __loaderStart?: number }).__loaderStart;
+  const elapsed = typeof start === "number" ? Date.now() - start : LOADER_MIN_MS;
+  window.setTimeout(
+    () => {
+      el.dataset.loader = "done";
+    },
+    Math.max(0, LOADER_MIN_MS - elapsed),
+  );
 }

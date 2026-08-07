@@ -30,6 +30,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "optimize:images": "node scripts/optimize-static-images.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build"

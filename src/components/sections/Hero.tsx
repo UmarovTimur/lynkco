@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 
 const SPECS = ["B-SUV", "1.5T 156 л.с.", "7DCT", "L2 ADAS", "FWD"];
 
-const CHIP_IMAGES = ["/images/hero/car-4.png", "/images/hero/car-5.png"];
+const CHIP_IMAGES = ["/images/hero/car-4.webp", "/images/hero/car-5.webp"];
 
 const STRIP_IMAGES = [
-  "/images/hero/car-1.png",
-  "/images/hero/car-2.png",
-  "/images/hero/car-3.png",
+  "/images/hero/car-1.webp",
+  "/images/hero/car-2.webp",
+  "/images/hero/car-3.webp",
 ];
 
 const CHIP_CLASS =
@@ -174,10 +174,10 @@ function HeroPhotoCarousel({ className }: { className?: string }) {
           shouldReduceMotion
             ? undefined
             : {
-                duration: STRIP_IMAGES.length * 3,
-                ease: "linear",
-                repeat: Infinity,
-              }
+              duration: STRIP_IMAGES.length * 3,
+              ease: "linear",
+              repeat: Infinity,
+            }
         }
       >
         {LOOP_IMAGES.map((src, i) => (
@@ -241,7 +241,7 @@ export function Hero() {
                 the inactive one out of the accessibility tree too, so only one
                 is ever present as far as a screen reader is concerned. */}
             <AnimatedChip
-              delay={0.65 + "из Китая".length * LETTER_STAGGER}
+              delay={0.5}
               className="sm:hidden"
             >
               <HeroPhotoCarousel className="-rotate-3" />
@@ -249,7 +249,7 @@ export function Hero() {
           </span>
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4">
             <AnimatedChip
-              delay={0.65 + "из Китая".length * LETTER_STAGGER}
+              delay={0.5}
               className="hidden sm:inline-block"
             >
               <HeroPhotoCarousel className="-rotate-3" />

@@ -4,6 +4,9 @@ import Script from "next/script";
 import { ReactLenis } from "lenis/react";
 import { PageTransitionProvider } from "@/components/PageTransition";
 import { REVEAL_FALLBACK_SCRIPT } from "@/lib/reveal-fallback";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
+import { SiteLoader } from "@/components/SiteLoader";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,10 +24,78 @@ const instrumentSerif = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+const TITLE = "Lynk & Co 06 — параллельный импорт из Китая";
+const DESCRIPTION =
+  "Прямые поставки Lynk & Co 06 по параллельному импорту. Автомобили в наличии на складе в Хоргосе, отгрузка от одной единицы, доставка по странам СНГ.";
+
 export const metadata: Metadata = {
-  title: "Lynk & Co 06 — параллельный импорт из Китая",
-  description:
-    "Прямые поставки Lynk & Co 06 по параллельному импорту. Автомобили в наличии на складе в Хоргосе, отгрузка от одной единицы, доставка по странам СНГ.",
+  // Without metadataBase, Next resolves every relative OG/canonical URL against
+  // localhost and says so in the build log. With `output: "export"` there is no
+  // request to infer a host from later, so this is the only chance to get it
+  // right — see src/lib/site.ts.
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    // Sub-pages set only their own title; this keeps the brand on the end of it
+    // without every page having to remember to repeat it.
+    template: "%s | Lynk & Co 06",
+  },
+  description: DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [
+      {
+        // Written by scripts/optimize-static-images.mjs from a gallery frame.
+        url: "/seo/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Lynk & Co 06 — параллельный импорт из Китая",
+      },
+    ],
+  },
+  twitter: {
+    // Large image rather than the default summary thumbnail: the product here
+    // is the car, and a 120px square of it communicates nothing.
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/seo/og.jpg"],
+  },
+  icons: {
+    icon: [
+      {
+        url: "/seo/favicon-light.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/seo/favicon-dark.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    apple: "/seo/apple-touch-icon.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      // Let Google show a full-size image and an untruncated snippet — the
+      // defaults are conservative and cost preview real estate for no benefit
+      // on a page that wants to be seen.
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -46,6 +117,17 @@ export default function RootLayout({
           screen, so the phone zooms out to fit and the page never fills the
           viewport. The layout is responsive on its own down to ~320px. */}
       <body className="flex min-h-full flex-col">
+        {/* Inert JSON-LD data, rendered into the prerendered HTML where
+            crawlers read it. See StructuredData for what it does and does not
+            claim. */}
+        <StructuredData />
+
+        {/* First in the body so it is parsed and painted before the sections
+            behind it — the whole point is to be on screen at first paint. It
+            takes itself down via the data-loader attribute; no JS of ours
+            needs to run. */}
+        <SiteLoader />
+
         {/* beforeInteractive so it runs ahead of first paint and ahead of the
             app bundle — the whole point is to cover the bundle not arriving.
             Routed through next/script rather than a bare <script> tag, which
