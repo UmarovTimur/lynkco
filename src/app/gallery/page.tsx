@@ -93,7 +93,7 @@ export default function GalleryPage() {
             className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-6 py-4 text-sm font-medium sm:pr-8 sm:pl-7 sm:text-base text-black transition-colors hover:bg-black/5"
           >
             <ArrowLeft size={16} />
-            Вернуться к предложению
+            Вернутся на главную
           </TransitionLink>
         </div>
       </section>
