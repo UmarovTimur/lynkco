@@ -2,7 +2,7 @@ import { Shield, Radar, Volume2, Sun, BadgePercent, Ruler } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS } from "@/lib/typography";
 
 interface EquipmentCategory {
   title: string;
@@ -81,7 +81,7 @@ export function Equipment() {
       </Reveal>
 
       <AnimatedHeading
-        text="Ключевые преимущества"
+        text="Почему Lynk & Co 06?"
         className={SECTION_HEADING_CLASS}
         delay={0.08}
       />
@@ -103,7 +103,7 @@ export function Equipment() {
               </span>
               <h3 className="mt-5 text-lg font-bold text-black">{title}</h3>
               <p className="mt-3 text-base leading-relaxed text-black/60">
-                {description}
+                {nbsp(description)}
               </p>
             </div>
           </Reveal>

@@ -2,7 +2,7 @@ import { MediaImage } from "@/components/MediaImage";
 import { ImageReveal } from "@/components/ImageReveal";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
 
 interface GalleryItem {
   title: string;
@@ -109,7 +109,7 @@ export function Work() {
               <figcaption className="mt-4 flex items-baseline justify-between gap-4">
                 <span className="text-lg text-black">{item.title}</span>
                 <span className="text-right text-base text-black/40">
-                  {item.caption}
+                  {nbsp(item.caption)}
                 </span>
               </figcaption>
             </figure>

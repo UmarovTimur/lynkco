@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 // Order-details fields (комплектация, страна, объём, тип доставки, рег.
@@ -66,8 +66,9 @@ export function LeadForm() {
         />
         <Reveal delay={0.08} rotate={3}>
           <p className="mt-4 text-base text-black/60 md:text-lg">
-            Оставьте контакты — уточним детали и подготовим коммерческое
-            предложение. Отвечаем оперативно в рабочие дни.
+            {nbsp(
+              "Оставьте контакты — уточним детали и подготовим коммерческое предложение. Отвечаем оперативно в рабочие дни.",
+            )}
           </p>
         </Reveal>
       </div>

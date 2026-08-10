@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface TermItem {
@@ -57,7 +57,7 @@ export function Terms() {
           >
             <p className="text-base text-black sm:text-lg">
               <span className="font-bold">{term.label}</span>{" "}
-              <span className="text-black/60">— {term.description}</span>
+              <span className="text-black/60">— {nbsp(term.description)}</span>
             </p>
           </Reveal>
         ))}

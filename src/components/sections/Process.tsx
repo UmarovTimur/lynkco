@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
 
 interface ProcessStep {
   index: number;
@@ -84,10 +84,10 @@ export function Process() {
             </span>
             <div>
               <h3 className="text-lg font-bold text-black sm:text-xl">
-                Шаг {step.index}. {step.title}
+                Шаг {step.index}. {nbsp(step.title)}
               </h3>
               <p className="mt-3 text-base leading-relaxed text-black/60 sm:text-lg">
-                {step.description}
+                {nbsp(step.description)}
               </p>
             </div>
           </Reveal>

@@ -5,7 +5,7 @@ import { ArrowRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS } from "@/lib/typography";
 import { FAQ_ITEMS } from "@/lib/faq";
 
 export function Faq() {
@@ -40,7 +40,7 @@ export function Faq() {
             <span className="font-bold">Остались вопросы?</span>
             <br />
             <span className="font-normal text-black/70">
-              Оставьте заявку от юридического лица
+              {nbsp("Оставьте заявку от юридического лица")}
             </span>
           </p>
           <a

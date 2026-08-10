@@ -5,7 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { SECTION_HEADING_CLASS } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
 
 type StockKey = "retail" | "demo";
 type TrimKey = "max" | "ultra";
@@ -164,7 +164,7 @@ function OfferCard({ offer }: { offer: TrimOffer }) {
           offer.popular ? "text-white/50" : "text-black/40",
         )}
       >
-        {offer.note}
+        {nbsp(offer.note)}
       </p>
 
       <ul className="mt-6 flex flex-col gap-3">
@@ -183,7 +183,7 @@ function OfferCard({ offer }: { offer: TrimOffer }) {
                 offer.popular ? "text-white/80" : "text-black/60",
               )}
             >
-              {item}
+              {nbsp(item)}
             </span>
           </li>
         ))}
@@ -244,7 +244,7 @@ export function Pricing() {
                   className="mt-2 h-1 w-1 shrink-0 rounded-full bg-black/30"
                   aria-hidden="true"
                 />
-                <span className="text-base text-black/60">{term}</span>
+                <span className="text-base text-black/60">{nbsp(term)}</span>
               </li>
             ))}
           </ul>

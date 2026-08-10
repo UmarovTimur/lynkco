@@ -1,6 +1,7 @@
 import { ArrowRight, Mail, X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 import { Parallax } from "@/components/Parallax";
+import { nbsp } from "@/lib/typography";
 
 const SOCIALS = [
   { label: "Email", href: "#lead-form", Icon: Mail },
@@ -38,14 +39,15 @@ export function CtaFooter() {
 
           <Parallax distance={140} blur={18} className="w-full">
             <h2 className="mt-6 max-w-full text-center font-sans text-7xl leading-[1.05] font-bold tracking-[-0.03em] text-white sm:text-7xl md:text-8xl lg:text-[7rem]">
-              Остались <span className="text-white/40">вопросы?</span>
+              Остались <span className="text-white/40 text-6xl lg:text-[7rem]">вопросы?</span>
             </h2>
           </Parallax>
 
           <Parallax distance={140} blur={18}>
             <p className="mt-4 max-w-md text-center text-sm max-w-80vw leading-[1.7] text-white/60">
-              Свяжитесь с нами — ответим оперативно в рабочие дни и подготовим
-              коммерческое предложение под ваш объём и регион.
+              {nbsp(
+                "Свяжитесь с нами — ответим оперативно в рабочие дни и подготовим коммерческое предложение под ваш объём и регион.",
+              )}
             </p>
           </Parallax>
 
@@ -62,7 +64,7 @@ export function CtaFooter() {
           <Parallax distance={36} blur={6} className="w-full">
             <div className="mt-24 flex w-full flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
               <span className="text-base text-white">
-                © Lynk&nbsp;&amp;&nbsp;Co&nbsp;06 Import, 2025
+                © Lynk&nbsp;&amp;&nbsp;Co&nbsp;06 Global, 2026
               </span>
 
               <div className="flex items-center gap-3">

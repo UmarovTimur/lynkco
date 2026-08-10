@@ -12,12 +12,14 @@
  * it deliberately holds data only — no "use client", no React.
  */
 
+import { nbsp } from "@/lib/typography";
+
 export interface FaqItem {
   question: string;
   answer: string;
 }
 
-export const FAQ_ITEMS: FaqItem[] = [
+const ITEMS: FaqItem[] = [
   {
     question: "Двигатель четырёхцилиндровый?",
     answer:
@@ -59,3 +61,17 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Оставьте заявку от юридического лица. Условия формируются индивидуально под ваш объём и регион поставки.",
   },
 ];
+
+/**
+ * Typographed once, here, rather than at either render site.
+ *
+ * Both consumers must see byte-identical strings: Google compares the FAQ
+ * structured data against the visible copy and treats a mismatch as spam, and a
+ * non-breaking space is a different character from a space. Applying `nbsp()` in
+ * Faq.tsx alone would have introduced exactly the drift this file exists to
+ * prevent — invisibly, and only in the eyes of a crawler.
+ */
+export const FAQ_ITEMS: FaqItem[] = ITEMS.map((item) => ({
+  question: nbsp(item.question),
+  answer: nbsp(item.answer),
+}));

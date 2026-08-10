@@ -1,5 +1,7 @@
 import { MapPin } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { nbsp, SECTION_HEADING_CLASS } from "@/lib/typography";
+import { AnimatedHeading } from "../AnimatedHeading";
 
 const COUNTRIES = [
   "Россия",
@@ -21,9 +23,11 @@ export function Geography() {
           className="hidden h-px w-12 bg-black/10 sm:block"
           aria-hidden="true"
         />
-        <span className="font-serif text-2xl italic sm:text-3xl text-black/50">
-          География поставок
-        </span>
+        <AnimatedHeading
+          text="География поставок"
+          className={SECTION_HEADING_CLASS}
+          delay={0.08}
+        />
         <span
           className="hidden h-px w-12 bg-black/10 sm:block"
           aria-hidden="true"
@@ -32,10 +36,9 @@ export function Geography() {
 
       <Reveal delay={0.1} rotate={3}>
         <p className="mx-auto mt-6 max-w-2xl text-center text-base leading-relaxed text-black/60 md:text-lg">
-          Работаем с партнёрами в странах СНГ. Автомобили отгружаются со склада
-          в Хоргосе, маршрут и способ доставки подбираем под ваш регион.
-          Логистика, сроки и стоимость доставки рассчитываются индивидуально и
-          указываются в коммерческом предложении.
+          {nbsp(
+            "Работаем с партнёрами в странах СНГ. Автомобили отгружаются со склада в Хоргосе, маршрут и способ доставки подбираем под ваш регион. Логистика, сроки и стоимость доставки рассчитываются индивидуально и указываются в коммерческом предложении.",
+          )}
         </p>
       </Reveal>
 
@@ -57,8 +60,9 @@ export function Geography() {
 
       <Reveal delay={0.3} rotate={2}>
         <p className="mx-auto mt-8 max-w-2xl text-center text-base text-black/40">
-          Требования к сертификации и таможенному оформлению различаются по
-          странам. Условия для вашего региона уточняйте при запросе предложения.
+          {nbsp(
+            "Требования к сертификации и таможенному оформлению различаются по странам. Условия для вашего региона уточняйте при запросе предложения.",
+          )}
         </p>
       </Reveal>
     </section>
