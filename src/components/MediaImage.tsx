@@ -11,11 +11,36 @@ interface MediaImageProps extends ImageProps {
 }
 
 /**
- * `next/image` with a shimmering grey placeholder held over it until the file
- * has actually decoded.
+ * `next/image` with a shimmering grey placeholder showing through it until the
+ * file has actually decoded.
  *
- * The placeholder covers the image rather than the image fading in over it, so
- * nothing here touches the image's own `className` — several call sites hang
+ * THE PLACEHOLDER SITS *BEHIND* THE IMAGE, AND THAT ORDER IS LOAD-BEARING.
+ *
+ * It used to be rendered after the <Image>, so it painted on top and hid the
+ * photograph until React took it away. That put the single most basic thing on
+ * the page — whether the reader sees the picture — at the end of a four-link
+ * chain: the bundle had to arrive, hydration had to run, this effect had to see
+ * the load, and finally Motion's exit animation had to play out on
+ * requestAnimationFrame. Break any link and the reader is left looking at a
+ * grey shimmering plate over a photograph that downloaded perfectly.
+ *
+ * The last link is the one that actually broke, and it broke for a reason worth
+ * recording: rAF is not a guarantee. It is frozen in a backgrounded tab, and it
+ * is starved on a phone whose main thread is already saturated. A half-finished
+ * exit leaves the plate parked at partial opacity over the picture, forever.
+ *
+ * Painting the placeholder underneath removes the whole chain. A decoded image
+ * is opaque, so it covers its own placeholder the instant it paints — no
+ * JavaScript, no hydration, no animation frame. Everything below is now only
+ * about tidying up: taking the finished plate out of the DOM so its infinite
+ * sweep keyframes stop burning frames, times ~36 images on this page.
+ *
+ * All six call sites pass `fill`, so the <img> is `position: absolute` and wins
+ * the paint order against an equally-positioned sibling declared before it.
+ * A non-`fill` call site would be statically positioned and would paint *under*
+ * the placeholder — if you add one, give it `relative` or it will vanish.
+ *
+ * Nothing here touches the image's own `className`: several call sites hang
  * `transition-transform` hover effects off it, and a second `transition-*`
  * utility from this component would win the merge and kill them.
  *
@@ -64,8 +89,6 @@ export function MediaImage({
 
   return (
     <>
-      <Image {...props} alt={alt} ref={ref} onLoad={onLoad} />
-
       <AnimatePresence>
         {!loaded && (
           <motion.span
@@ -79,6 +102,10 @@ export function MediaImage({
           />
         )}
       </AnimatePresence>
+
+      {/* Declared last so it paints over the placeholder above. See the header
+          comment — this is the ordering the whole component depends on. */}
+      <Image {...props} alt={alt} ref={ref} onLoad={onLoad} />
     </>
   );
 }

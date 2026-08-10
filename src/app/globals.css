@@ -96,7 +96,6 @@
 
 .dark {
   --background: oklch(0.145 0 0);
-  /* --background: black; */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -140,6 +139,41 @@
   html {
     @apply font-sans;
   }
+
+  /* Ragging, handled once for the whole site.
+
+     `balance` evens the lines of a heading instead of running them full and
+     dropping one word onto a line of its own — the failure that a 390px screen
+     produces constantly, because a heading that fits one desktop line becomes
+     three on a phone. The browser only balances short blocks (Chrome caps it at
+     a handful of lines), which is exactly the case this is for.
+
+     `pretty` does the narrower job on body copy: it leaves the ragging alone
+     but refuses to leave a widow on the last line.
+
+     This is the right layer for it. Widows are a ragging problem, not a meaning
+     problem, so they are fixed by the typesetter rather than by inserting
+     characters into the copy — see `nbsp()` in lib/typography.ts, which handles
+     the breaks that *do* change meaning. Neither can substitute for the other. */
+  h1,
+  h2,
+  h3,
+  h4,
+  blockquote,
+  figcaption {
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd,
+  summary,
+  /* Table cells too: the specs board is the narrowest measure on the site, so
+     it produces widows more readily than any paragraph does. */
+  th,
+  td {
+    text-wrap: pretty;
+  }
 }
 
 /* Lenis (see layout.tsx) drives smooth scroll in JS; it disables itself
@@ -152,13 +186,31 @@ html.lenis {
    straight 45deg rays scattered across the whole page — kept low-opacity so it
    reads as ambient light, not a pattern.
 
-   This lives on its own absolutely-positioned layer rather than on `body`
-   because <html> is `h-full` (see layout.tsx): a body background propagates to
-   the canvas but is still *sized and positioned* against the root element's
-   box, so with `no-repeat` the gradients only ever painted over the first
-   viewport-height of the page and everything below it got flat colour. Sized
-   against `body` instead, the layer spans the whole scrollable page, and it
-   scrolls with the content rather than being pinned to the viewport.
+   This lives on its own layer rather than on `body` because <html> is `h-full`
+   (see layout.tsx): a body background propagates to the canvas but is still
+   *sized and positioned* against the root element's box, so with `no-repeat`
+   the gradients only ever painted over the first viewport-height of the page
+   and everything below it got flat colour.
+
+   ABSOLUTE, so the rays travel with the page rather than being pinned to the
+   viewport — they are light falling across the document, not light on the
+   glass. That makes this layer as tall as the document (15 000px on the home
+   page at desktop width, more on a phone), which is affordable only because
+   nothing here is animated on the devices that cannot afford it: see the phone
+   budget block further down, where the drift is frozen on coarse pointers. A
+   static layer this size is fine — the browser rasterises it lazily by tile and
+   caches the result. An *animated* one is not: past roughly 4-8k device pixels
+   a layer no longer fits a single GPU texture, so mobile Chrome falls back to
+   tiled CPU rasterisation and re-rasters those tiles for every frame of every
+   animation.
+
+   The handoff mask is the other half of the story. `.page-rays` lays its own
+   big opening beams over the first viewport, and both systems draw white 45deg
+   shafts, so over the opening screen they stacked and doubled the light. This
+   fades the ambient field in across the first viewport instead, so the hero
+   belongs to the opening beams alone and the field takes over once they have
+   faded out. Absolute lengths, not percentages: the fade has to be one screen
+   tall, not a share of a document whose height nobody controls.
 
    z-index -1 keeps it above the (canvas-propagated) background colour but
    behind all page content. */
@@ -169,6 +221,28 @@ html.lenis {
   pointer-events: none;
   /* Clips the oversized, drifting ray bundles inside. */
   overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0%) 0,
+    rgb(0 0 0 / 0%) 55svh,
+    rgb(0 0 0) 105svh
+  );
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
+
+/* The corner glow, split out of .light-rays-backdrop so the handoff mask above
+   cannot eat it — the mask blanks that layer over exactly the stretch of page
+   this gradient exists to light.
+
+   Splitting costs nothing: this layer is a single static gradient with no
+   animation and no mask, so it is one paint at load and never again. */
+.page-glow {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1000px;
+  z-index: -1;
+  pointer-events: none;
   background-image: radial-gradient(
     1400px 1000px at 0% 0%,
     oklch(0.99 0 0 / 80%) 0%,
@@ -678,13 +752,28 @@ html.lenis {
   }
 }
 
-/* Light sepia + film-grain overlay, absolutely positioned over the full
-   scrollable page (see layout.tsx) — scrolls with content, not fixed to the
-   viewport. The noise PNG is blended twice: once against a warm tint to
-   colorize the grain, then the whole thing against the page via soft-light
-   at very low opacity so it reads as a faint vintage cast, not a filter. */
+/* Light sepia + film-grain overlay pinned to the viewport (see layout.tsx). The
+   noise PNG is blended twice: once against a warm tint to colorize the grain,
+   then the whole thing against the page via soft-light at very low opacity so
+   it reads as a faint vintage cast, not a filter.
+
+   FIXED, NOT ABSOLUTE — and unlike the ray field above, this one cannot go back
+   to scrolling with the page. `mix-blend-mode` forces the browser to collect
+   everything painted beneath this element into a backdrop buffer before it can
+   blend. Sized against `body` that buffer was the whole 15 000px document; on a
+   phone, where the page is taller still and the memory budget far smaller,
+   Chrome cannot allocate it and gives up on painting what is underneath. One
+   viewport of backdrop is the cost every film-grain overlay on the web pays.
+
+   Nothing is lost visually: the grain is a uniform 256px noise tile at 22%, so
+   whether it travels with the page or sits still is not a difference the eye
+   can find — and grain that stays put is what film actually does anyway, since
+   the grain is in the print rather than in the scene.
+
+   Grain that stays put while the page slides under it is also what film
+   actually does: the grain is in the print, not in the scene. */
 .sepia-grain-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 40;
   pointer-events: none;
@@ -828,6 +917,22 @@ html[data-js="failed"] [data-reveal] {
      leaves the gallery photographs clipped to nothing while every other
      animated element recovers. */
   clip-path: none !important;
+}
+
+/* MediaImage's placeholder belongs to the same contract and was never wired
+   into it. It is not a Motion `initial` and carries no `data-reveal`, so none
+   of the resets above ever reached it — but it is React state, which means a
+   bundle that never arrives leaves an opaque grey plate on all 36 images with
+   nothing able to remove it.
+
+   Since the plate now paints *behind* the photograph (see MediaImage.tsx) this
+   is belt and braces rather than the only line of defence, and it still earns
+   its place: with no bundle there is also nothing to stop the sweep keyframes,
+   and 36 elements animating forever is not what a scripting-off reader should
+   be given. */
+html:not([data-js]) .img-shimmer,
+html[data-js="failed"] .img-shimmer {
+  display: none !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1048,6 +1153,90 @@ html[data-js="failed"] [data-reveal] {
        motion sees beams of the same weight as everyone else — not dimmer ones.
        Moved with the curve when it was brightened. */
     opacity: 0.36;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Phone budget                                                               */
+/* -------------------------------------------------------------------------- */
+
+/* Everything the desktop absorbs and a phone does not, in one place.
+
+   `pointer: coarse` and not a width breakpoint: this is about what the device
+   can raster, not about how much room the layout has. A narrow desktop window
+   has a GPU; a large tablet does not.
+
+   Nothing here changes the composition — the rays still scroll with the page,
+   the grain is still there, every element still enters. What is dropped is the
+   per-frame cost behind those effects. */
+@media (pointer: coarse) {
+  /* 1. THE RAY DRIFT.
+
+     .light-rays-backdrop is as tall as the document by design, so the light
+     travels with the page. Static, that is cheap: rasterised lazily by tile and
+     cached. Animated, it is the single most expensive thing on the site — a
+     ~2 300 x 15 600px masked layer per bundle, times three, each with a
+     ::before overhanging by another 420px and carrying two mask images
+     composited with `intersect`, all re-rastering on the CPU every frame
+     because no layer that size fits a GPU texture.
+
+     So on a phone the shafts hold still and scroll past instead of drifting.
+     They are a background, and a background that is quietly doing nothing is
+     not what anyone came to look at. */
+  .light-rays-bundle,
+  .light-rays-bundle::before {
+    animation: none;
+  }
+
+  /* Two of the three bundles as well: even frozen, three stacked masked layers
+     of that size are three lots of tile raster and GPU memory. Bundle A carries
+     the widest, brightest shafts, so keeping it alone loses the phase drift
+     between bundles but not the light itself. */
+  .light-rays-bundle-b,
+  .light-rays-bundle-c {
+    display: none;
+  }
+
+  /* 2. THE OPENING BEAMS. These are only one viewport tall, so they can keep
+     moving — but five skewed masked layers inside a masked container is still
+     the most expensive thing on the opening screen, which is the screen that
+     has to feel fast. Beams 2 and 4 out of the cluster of five: dropping an
+     adjacent pair would leave a visible gap on one side, dropping every other
+     one keeps the light pooled where it was. */
+  .page-ray:nth-child(2),
+  .page-ray:nth-child(4) {
+    display: none;
+  }
+
+  /* 3. THE GRAIN JITTER. The one animation on the site that cannot run on the
+     compositor: it drives `background-position`, so every step repaints the
+     blend layer and forces a fresh backdrop read of the whole viewport, about
+     once a second, forever. The grain itself stays — only its jitter stops. */
+  .sepia-grain-overlay {
+    animation: none;
+  }
+
+  /* 4. EVERY ENTRANCE BLUR, and this is the one that matters most off the
+     opening screen.
+
+     Reveal brings each element in from `blur(8px)`, and there are close to 300
+     of them on this page. Worse, Parallax drives `filter: blur(16px)` straight
+     off scroll position — the footer alone runs ten of those, so ten elements
+     re-rasterise and run a fresh blur pass on every single scroll frame.
+     Animated blur is the most expensive filter there is: it cannot be
+     composited, so each frame is a full CPU repaint of the element.
+
+     There is a second cost that outlives the animation. Motion leaves the final
+     value in the inline style, so an element that has finished entering still
+     carries `filter: blur(0px)` — a no-op that still forces its own render
+     surface and still disables subpixel text antialiasing. 60 elements were
+     sitting in that state on a fully-settled page.
+
+     `!important` because Motion writes these as inline styles, which a
+     stylesheet cannot otherwise reach. The entrances keep their fade, their
+     rise and their rotation — all composited, all free. Only the blur goes. */
+  [data-reveal] {
+    filter: none !important;
   }
 }
 
@@ -1295,6 +1484,31 @@ html[data-loader="done"] .site-loader {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* And stop everything inside it, which `visibility: hidden` does not.
+ *
+ * A hidden element's CSS animations keep running: the browser goes on ticking
+ * them, and on a compositor property it goes on producing frames for them. This
+ * panel is on screen for under a second and then invisible for the rest of the
+ * session, but it was still driving seven infinite animations the whole time —
+ * five shaft sweeps across a 12-megapixel surface each (at phone DPR), plus the
+ * wordmark gleam and the progress bar. Measured with `document.getAnimations()`
+ * long after dismissal, they were still reported as `running`.
+ *
+ * Cutting them at the start of the fade rather than the end is deliberate and
+ * costs nothing anyone can see: the panel is on its way out over 0.72s, and a
+ * shaft that stops drifting while a black panel dissolves is not a thing the
+ * eye can catch. `animation` and `transition` are separate properties, so the
+ * fade itself is untouched by this.
+ *
+ * The selector has to reach pseudo-elements too — the shaft sweep and the
+ * shimmer both live on `::before`/`::after`. */
+html[data-loader="done"] .site-loader,
+html[data-loader="done"] .site-loader *,
+html[data-loader="done"] .site-loader *::before,
+html[data-loader="done"] .site-loader *::after {
+  animation: none;
 }
 
 /* The shafts are the footer's, imported wholesale (see SiteLoader.tsx), so the

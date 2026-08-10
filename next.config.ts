@@ -41,6 +41,15 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [
     // Phones on the same wifi hit the dev server by LAN IP, which counts as a
     // different origin than the localhost it was started on.
+    //
+    // Pinned addresses go stale the moment the router hands out a different
+    // lease, and the failure is quiet in the worst way: the page still renders,
+    // because that is server HTML, but the bundle is refused and nothing
+    // hydrates. `192.168.1.36` was here while the machine sat on `.34`, which
+    // is exactly the shape of "on my phone the images never appear, only their
+    // loaders" — no hydration means no effect to take the placeholders down.
+    // Check `hostname -I` before trusting either of these.
+    "192.168.1.34",
     "192.168.1.36",
     "*.trycloudflare.com",
     "*.ngrok-free.dev",

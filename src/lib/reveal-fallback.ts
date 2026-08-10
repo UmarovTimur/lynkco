@@ -69,15 +69,43 @@ export const REVEAL_FALLBACK_SCRIPT = `
 
 /**
  * Called from the animated components' mount effects. Reaching this proves
- * React hydrated, so Motion owns visibility from here and the fallback must
- * stand down — including when it has already fired on a very slow device.
+ * React hydrated, so Motion owns visibility from here.
+ *
+ * EXCEPT ONCE THE FALLBACK HAS ALREADY FIRED — and that exception is the whole
+ * point of this branch. `data-js="failed"` means the grace period elapsed and
+ * the force-show rules in globals.css put the entire page on screen with
+ * `!important`. Handing control back to Motion at that point does not resume an
+ * entrance; it un-does a page the reader is already looking at. Motion's
+ * `initial` is still sitting in each element's inline style, so the instant the
+ * attribute flips to "ok" every one of the ~280 animated elements drops back to
+ * `opacity: 0` — the page blinks out, the photographs clip shut, and each one
+ * only crawls back as its observer or its 2s timer catches up.
+ *
+ * That is exactly the "loader flashes, images don't appear" report on slow
+ * phones: hydration there routinely lands after the 4s grace period, so the
+ * flip happened on every load. A device slow enough to miss the window is the
+ * last one that should then be made to replay 280 entrance animations.
+ *
+ * So: failed is terminal. This session shows its content plainly and skips the
+ * entrances, which is the correct trade — a visible page beats an animated
+ * blank one.
  */
+/**
+ * Every animated element calls markHydrated() from its own mount effect, and
+ * there are close to 300 of them — they all mount in the same commit, while the
+ * panel is still up and before the dismissal timer below has had a chance to
+ * run. Without this latch each one queues its own redundant timer.
+ */
+let dismissalScheduled = false;
+
 export function markHydrated() {
   if (typeof document === "undefined") return;
   const el = document.documentElement;
+  if (el.dataset.js === "failed") return;
   el.dataset.js = "ok";
 
-  if (el.dataset.loader !== "visible") return;
+  if (dismissalScheduled || el.dataset.loader !== "visible") return;
+  dismissalScheduled = true;
 
   // Serve out the rest of the minimum hold. `__loaderStart` is set by the
   // inline script above; if it is somehow missing, dismiss immediately rather

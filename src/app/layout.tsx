@@ -136,6 +136,11 @@ export default function RootLayout({
           {REVEAL_FALLBACK_SCRIPT}
         </Script>
 
+        {/* Static corner glow over the opening screen. Separate from the ray
+            layer below because that one is pinned to the viewport and this one
+            must not be — see .page-glow in globals.css. */}
+        <div className="page-glow" aria-hidden="true" />
+
         <div className="light-rays-backdrop" aria-hidden="true">
           <span className="light-rays-bundle light-rays-bundle-a" />
           <span className="light-rays-bundle light-rays-bundle-b" />
