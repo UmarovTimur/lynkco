@@ -1,10 +1,9 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { ValueProps } from "@/components/sections/ValueProps";
-import { Specs } from "@/components/sections/Specs";
 import { Geography } from "@/components/sections/Geography";
-import { Complectations } from "@/components/sections/Complectations";
 import { Equipment } from "@/components/sections/Equipment";
+import { ModelOverview } from "@/components/sections/ModelOverview";
 import { Stock } from "@/components/sections/Stock";
 import { Process } from "@/components/sections/Process";
 import { Terms } from "@/components/sections/Terms";
@@ -31,8 +30,7 @@ export default function Home() {
       <AboutBento />
       <Work />
       <Equipment />
-      <Specs />
-      <Complectations />
+      <ModelOverview />
       <Pricing />
       <Stock />
       <Geography />
