@@ -5,7 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
-import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
+import { nbsp, SECTION_HEADING_CLASS } from "@/lib/typography";
 
 type StockKey = "retail" | "demo";
 type TrimKey = "max" | "ultra";
@@ -256,7 +256,7 @@ export function Pricing() {
           href="#lead-form"
           className="glass-edge-button inline-flex items-center gap-2 rounded-full bg-black px-6 py-4 text-sm font-medium sm:pr-7 sm:pl-8 sm:text-base text-white transition-opacity hover:opacity-90"
         >
-          Получить коммерческое предложение
+          Заказать
           <ArrowRight size={16} />
         </a>
       </Reveal>

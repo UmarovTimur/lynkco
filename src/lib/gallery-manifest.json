@@ -273,43 +273,43 @@
       "type": "photo",
       "src": "/images/gallery/white/white-01.webp",
       "thumb": "/images/gallery/white/white-01-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
       "src": "/images/gallery/white/white-02.webp",
       "thumb": "/images/gallery/white/white-02-thumb.webp",
-      "width": 1279,
-      "height": 1706
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
       "src": "/images/gallery/white/white-03.webp",
       "thumb": "/images/gallery/white/white-03-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
       "src": "/images/gallery/white/white-04.webp",
       "thumb": "/images/gallery/white/white-04-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
       "src": "/images/gallery/white/white-05.webp",
       "thumb": "/images/gallery/white/white-05-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
       "src": "/images/gallery/white/white-06.webp",
       "thumb": "/images/gallery/white/white-06-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1200,
+      "height": 800
     },
     {
       "type": "photo",
@@ -322,8 +322,8 @@
       "type": "photo",
       "src": "/images/gallery/white/white-08.webp",
       "thumb": "/images/gallery/white/white-08-thumb.webp",
-      "width": 1706,
-      "height": 1279
+      "width": 1279,
+      "height": 1706
     },
     {
       "type": "photo",
@@ -343,8 +343,8 @@
       "type": "photo",
       "src": "/images/gallery/white/white-11.webp",
       "thumb": "/images/gallery/white/white-11-thumb.webp",
-      "width": 1279,
-      "height": 1706
+      "width": 1706,
+      "height": 1279
     },
     {
       "type": "photo",
@@ -357,6 +357,48 @@
       "type": "photo",
       "src": "/images/gallery/white/white-13.webp",
       "thumb": "/images/gallery/white/white-13-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-14.webp",
+      "thumb": "/images/gallery/white/white-14-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-15.webp",
+      "thumb": "/images/gallery/white/white-15-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-16.webp",
+      "thumb": "/images/gallery/white/white-16-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-17.webp",
+      "thumb": "/images/gallery/white/white-17-thumb.webp",
+      "width": 1279,
+      "height": 1706
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-18.webp",
+      "thumb": "/images/gallery/white/white-18-thumb.webp",
+      "width": 1706,
+      "height": 1279
+    },
+    {
+      "type": "photo",
+      "src": "/images/gallery/white/white-19.webp",
+      "thumb": "/images/gallery/white/white-19-thumb.webp",
       "width": 1279,
       "height": 1706
     },

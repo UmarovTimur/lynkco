@@ -221,14 +221,12 @@ html.lenis {
   pointer-events: none;
   /* Clips the oversized, drifting ray bundles inside. */
   overflow: hidden;
-  mask-image: linear-gradient(
-    to bottom,
-    rgb(0 0 0 / 0%) 0,
-    rgb(0 0 0 / 0%) 55svh,
-    rgb(0 0 0) 105svh
-  );
-  mask-repeat: no-repeat;
-  mask-size: 100% 100%;
+  /* The handoff mask that used to hold this layer down over the first screen is
+     gone with the opening beams it was handing off from (see .page-rays). It
+     faded the field in between 55svh and 105svh so the two systems would not
+     stack their 45deg shafts over the hero; with only one system left there is
+     nothing to stack against, and the field now lights the first screen itself.
+     .page-glow still sits on top of it in the corner. */
 }
 
 /* The corner glow, split out of .light-rays-backdrop so the handoff mask above
@@ -252,12 +250,17 @@ html.lenis {
   background-repeat: no-repeat;
 }
 
-/* The rays themselves, split across three sibling layers (see layout.tsx) so
-   each bundle can break up, dim and drift on its own clock.
+/* The rays themselves, split across two sibling layers (see layout.tsx) so each
+   bundle can break up, dim and drift on its own clock.
 
-   Why three bundles rather than one gradient:
+   There was a third, finest bundle (350px period) supplying high-frequency
+   shimmer. It was dropped along with a scale-up of these two: at this size the
+   fine bundle read as texture over the shafts rather than as more of them, and
+   it was the layer phones already threw away first.
 
-   - their periods (760 / 520 / 350px) share no common factor, so the combined
+   Why two bundles rather than one gradient:
+
+   - their periods (2280 / 1612px) share only a factor of 4, so the combined
      figure only truly repeats after their LCM — far taller than any page;
    - their angles differ by a couple of degrees, so bundles slowly drift in and
      out of phase across the width instead of marching in lockstep;
@@ -276,10 +279,14 @@ html.lenis {
      .light-rays-bundle::before  the rays and their breaks + fade + travel
 
    Both overhang their box (and .light-rays-backdrop clips the lot) by more
-   than the largest animation amplitude, so no drift can pull an edge in. */
+   than the largest animation amplitude, so no drift can pull an edge in. The
+   insets grew with the amplitudes below: the parent covers 120px of summed
+   translate plus ~70px thrown by a 0.5deg pivot on a document-tall layer, and
+   the ::before covers 400px of summed travel. Raise an amplitude without
+   raising these and a hard edge walks into frame. */
 .light-rays-bundle {
   position: absolute;
-  inset: -220px;
+  inset: -320px;
   /* Pin the mask to one tile the size of the layer: the initial `repeat` would
      tile this gradient and band the page, and it also keeps the ::before
      overhang below clipped out. */
@@ -316,11 +323,27 @@ html.lenis {
    Two of them, a few degrees apart and on different periods, because a single
    one would cut every parallel ray at the same offset — one clean band shearing
    across the whole bundle. Crossed at an angle, their dim zones land at a
-   different point on each ray, so the breaks stagger the way real shafts do. */
+   different point on each ray, so the breaks stagger the way real shafts do.
+
+   THEIR FLOORS ARE HIGH ON PURPOSE — DO NOT TAKE THEM BACK TO ~10%.
+
+   Light here survives five multiplications in a row: the shaft's own alpha, the
+   vertical block mask, these two breaks (composited `intersect`, so they
+   multiply against each other), and the bundle's dapple opacity. Two masks
+   dipping to 0.1 each contribute 0.01 between them, and the chain bottomed out
+   near 0.0004 — mathematically present, invisible on an oklch(0.86) page.
+
+   Scale made it worse rather than better. When the periods doubled, so did the
+   dim stretches: break-a now runs dim from 1020px to 3090px, which is longer
+   than a viewport, so a reader could sit entirely inside one gap and see no
+   rays at all. That is the failure this guards against. A gap should dim a
+   shaft to roughly half, not delete it — the segmenting still reads, because
+   the crossed masks put their dim zones in different places. */
+
 .light-rays-bundle::before {
   content: "";
   position: absolute;
-  inset: -420px;
+  inset: -760px;
   background-image: var(--ray-pattern);
   mask-image: var(--ray-break-a), var(--ray-break-b);
   mask-composite: intersect;
@@ -343,22 +366,26 @@ html.lenis {
 }
 
 .light-rays-bundle-a {
+  /* Period 2280px — three times the 760px this started at, and twice the 1140px
+     of the pass before. Every stop scales with it, so widths, gaps and alphas
+     stay in proportion and this is the same bundle seen from much closer rather
+     than a different one. At this size a single shaft is wider than a phone. */
   --ray-pattern: repeating-linear-gradient(
     45deg,
     oklch(1 0 0 / 0%) 0px,
-    oklch(1 0 0 / 0%) 42px,
-    oklch(1 0 0 / 32%) 84px,
-    oklch(1 0 0 / 0%) 155px,
-    oklch(1 0 0 / 0%) 240px,
-    oklch(1 0 0 / 17%) 256px,
-    oklch(1 0 0 / 0%) 282px,
-    oklch(1 0 0 / 0%) 398px,
-    oklch(1 0 0 / 41%) 456px,
-    oklch(1 0 0 / 0%) 546px,
-    oklch(1 0 0 / 0%) 650px,
-    oklch(1 0 0 / 14%) 664px,
-    oklch(1 0 0 / 0%) 682px,
-    oklch(1 0 0 / 0%) 760px
+    oklch(1 0 0 / 0%) 126px,
+    oklch(1 0 0 / 58%) 252px,
+    oklch(1 0 0 / 0%) 466px,
+    oklch(1 0 0 / 0%) 720px,
+    oklch(1 0 0 / 36%) 768px,
+    oklch(1 0 0 / 0%) 846px,
+    oklch(1 0 0 / 0%) 1194px,
+    oklch(1 0 0 / 75%) 1368px,
+    oklch(1 0 0 / 0%) 1638px,
+    oklch(1 0 0 / 0%) 1950px,
+    oklch(1 0 0 / 30%) 1992px,
+    oklch(1 0 0 / 0%) 2046px,
+    oklch(1 0 0 / 0%) 2280px
   );
   --ray-block-mask: linear-gradient(
     to bottom,
@@ -378,80 +405,89 @@ html.lenis {
     rgb(0 0 0 / 88%) 92%,
     rgb(0 0 0 / 72%) 100%
   );
-  /* 135deg — square along the 45deg rays. */
+  /* 135deg — square along the 45deg rays. Scaled with the pattern: segments have
+     to grow with the shafts they cut, or wider rays end up chopped at the old
+     rate and read as a dashed line. At a 5700px period only a handful of breaks
+     fall across the document, which is the point — long shafts, few gutters. */
   --ray-break-a: repeating-linear-gradient(
     135deg,
     rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 340px,
-    rgb(0 0 0 / 12%) 580px,
-    rgb(0 0 0 / 8%) 756px,
-    rgb(0 0 0 / 100%) 1030px,
-    rgb(0 0 0 / 100%) 1256px,
-    rgb(0 0 0 / 32%) 1450px,
-    rgb(0 0 0 / 100%) 1690px,
-    rgb(0 0 0 / 100%) 1900px
+    rgb(0 0 0 / 100%) 1020px,
+    rgb(0 0 0 / 48%) 1740px,
+    rgb(0 0 0 / 40%) 2268px,
+    rgb(0 0 0 / 100%) 3090px,
+    rgb(0 0 0 / 100%) 3768px,
+    rgb(0 0 0 / 65%) 4350px,
+    rgb(0 0 0 / 100%) 5070px,
+    rgb(0 0 0 / 100%) 5700px
   );
   --ray-break-b: repeating-linear-gradient(
     128deg,
     rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 242px,
-    rgb(0 0 0 / 24%) 452px,
-    rgb(0 0 0 / 100%) 694px,
-    rgb(0 0 0 / 100%) 904px,
-    rgb(0 0 0 / 16%) 1098px,
-    rgb(0 0 0 / 100%) 1340px
+    rgb(0 0 0 / 100%) 726px,
+    rgb(0 0 0 / 55%) 1356px,
+    rgb(0 0 0 / 100%) 2082px,
+    rgb(0 0 0 / 100%) 2712px,
+    rgb(0 0 0 / 48%) 3294px,
+    rgb(0 0 0 / 100%) 4020px
   );
   /* Durations are deliberately long and mutually indivisible (13/19/23/17s).
      The old 5–10s periods were short enough that a single gust filled the
      whole cycle, which put the loop back on the surface; stretched out, one
      cycle holds several gusts of different sizes. Negative delays start every
      channel part-way in, so nothing begins from rest on first paint and the
-     three bundles are already out of phase with each other. */
-  /* translate = sway(19s) + gust(13s)  ->  gust envelope every ~41s.
-     Amplitudes are halves of the old single-channel figure, so the summed
-     peak lands in the same place it always did. */
-  --ray-sway-dur: 19s;
+     two bundles are already out of phase with each other. */
+  /* translate = sway(13s) + gust(8s)  ->  gust envelope every ~21s. Periods are
+     coprime, so the sum itself only repeats after 104s. Amplitudes roughly
+     doubled along with the pattern — holding them still while the shafts grew
+     would have halved the motion the eye actually reads, since what registers
+     is travel relative to shaft width, not travel in pixels. */
+  --ray-sway-dur: 13s;
   --ray-sway-delay: 0s;
-  --ray-sway-x: 30px;
-  --ray-sway-y: -12px;
-  --ray-gust-dur: 13s;
+  --ray-sway-x: 70px;
+  --ray-sway-y: -28px;
+  --ray-gust-dur: 8s;
   --ray-gust-delay: -4s;
-  --ray-gust-x: 22px;
-  --ray-gust-y: -9px;
-  --ray-canopy-dur: 23s;
+  --ray-gust-x: 50px;
+  --ray-gust-y: -21px;
+  --ray-canopy-dur: 17s;
   --ray-canopy-delay: -7s;
-  --ray-canopy-a: 0.34deg;
-  /* travel = travel(17s) + surge(11s)  ->  envelope every ~31s */
-  --ray-travel-dur: 17s;
+  --ray-canopy-a: 0.5deg;
+  /* travel = travel(11s) + surge(7s)  ->  envelope every ~19s */
+  --ray-travel-dur: 11s;
   --ray-travel-delay: -5s;
-  --ray-travel-x: 130px;
-  --ray-travel-y: 130px;
-  --ray-surge-dur: 11s;
+  --ray-travel-x: 240px;
+  --ray-travel-y: 240px;
+  --ray-surge-dur: 7s;
   --ray-surge-delay: -3s;
-  --ray-surge-x: 85px;
-  --ray-surge-y: 85px;
-  --ray-flutter-dur: 6.5s;
+  --ray-surge-x: 160px;
+  --ray-surge-y: 160px;
+  --ray-flutter-dur: 4.3s;
   --ray-flutter-delay: -2.1s;
-  --ray-flutter-a: 0.06deg;
-  --ray-fade-floor: 0.18;
-  --ray-fade-dur: 13s;
+  --ray-flutter-a: 0.1deg;
+  --ray-fade-floor: 0.42;
+  --ray-fade-dur: 9s;
   --ray-dapple-delay: -4s;
 }
 
 .light-rays-bundle-b {
+  /* Period 1612px, from an original 520px. The ratio to bundle A is deliberately
+     not a whole number: 2280 and 1612 share only a factor of 4, so the two
+     bundles realign every ~919 000px. Scaling both by the same factor from the
+     same base would have dropped that to something a long page could reach. */
   --ray-pattern: repeating-linear-gradient(
     43.2deg,
     oklch(1 0 0 / 0%) 0px,
-    oklch(1 0 0 / 0%) 30px,
-    oklch(1 0 0 / 25%) 72px,
-    oklch(1 0 0 / 0%) 134px,
-    oklch(1 0 0 / 0%) 226px,
-    oklch(1 0 0 / 13%) 242px,
-    oklch(1 0 0 / 0%) 266px,
-    oklch(1 0 0 / 0%) 350px,
-    oklch(1 0 0 / 29%) 400px,
-    oklch(1 0 0 / 0%) 476px,
-    oklch(1 0 0 / 0%) 520px
+    oklch(1 0 0 / 0%) 94px,
+    oklch(1 0 0 / 50%) 224px,
+    oklch(1 0 0 / 0%) 416px,
+    oklch(1 0 0 / 0%) 700px,
+    oklch(1 0 0 / 30%) 750px,
+    oklch(1 0 0 / 0%) 824px,
+    oklch(1 0 0 / 0%) 1086px,
+    oklch(1 0 0 / 58%) 1240px,
+    oklch(1 0 0 / 0%) 1476px,
+    oklch(1 0 0 / 0%) 1612px
   );
   --ray-block-mask: linear-gradient(
     to bottom,
@@ -471,147 +507,61 @@ html.lenis {
     rgb(0 0 0 / 66%) 96%,
     rgb(0 0 0 / 100%) 100%
   );
-  /* 133.2deg — square along the 43.2deg rays. */
+  /* 133.2deg — square along the 43.2deg rays. Scaled by the same 1.55. */
   --ray-break-a: repeating-linear-gradient(
     133.2deg,
     rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 274px,
-    rgb(0 0 0 / 10%) 484px,
-    rgb(0 0 0 / 100%) 726px,
-    rgb(0 0 0 / 100%) 982px,
-    rgb(0 0 0 / 28%) 1160px,
-    rgb(0 0 0 / 100%) 1416px,
-    rgb(0 0 0 / 100%) 1560px
+    rgb(0 0 0 / 100%) 850px,
+    rgb(0 0 0 / 45%) 1500px,
+    rgb(0 0 0 / 100%) 2250px,
+    rgb(0 0 0 / 100%) 3044px,
+    rgb(0 0 0 / 62%) 3596px,
+    rgb(0 0 0 / 100%) 4390px,
+    rgb(0 0 0 / 100%) 4836px
   );
   --ray-break-b: repeating-linear-gradient(
     140deg,
     rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 208px,
-    rgb(0 0 0 / 18%) 416px,
-    rgb(0 0 0 / 100%) 640px,
-    rgb(0 0 0 / 100%) 832px,
-    rgb(0 0 0 / 30%) 1024px,
-    rgb(0 0 0 / 100%) 1264px,
-    rgb(0 0 0 / 100%) 2100px
+    rgb(0 0 0 / 100%) 644px,
+    rgb(0 0 0 / 50%) 1290px,
+    rgb(0 0 0 / 100%) 1984px,
+    rgb(0 0 0 / 100%) 2580px,
+    rgb(0 0 0 / 64%) 3174px,
+    rgb(0 0 0 / 100%) 3918px,
+    rgb(0 0 0 / 100%) 6510px
   );
   /* Every channel here leans the opposite way to bundle A — negative drift,
      negative pivot, negative flutter. Two bundles swaying against each other is
      what a canopy does; two swaying together is a slideshow panning. */
-  /* translate = sway(27s) + gust(17s)  ->  envelope every ~69s, the slowest
-     of the three. Every amplitude is negative: this bundle leans against
-     bundle A, which is what a canopy does and a panning slideshow does not. */
-  --ray-sway-dur: 27s;
+  /* translate = sway(19s) + gust(11s)  ->  envelope every ~26s, still the slower
+     of the two. Every amplitude is negative: this bundle leans against bundle A,
+     which is what a canopy does and a panning slideshow does not. */
+  --ray-sway-dur: 19s;
   --ray-sway-delay: -11s;
-  --ray-sway-x: -24px;
-  --ray-sway-y: 17px;
-  --ray-gust-dur: 17s;
+  --ray-sway-x: -56px;
+  --ray-sway-y: 40px;
+  --ray-gust-dur: 11s;
   --ray-gust-delay: -6s;
-  --ray-gust-x: -17px;
-  --ray-gust-y: 12px;
-  --ray-canopy-dur: 31s;
+  --ray-gust-x: -40px;
+  --ray-gust-y: 28px;
+  --ray-canopy-dur: 23s;
   --ray-canopy-delay: -13s;
-  --ray-canopy-a: -0.26deg;
-  /* travel = travel(21s) + surge(13s)  ->  envelope every ~34s */
-  --ray-travel-dur: 21s;
-  --ray-travel-delay: -8s;
-  --ray-travel-x: -108px;
-  --ray-travel-y: -115px;
-  --ray-surge-dur: 13s;
-  --ray-surge-delay: -9s;
-  --ray-surge-x: -70px;
-  --ray-surge-y: -75px;
-  --ray-flutter-dur: 8.5s;
-  --ray-flutter-delay: -5.3s;
-  --ray-flutter-a: -0.045deg;
-  --ray-fade-floor: 0.12;
-  --ray-fade-dur: 17s;
-  --ray-dapple-delay: -9s;
-}
-
-.light-rays-bundle-c {
-  --ray-pattern: repeating-linear-gradient(
-    47.4deg,
-    oklch(1 0 0 / 0%) 0px,
-    oklch(1 0 0 / 0%) 50px,
-    oklch(1 0 0 / 17%) 70px,
-    oklch(1 0 0 / 0%) 113px,
-    oklch(1 0 0 / 0%) 219px,
-    oklch(1 0 0 / 10%) 232px,
-    oklch(1 0 0 / 0%) 252px,
-    oklch(1 0 0 / 0%) 350px
-  );
-  --ray-block-mask: linear-gradient(
-    to bottom,
-    rgb(0 0 0 / 92%) 0%,
-    rgb(0 0 0 / 58%) 5%,
-    rgb(0 0 0 / 100%) 12%,
-    rgb(0 0 0 / 72%) 19%,
-    rgb(0 0 0 / 55%) 26%,
-    rgb(0 0 0 / 92%) 33%,
-    rgb(0 0 0 / 100%) 41%,
-    rgb(0 0 0 / 66%) 48%,
-    rgb(0 0 0 / 86%) 55%,
-    rgb(0 0 0 / 60%) 63%,
-    rgb(0 0 0 / 100%) 70%,
-    rgb(0 0 0 / 78%) 77%,
-    rgb(0 0 0 / 57%) 84%,
-    rgb(0 0 0 / 95%) 91%,
-    rgb(0 0 0 / 70%) 100%
-  );
-  /* 137.4deg — square along the 47.4deg rays. */
-  --ray-break-a: repeating-linear-gradient(
-    137.4deg,
-    rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 194px,
-    rgb(0 0 0 / 6%) 402px,
-    rgb(0 0 0 / 100%) 626px,
-    rgb(0 0 0 / 100%) 754px,
-    rgb(0 0 0 / 26%) 930px,
-    rgb(0 0 0 / 100%) 1124px,
-    rgb(0 0 0 / 100%) 1220px
-  );
-  --ray-break-b: repeating-linear-gradient(
-    131deg,
-    rgb(0 0 0 / 100%) 0px,
-    rgb(0 0 0 / 100%) 306px,
-    rgb(0 0 0 / 20%) 530px,
-    rgb(0 0 0 / 100%) 770px,
-    rgb(0 0 0 / 100%) 1026px,
-    rgb(0 0 0 / 34%) 1204px,
-    rgb(0 0 0 / 100%) 1444px,
-    rgb(0 0 0 / 100%) 1780px
-  );
-  /* The lightest and quickest bundle: smallest sway, but the fastest flutter
-     and the widest of the three ray periods. It supplies most of the
-     high-frequency shimmer the other two are too slow to carry. */
-  /* translate = sway(23s) + gust(15s)  ->  envelope every ~43s */
-  --ray-sway-dur: 23s;
-  --ray-sway-delay: -5s;
-  --ray-sway-x: 17px;
-  --ray-sway-y: 10px;
-  --ray-gust-dur: 15s;
-  --ray-gust-delay: -2s;
-  --ray-gust-x: 12px;
-  --ray-gust-y: 7px;
-  --ray-canopy-dur: 19s;
-  --ray-canopy-delay: -3s;
-  --ray-canopy-a: 0.19deg;
-  /* travel = travel(14s) + surge(9s)  ->  envelope every ~25s, the shortest of
-     the three, which is what makes this bundle the liveliest. */
+  --ray-canopy-a: -0.42deg;
+  /* travel = travel(14s) + surge(9s)  ->  envelope every ~25s */
   --ray-travel-dur: 14s;
-  --ray-travel-delay: -2s;
-  --ray-travel-x: 90px;
-  --ray-travel-y: 85px;
+  --ray-travel-delay: -8s;
+  --ray-travel-x: -210px;
+  --ray-travel-y: -220px;
   --ray-surge-dur: 9s;
-  --ray-surge-delay: -6s;
-  --ray-surge-x: 60px;
-  --ray-surge-y: 56px;
-  --ray-flutter-dur: 5.5s;
-  --ray-flutter-delay: -1.3s;
-  --ray-flutter-a: 0.07deg;
-  --ray-fade-floor: 0.25;
-  --ray-fade-dur: 11s;
-  --ray-dapple-delay: -6.5s;
+  --ray-surge-delay: -9s;
+  --ray-surge-x: -140px;
+  --ray-surge-y: -145px;
+  --ray-flutter-dur: 5.9s;
+  --ray-flutter-delay: -5.3s;
+  --ray-flutter-a: -0.08deg;
+  --ray-fade-floor: 0.36;
+  --ray-fade-dur: 13s;
+  --ray-dapple-delay: -9s;
 }
 
 /* ── Wind ──────────────────────────────────────────────────────────────────
@@ -645,10 +595,10 @@ html.lenis {
    The periodicity is broken by *summing two of them* on the same property at
    different periods, via `animation-composition: add`:
 
-     translate = sway(19s) + gust(13s)
+     translate = sway(13s) + gust(8s)
 
    Two oscillators at nearby-but-coprime periods beat against each other. Their
-   sum swells and fades on an envelope of 1/(1/13 - 1/19) ≈ 41s — long, smooth
+   sum swells and fades on an envelope of 1/(1/8 - 1/13) ≈ 21s — long, smooth
    gusts with genuine lulls between them — while staying infinitely
    differentiable, because a sum of smooth curves is smooth. Every bundle uses a
    different pair, so no two beat together either.
@@ -1136,7 +1086,14 @@ html[data-js="failed"] .img-shimmer {
    bought by widening this range, not by picking a lighter colour. The floor
    matters as much as the ceiling: taking it below the visible threshold is what
    makes the bright end read as a beam sweeping in rather than a panel that is
-   simply always on. */
+   simply always on.
+
+   Currently 0.18-0.26 up to 0.72-0.80, raised about a third from the first
+   measured pass. What keeps a ceiling this high off flooding the page is that
+   the beams never reach it together: each carries its own --beam-breathe-dur
+   and --beam-dapple-delay, so where they overlap most heavily they are almost
+   always at different points on their curves. Shortening those periods toward
+   each other is what would actually blow this out, not the ceiling alone. */
 @keyframes beam-dapple {
   from {
     opacity: var(--beam-dim);
@@ -1152,7 +1109,7 @@ html[data-js="failed"] .img-shimmer {
     /* Roughly the mean of the beam-dapple curve, so a reader who opts out of
        motion sees beams of the same weight as everyone else — not dimmer ones.
        Moved with the curve when it was brightened. */
-    opacity: 0.36;
+    opacity: 0.49;
   }
 }
 
@@ -1175,7 +1132,7 @@ html[data-js="failed"] .img-shimmer {
      .light-rays-backdrop is as tall as the document by design, so the light
      travels with the page. Static, that is cheap: rasterised lazily by tile and
      cached. Animated, it is the single most expensive thing on the site — a
-     ~2 300 x 15 600px masked layer per bundle, times three, each with a
+     ~2 300 x 15 600px masked layer per bundle, times two, each with a
      ::before overhanging by another 420px and carrying two mask images
      composited with `intersect`, all re-rastering on the CPU every frame
      because no layer that size fits a GPU texture.
@@ -1188,12 +1145,11 @@ html[data-js="failed"] .img-shimmer {
     animation: none;
   }
 
-  /* Two of the three bundles as well: even frozen, three stacked masked layers
-     of that size are three lots of tile raster and GPU memory. Bundle A carries
-     the widest, brightest shafts, so keeping it alone loses the phase drift
-     between bundles but not the light itself. */
-  .light-rays-bundle-b,
-  .light-rays-bundle-c {
+  /* The second bundle as well: even frozen, two stacked masked layers of that
+     size are two lots of tile raster and GPU memory. Bundle A carries the
+     widest, brightest shafts, so keeping it alone loses the phase drift between
+     bundles but not the light itself. */
+  .light-rays-bundle-b {
     display: none;
   }
 
@@ -1264,8 +1220,8 @@ html[data-js="failed"] .img-shimmer {
   --beam-rot: 0.5deg;
   --beam-sway-dur: 21s;
   --beam-sway-delay: -6s;
-  --beam-dim: 0.15;
-  --beam-bright: 0.58;
+  --beam-dim: 0.22;
+  --beam-bright: 0.76;
   --beam-breathe-dur: 13s;
   --beam-dapple-delay: -3s;
 }
@@ -1284,8 +1240,8 @@ html[data-js="failed"] .img-shimmer {
   --beam-rot: -0.42deg;
   --beam-sway-dur: 15s;
   --beam-sway-delay: -2s;
-  --beam-dim: 0.12;
-  --beam-bright: 0.55;
+  --beam-dim: 0.18;
+  --beam-bright: 0.72;
   --beam-breathe-dur: 17s;
   --beam-dapple-delay: -8s;
 }
@@ -1304,8 +1260,8 @@ html[data-js="failed"] .img-shimmer {
   --beam-rot: 0.66deg;
   --beam-sway-dur: 27s;
   --beam-sway-delay: -11s;
-  --beam-dim: 0.18;
-  --beam-bright: 0.6;
+  --beam-dim: 0.26;
+  --beam-bright: 0.8;
   --beam-breathe-dur: 11s;
   --beam-dapple-delay: -5s;
 }
@@ -1324,8 +1280,8 @@ html[data-js="failed"] .img-shimmer {
   --beam-rot: -0.55deg;
   --beam-sway-dur: 18s;
   --beam-sway-delay: -14s;
-  --beam-dim: 0.14;
-  --beam-bright: 0.56;
+  --beam-dim: 0.21;
+  --beam-bright: 0.74;
   --beam-breathe-dur: 19s;
   --beam-dapple-delay: -11s;
 }
@@ -1344,8 +1300,8 @@ html[data-js="failed"] .img-shimmer {
   --beam-rot: 0.38deg;
   --beam-sway-dur: 24s;
   --beam-sway-delay: -8s;
-  --beam-dim: 0.16;
-  --beam-bright: 0.58;
+  --beam-dim: 0.24;
+  --beam-bright: 0.76;
   --beam-breathe-dur: 15s;
   --beam-dapple-delay: -6s;
 }
@@ -1448,6 +1404,44 @@ html[data-js="failed"] .img-shimmer {
     rgb(0 0 0) 78%,
     rgb(0 0 0 / 0%) 100%
   );
+  /* The beams bloom in behind the lifting panel rather than being fully lit the
+     instant it clears. Delayed by half the panel's own 0.72s fade, so the light
+     is already coming up as the panel thins out and the two read as one move.
+     Long and eased-out because this is light arriving, not an element sliding.
+
+     The fade lives on the container, not on the beams. Each .page-ray already
+     runs `beam-dapple` on its own opacity, and an animation beats a transition
+     on the same property — a per-beam fade would simply be overwritten on the
+     next frame. On the parent it multiplies into whatever each beam is doing. */
+  transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.36s;
+}
+
+/* Held dark while the opening panel is up, and *only* in that state.
+   `data-loader` is absent entirely when scripting is off, so the beams default
+   to lit and nothing can strand them at zero — the same defensive shape as
+   `html:not([data-loader]) .site-loader`, for the same reason.
+
+   `transition: none` here so entering this state is instant; the transition
+   above only ever runs in the visible -> done direction. */
+html[data-loader="visible"] .page-rays {
+  opacity: 0;
+  transition: none;
+}
+
+/* TEMPORARY — the opening beams are switched off while the ambient field is
+   being reworked to cover the first screen on its own. Everything else about
+   them is left intact (markup in layout.tsx, geometry and the five band masks
+   below, the fade-in above), so putting them back is deleting this one rule.
+   `display: none` and not `opacity: 0` on purpose: a hidden box generates no
+   frames, so the four animations per beam stop costing anything. */
+.page-rays {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-rays {
+    transition: none;
+  }
 }
 
 /* ── Opening panel ─────────────────────────────────────────────────────────

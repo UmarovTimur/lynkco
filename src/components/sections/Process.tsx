@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
 import { nbsp, SECTION_HEADING_CLASS  } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 interface ProcessStep {
   index: number;
@@ -44,6 +45,12 @@ const PROCESS_STEPS: ProcessStep[] = [
     description:
       "Растаможку, лабораторию и получение СБКТС и ЭПТС клиент организует самостоятельно. Рекомендуем проверенного партнёра «под ключ».",
   },
+  {
+    index: 7,
+    title: "Передача клиенту",
+    description:
+      "Забираете автомобили с полным комплектом документов на каждую единицу — можно ставить на учёт и выводить в продажу.",
+  },
 ];
 
 export function Process() {
@@ -77,7 +84,19 @@ export function Process() {
             key={step.index}
             delay={(i % 2) * 0.1}
             rotate={i % 2 === 0 ? 2 : -2}
-            className="flex gap-5"
+            className={cn(
+              "flex gap-5",
+              // An odd number of steps leaves the last one alone in the final
+              // row, hard against the left edge, where it reads as a layout
+              // accident rather than a step. Spanning both columns and holding
+              // it to one column's width — half the grid minus half the 3rem
+              // gap-x — centres it without letting it grow wider than its
+              // neighbours. Derived from the array length, so adding an eighth
+              // step drops the treatment on its own.
+              i === PROCESS_STEPS.length - 1 &&
+                PROCESS_STEPS.length % 2 === 1 &&
+                "md:col-span-2 md:mx-auto md:w-[calc(50%-1.5rem)]",
+            )}
           >
             <span className="glass-edge-button flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-black text-base font-medium text-white sm:h-14 sm:w-14 sm:text-lg">
               {step.index}

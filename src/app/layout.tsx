@@ -155,7 +155,6 @@ export default function RootLayout({
         <div className="light-rays-backdrop" aria-hidden="true">
           <span className="light-rays-bundle light-rays-bundle-a" />
           <span className="light-rays-bundle light-rays-bundle-b" />
-          <span className="light-rays-bundle light-rays-bundle-c" />
         </div>
 
         {/* The big diagonal shafts every page opens on. They share their band

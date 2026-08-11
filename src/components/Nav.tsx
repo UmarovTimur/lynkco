@@ -7,14 +7,17 @@ import { Menu, X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
 import type { NavLink } from "@/types/content";
 
+// Order follows the page top to bottom (see app/page.tsx) — a menu that lists
+// anchors in a different order than the reader meets them turns every click
+// into a guess about which way the page will jump.
 const NAV_LINKS: NavLink[] = [
   { label: "Характеристики", href: "#specs" },
   { label: "Комплектации", href: "#complectations" },
   { label: "Наличие", href: "#stock" },
   { label: "География", href: "#geography" },
   { label: "Схема поставки", href: "#process" },
-  { label: "FAQ", href: "#faq" },
   { label: "Заявка", href: "#lead-form" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 const panelVariants = {
