@@ -31,14 +31,14 @@ export default function Home() {
       <Work />
       <Equipment />
       <ModelOverview />
-      <Pricing />
       <Stock />
       <Geography />
       <Process />
       <Terms />
       {/* <WholesalePricing /> */}
-      <Faq />
+      <Pricing />
       <LeadForm />
+      <Faq />
 
       {/*
         Leftover template demo content (Hanzo portfolio placeholders) — kept

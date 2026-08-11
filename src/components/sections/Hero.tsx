@@ -53,6 +53,12 @@ function HeroPhotoChip({ className }: { className?: string }) {
             fill
             sizes="(min-width: 1024px) 160px, 96px"
             className="object-cover"
+            // First frame only — it is the one in the server HTML, so it is
+            // above the fold by definition and must not wait behind the
+            // lazy queue. Later frames are swapped in mid-session, where the
+            // default lazy behaviour is correct.
+            loading={index === 0 ? "eager" : undefined}
+            fetchPriority={index === 0 ? "high" : undefined}
           />
         </motion.span>
       </AnimatePresence>
@@ -192,6 +198,11 @@ function HeroPhotoCarousel({ className }: { className?: string }) {
               fill
               sizes="(min-width: 1024px) 160px, 96px"
               className="object-contain p-1"
+              // Only the first pass of the loop: the second half repeats the
+              // same URLs, so marking it too would add nothing but three more
+              // entries to the eager queue.
+              loading={i < STRIP_IMAGES.length ? "eager" : undefined}
+              fetchPriority={i < STRIP_IMAGES.length ? "high" : undefined}
             />
           </span>
         ))}
@@ -261,8 +272,8 @@ export function Hero() {
 
         <Reveal delay={0.35} rotate={-2}>
           <div className="max-w-xl text-center text-base leading-[1.7] text-black/50 sm:text-lg">
-            Эксклюзивное предложение для новых партнеров
-            <p>Склад Хоргос | Июль 2026</p>
+            Поставка новых автомобилей по схеме параллельного импорта
+            <p>Склад в Хоргосе | Июль 2026</p>
           </div>
         </Reveal>
         {/* 

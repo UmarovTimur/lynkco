@@ -66,6 +66,13 @@ const TARGETS = [
     // at 3x alike.
     note: "bento tiles, max 600px CSS",
   },
+  {
+    dir: "public/images/second",
+    maxWidth: 1280,
+    // Same bento tiles as public/images/about — a second drop folder for the
+    // section, so the same ceiling applies.
+    note: "bento tiles, max 600px CSS",
+  },
 ];
 
 /** Written from a gallery frame — see the social-card step at the bottom. */

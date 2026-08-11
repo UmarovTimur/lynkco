@@ -18,10 +18,21 @@ const inter = Inter({
 // Playfair Display replaces Instrument Serif: same "elegant italic accent" role,
 // but Instrument Serif has no Cyrillic glyphs at all (Latin/Latin-ext only),
 // so Russian eyebrow labels would silently fall back to a system serif.
+// Kept out of the critical path on purpose. This face is only ever used for the
+// small italic eyebrow above a section heading, and there is no such label in
+// the first viewport of either route — preloading it put ~119KB of fonts ahead
+// of the hero. `swap` lets those labels paint in the metric-matched fallback
+// Next generates (Playfair Display Fallback, off local Times New Roman) and
+// switch when the real face lands.
+//
+// `normal` is deliberately absent: every one of the ten `font-serif` call sites
+// in src/ is italic, so shipping the upright cuts a subset nothing renders.
 const instrumentSerif = Playfair_Display({
   variable: "--font-instrument-serif",
   subsets: ["latin", "cyrillic"],
-  style: ["normal", "italic"],
+  style: ["italic"],
+  preload: false,
+  display: "swap",
 });
 
 const TITLE = "Lynk & Co 06 — параллельный импорт из Китая";

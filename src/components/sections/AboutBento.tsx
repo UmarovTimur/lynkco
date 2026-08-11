@@ -14,28 +14,31 @@ import { TransitionLink } from "@/components/PageTransition";
 import type { BentoImage } from "@/types/content";
 import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 
+// Each column mixes exterior and interior on purpose: COLUMN_TWO is hidden
+// below md, so a column split by subject would leave the phone showing four
+// shots of the same thing.
 const COLUMN_ONE: BentoImage[] = [
   {
-    src: "/images/about/1/1.webp",
-    alt: "Lynk & Co 06 — экстерьер, фото со склада 1",
-    width: 1706,
-    height: 1279,
+    src: "/images/second/6.webp",
+    alt: "Lynk & Co 06 — вид спереди три четверти, белый",
+    width: 1200,
+    height: 800,
   },
   {
-    src: "/images/about/1/2.webp",
-    alt: "Lynk & Co 06 — экстерьер, фото со склада 2",
-    width: 1706,
-    height: 1279,
+    src: "/images/second/2.webp",
+    alt: "Lynk & Co 06 — передние сиденья, чёрная кожа",
+    width: 1200,
+    height: 800,
   },
   {
-    src: "/images/about/1/3.webp",
-    alt: "Lynk & Co 06 — экстерьер, фото со склада 3",
-    width: 1706,
-    height: 1279,
+    src: "/images/second/1.webp",
+    alt: "Lynk & Co 06 — вид сбоку, белый",
+    width: 1200,
+    height: 800,
   },
   {
     src: "/images/about/1/4.webp",
-    alt: "Lynk & Co 06 — экстерьер, фото со склада 4",
+    alt: "Lynk & Co 06 в зелёном цвете — вид спереди, фото со склада",
     width: 4096,
     height: 3072,
   },
@@ -43,26 +46,26 @@ const COLUMN_ONE: BentoImage[] = [
 
 const COLUMN_TWO: BentoImage[] = [
   {
-    src: "/images/about/2/1.webp",
-    alt: "Lynk & Co 06 — интерьер, фото 1",
-    width: 4096,
-    height: 3072,
+    src: "/images/second/5.webp",
+    alt: "Lynk & Co 06 — вид сзади три четверти, белый",
+    width: 1200,
+    height: 800,
   },
   {
-    src: "/images/about/2/2.webp",
-    alt: "Lynk & Co 06 — интерьер, фото 2",
-    width: 1279,
-    height: 1706,
+    src: "/images/second/4.webp",
+    alt: "Lynk & Co 06 — передняя панель с центральным экраном",
+    width: 1200,
+    height: 800,
   },
   {
-    src: "/images/about/2/3.webp",
-    alt: "Lynk & Co 06 — интерьер, фото 3",
-    width: 1706,
-    height: 1279,
+    src: "/images/second/3.webp",
+    alt: "Lynk & Co 06 — подкапотное пространство",
+    width: 1200,
+    height: 800,
   },
   {
-    src: "/images/about/2/4.webp",
-    alt: "Lynk & Co 06 — интерьер, фото 4",
+    src: "/images/about/1/3.webp",
+    alt: "Lynk & Co 06 в сером цвете — вид спереди, фото со склада",
     width: 1706,
     height: 1279,
   },
@@ -139,7 +142,7 @@ export function AboutBento() {
   // exposed. Overscan must therefore stay above the largest total offset any
   // child can reach: 16vh here plus 5vh of column differential = 21vh, against
   // 24vh of overscan below.
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ["-16vh", "16vh"]);
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["-36vh", "36vh"]);
 
   // The two columns additionally move against *each other*, not just against
   // the frame. One shared offset moves the whole layer as a single flat plane,

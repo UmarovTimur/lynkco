@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { MediaImage } from "@/components/MediaImage";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useLenis } from "lenis/react";
-import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import { Play } from "lucide-react";
 import {
   ALL_ITEMS,
   GALLERY_GROUPS,
@@ -16,19 +16,33 @@ import { cn } from "@/lib/utils";
 
 const ALL = "all";
 
+// Loaded on the first click, not with the grid. See the note in Work.tsx —
+// `dynamic()` only splits when it is called from a Client Component.
+const Lightbox = dynamic(() =>
+  import("@/components/Lightbox").then((m) => m.Lightbox),
+);
+
+/** Warms the chunk on intent, so the click itself doesn't wait on a fetch. */
+function preloadLightbox() {
+  void import("@/components/Lightbox");
+}
+
 function Thumb({
   item,
   onOpen,
-  priority,
+  eager,
 }: {
   item: GalleryItem;
   onOpen: () => void;
-  priority: boolean;
+  /** Above the fold on first paint — skips the lazy queue. */
+  eager: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onOpen}
+      onPointerEnter={preloadLightbox}
+      onFocus={preloadLightbox}
       className="group relative aspect-[4/3] w-full cursor-pointer overflow-hidden rounded-2xl bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
     >
       <MediaImage
@@ -36,8 +50,12 @@ function Thumb({
         alt=""
         fill
         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
+        // `priority` is deprecated in Next 16 and meant a <link rel="preload">
+        // per image — eight of them in the head of this route. These are all
+        // above the fold, so eager is the part worth keeping; the head stays
+        // clear for the fonts.
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : undefined}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
       {item.type === "video" && (
@@ -48,138 +66,6 @@ function Thumb({
         </span>
       )}
     </button>
-  );
-}
-
-function Lightbox({
-  items,
-  index,
-  onClose,
-  onStep,
-}: {
-  items: GalleryItem[];
-  index: number;
-  onClose: () => void;
-  onStep: (delta: number) => void;
-}) {
-  const shouldReduceMotion = useReducedMotion();
-  const lenis = useLenis();
-  const item = items[index];
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onStep(-1);
-      if (e.key === "ArrowRight") onStep(1);
-    };
-    window.addEventListener("keydown", onKey);
-
-    // Locking background scroll takes both halves:
-    //
-    // 1. Lenis (see layout.tsx) drives scrolling from JS, so it keeps moving
-    //    the page no matter what `overflow` says — it has to be paused.
-    // 2. `html` is the scrolling element here, not `body` (body is `min-h-full`
-    //    inside an `h-full` html), so an overflow lock on body does nothing.
-    //    Removing the scrollbar also reflows the page, so its width is handed
-    //    back as padding to keep the content from jumping sideways.
-    lenis?.stop();
-
-    const root = document.documentElement;
-    const prevOverflow = root.style.overflow;
-    const prevPadding = root.style.paddingRight;
-    const scrollbar = window.innerWidth - root.clientWidth;
-    root.style.overflow = "hidden";
-    if (scrollbar > 0) root.style.paddingRight = `${scrollbar}px`;
-
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      lenis?.start();
-      root.style.overflow = prevOverflow;
-      root.style.paddingRight = prevPadding;
-    };
-  }, [onClose, onStep, lenis]);
-
-  if (!item) return null;
-
-  return (
-    <motion.div
-      // overscroll-contain stops touch rubber-banding from reaching the page
-      // behind; data-lenis-prevent keeps Lenis off this subtree even if
-      // something restarts it while the lightbox is open.
-      data-lenis-prevent
-      className="fixed inset-0 z-[100] flex flex-col overscroll-contain bg-black/95 backdrop-blur-sm"
-      initial={shouldReduceMotion ? undefined : { opacity: 0 }}
-      animate={shouldReduceMotion ? undefined : { opacity: 1 }}
-      exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Просмотр медиа"
-    >
-      <div className="flex shrink-0 items-center justify-between px-6 py-5">
-        <span className="text-sm text-white/60">
-          {index + 1} / {items.length}
-        </span>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Закрыть"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-        >
-          <X size={18} />
-        </button>
-      </div>
-
-      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-6 sm:px-16">
-        <button
-          type="button"
-          onClick={() => onStep(-1)}
-          aria-label="Предыдущее"
-          className="absolute left-2 z-10 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:left-4"
-        >
-          <ChevronLeft size={20} />
-        </button>
-
-        <div className="relative flex h-full w-full items-center justify-center">
-          {item.type === "video" ? (
-            <video
-              key={item.src}
-              src={item.src}
-              poster={item.poster}
-              controls
-              autoPlay
-              playsInline
-              className="max-h-full max-w-full rounded-lg"
-            />
-          ) : (
-            <MediaImage
-              key={item.src}
-              src={item.src}
-              alt=""
-              width={item.width}
-              height={item.height}
-              sizes="100vw"
-              className="max-h-full w-auto rounded-lg object-contain"
-              // The plate fills the whole stage here rather than tracking the
-              // photo — the photo's own dimensions aren't laid out until it
-              // loads. Toned right down so it doesn't glare out of the dark
-              // overlay.
-              shimmerClassName="rounded-lg bg-white/5 opacity-40"
-              priority
-            />
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => onStep(1)}
-          aria-label="Следующее"
-          className="absolute right-2 z-10 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-4"
-        >
-          <ChevronRight size={20} />
-        </button>
-      </div>
-    </motion.div>
   );
 }
 
@@ -286,7 +172,7 @@ export function GalleryBrowser() {
           <Thumb
             key={item.src}
             item={item}
-            priority={i < 8}
+            eager={i < 8}
             onOpen={() => setOpenIndex(i)}
           />
         ))}
