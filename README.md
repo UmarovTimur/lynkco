@@ -1,171 +1,128 @@
-# AI Website Cloner Template
+# Lynk & Co 06 — лендинг
 
-<a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template/stargazers"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a> <a href="https://discord.gg/hrTSX5yTpB"><img src="https://img.shields.io/discord/1400896964597383279?label=discord" alt="Discord" /></a>
+Одностраничный сайт о поставках Lynk & Co 06 по параллельному импорту: автомобили в наличии на складе в Хоргосе, отгрузка от одной единицы, доставка по странам СНГ. Плюс отдельная страница с галереей фото и видео по цветам кузова.
 
-A reusable template for reverse-engineering any website into a clean, modern Next.js codebase using AI coding agents. 
+Сайт полностью статический (`output: "export"`): `npm run build` собирает готовую папку `out/`, которую можно отдать любому статическому хостингу. Сервер на Node не нужен.
 
-**Recommended: [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with Opus 4.8 for best results** — but works with a variety of AI coding agents.
+**Демо:** https://umarovtimur.github.io/lynkco/
 
-Point it at a URL, run `/clone-website`, and your AI agent will inspect the site, extract design tokens and assets, write component specs, and dispatch parallel builders to reconstruct every section.
+## Стек
 
-## Demo
+- **Next.js 16** — App Router, React 19, TypeScript strict, статический экспорт
+- **Tailwind CSS v4** и **shadcn/ui**
+- **Motion** — анимации появления, переходы между страницами
+- **Lenis** — плавный скролл
+- **Lucide React** — иконки
 
-[![Watch the demo](docs/design-references/comparison.png)](https://youtu.be/O669pVZ_qr0)
+## Быстрый старт
 
-> Click the image above to watch the full demo on YouTube.
+Нужен [Node.js](https://nodejs.org/) 24+.
 
-## Quick Start
+```bash
+npm install
+npm run dev
+```
 
-> **Important:** Start by making your own copy with GitHub's **Use this template** button. Do not clone this template repository directly for your website project, and do not open pull requests here with your generated website.
+Сайт откроется на http://localhost:3000.
 
-1. **Create your own repository from this template**
+## Команды
 
-   On the GitHub page for this project, click **Use this template**, then click **Create a new repository**.
+```bash
+npm run dev              # дев-сервер
+npm run build            # статическая сборка в out/
+npm run lint             # ESLint
+npm run typecheck        # проверка типов
+npm run check            # lint + typecheck + build
+npm run optimize:images  # ужать картинки в public/images/ и собрать OG-карточку
+```
 
-   Give your new repository a name, choose whether it should be public or private, then click **Create repository**. If GitHub shows an **Include all branches** option, you can leave it off.
+## Страницы и секции
 
-   This gives you your own separate project to work in, so your website changes stay in your account instead of coming back to the main template.
+- `/` — главная. Секции идут по воронке продаж: Hero → о машине (AboutBento, Work) → оснащение → характеристики и комплектации → наличие → география → схема поставки → условия сделки → цены → заявка → FAQ. Компоненты лежат в `src/components/sections/`.
+- `/gallery` — галерея с фильтром по цветам и полноэкранным просмотром.
 
-2. **Open your new repository on your computer**
+## Галерея
 
-   After GitHub creates your copy, open that new repository. Click **Code** and open or clone your new repository with your preferred coding tool.
+Фото и видео для галереи не редактируются руками. Исходники раскладываются по папкам с названиями цветов:
 
-   If you use the terminal, the command will look like this:
+```
+media-src/
+  белый/      IMG_001.jpg  clip.mp4
+  зелёный/    ...
+  интерьер/   ...
+```
 
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/YOUR-NEW-REPOSITORY.git
-   cd YOUR-NEW-REPOSITORY
-   ```
+Затем:
 
-3. **Install dependencies**
-   ```bash
-   npm install
-   ```
-4. **Start your AI agent** — Claude Code recommended:
-   ```bash
-   claude --chrome
-   ```
-5. **Run the skill**:
-   ```
-   /clone-website <target-url1> [<target-url2> ...]
-   ```
-6. **Customize** (optional) — after the base clone is built, modify as needed
+```bash
+node scripts/process-gallery.mjs media-src
+```
 
-> Using a different agent? Open `AGENTS.md` for project instructions — most agents pick it up automatically.
+Скрипт сделает WebP (до 1920px) и превью для каждого фото, перекодирует видео в H.264 и вытащит постер. Потом пересоберёт `src/lib/gallery-manifest.json`, откуда страница берёт данные. Папка `media-src/` в git не попадает.
 
-## Supported Platforms
+## Картинки
 
-| Agent                                                         | Status                     |
-| ------------------------------------------------------------- | -------------------------- |
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | **Recommended** — Opus 4.8 |
-| [Codex CLI](https://github.com/openai/codex)                  | Supported                  |
-| [OpenCode](https://opencode.ai/)                              | Supported                  |
-| [GitHub Copilot](https://github.com/features/copilot)         | Supported                  |
-| [Cursor](https://cursor.com/)                                 | Supported                  |
-| [Windsurf](https://codeium.com/windsurf)                      | Supported                  |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli)     | Supported                  |
-| [Cline](https://github.com/cline/cline)                       | Supported                  |
-| [Roo Code](https://github.com/RooCodeInc/Roo-Code)            | Supported                  |
-| [Continue](https://continue.dev/)                             | Supported                  |
-| [Amazon Q](https://aws.amazon.com/q/developer/)               | Supported                  |
-| [Augment Code](https://www.augmentcode.com/)                  | Supported                  |
-| [Aider](https://aider.chat/)                                  | Supported                  |
+На статическом хостинге `next/image` ничего не ресайзит (`images.unoptimized`), так что браузер получает файл из `public/` как есть. Новую картинку нужно заранее уменьшить: добавьте её папку в `TARGETS` в `scripts/optimize-static-images.mjs` и запустите `npm run optimize:images`.
 
-## Prerequisites
+Пути к файлам из `public/` в коде оборачиваются в `asset()` из `src/lib/site.ts`. Так они работают и в корне домена, и в подпапке, как на GitHub Pages.
 
-- [Node.js](https://nodejs.org/) 24+
-- An AI coding agent (see [Supported Platforms](#supported-platforms))
+## Деплой
 
-## Tech Stack
+### GitHub Pages
 
-- **Next.js 16** — App Router, React 19, TypeScript strict
-- **shadcn/ui** — Radix primitives + Tailwind CSS v4
-- **Tailwind CSS v4** — oklch design tokens
-- **Lucide React** — default icons (replaced by extracted SVGs during cloning)
+Workflow `.github/workflows/pages.yml` собирает сайт и публикует его при каждом пуше в `main`. Его можно запустить и вручную во вкладке Actions.
 
-## How It Works
+Один раз нужно включить Pages: **Settings → Pages → Source: GitHub Actions**.
 
-The `/clone-website` skill runs a multi-phase pipeline:
+Адрес сайта и подпапку (`/lynkco`) workflow определяет сам. Если подключить свой домен, подпапка уберётся автоматически.
 
-1. **Reconnaissance** — screenshots, design token extraction, interaction sweep (scroll, click, hover, responsive)
-2. **Foundation** — updates fonts, colors, globals, downloads all assets
-3. **Component Specs** — writes detailed spec files (`docs/research/components/`) with exact computed CSS values, states, behaviors, and content
-4. **Parallel Build** — dispatches builder agents in git worktrees, one per section/component
-5. **Assembly & QA** — merges worktrees, wires up the page, runs visual diff against the original
+### Свой сервер (nginx)
 
-Each builder agent receives the full component specification inline — exact `getComputedStyle()` values, interaction models, multi-state content, responsive breakpoints, and asset paths. No guessing.
+```bash
+NEXT_PUBLIC_SITE_URL=https://example.com npm run build
+```
 
-## Use Cases
+Содержимое `out/` отдаётся nginx с одним правилом:
 
-- **Platform migration** — rebuild a site you own from WordPress/Webflow/Squarespace into a modern Next.js codebase
-- **Lost source code** — your site is live but the repo is gone, the developer left, or the stack is legacy. Get the code back in a modern format
-- **Learning** — deconstruct how production sites achieve specific layouts, animations, and responsive behavior by working with real code
+```nginx
+location / { try_files $uri $uri.html $uri/ =404; }
+error_page 404 /404.html;
+```
 
-## Not Intended For
+### Переменные окружения
 
-- **Phishing or impersonation** — this project must not be used for deceptive purposes, impersonation, or any activity that breaks the law.
-- **Passing off someone's design as your own** — logos, brand assets, and original copy belong to their owners.
-- **Violating terms of service** — some sites explicitly prohibit scraping or reproduction. Check first.
+| Переменная             | Зачем                                                                                        |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | Публичный адрес сайта. Из него строятся sitemap, robots, canonical, OG-теги и JSON-LD.       |
+| `PAGES_BASE_PATH`      | Подпапка, в которой лежит сайт (`/lynkco`). Пусто, если сайт в корне домена.                  |
+| `GITHUB_PAGES`         | `true` — собирать страницы как `gallery/index.html`, потому что у GitHub Pages нет `try_files`. |
 
-## Project Structure
+Все значения зашиваются в HTML при сборке, поэтому после их смены сайт нужно пересобрать. Пример для `NEXT_PUBLIC_SITE_URL` есть в `.env.example`.
+
+## Структура
 
 ```
 src/
-  app/              # Next.js routes
-  components/       # React components
-    ui/             # shadcn/ui primitives
-    icons.tsx       # Extracted SVG icons
-  lib/utils.ts      # cn() utility
-  types/            # TypeScript interfaces
-  hooks/            # Custom React hooks
+  app/                  # маршруты: главная, /gallery, sitemap, robots
+  components/
+    sections/           # секции главной
+    ui/                 # примитивы shadcn/ui
+  lib/
+    site.ts             # адрес сайта, asset(), absoluteUrl()
+    gallery.ts          # группы и элементы галереи
+    gallery-manifest.json  # генерируется scripts/process-gallery.mjs
 public/
-  images/           # Downloaded images from target
-  videos/           # Downloaded videos from target
-  seo/              # Favicons, OG images
-docs/
-  research/         # Extraction output & component specs
-  design-references/ # Screenshots
+  images/  videos/  seo/
 scripts/
-  sync-agent-rules.sh  # Regenerate agent instruction files
-  sync-skills.mjs      # Regenerate /clone-website for all platforms
-AGENTS.md           # Agent instructions (single source of truth)
-CLAUDE.md           # Claude Code config (imports AGENTS.md)
-GEMINI.md           # Gemini CLI config (imports AGENTS.md)
+  process-gallery.mjs         # исходники → ассеты галереи
+  optimize-static-images.mjs  # ужатие картинок и OG-карточка
+docs/research/          # заметки по дизайн-токенам и компонентам
 ```
 
-## Commands
+## Происхождение
 
-```bash
-npm run dev    # Start dev server
-npm run build  # Production build
-npm run lint   # ESLint check
-npm run typecheck # TypeScript check
-npm run check  # Run lint + typecheck + build
-```
+Проект начинался с шаблона [ai-website-cloner-template](https://github.com/JCodesMore/ai-website-cloner-template). Инструкции для AI-агентов (`AGENTS.md`, `CLAUDE.md` и прочие) остались от него.
 
-### If using docker
-
-```bash
-docker compose up app --build # build and run the app
-docker compose up dev --build # run the app in dev mode on port 3001
-```
-
-## Updating for Other Platforms
-
-Two source-of-truth files power all platform support. Edit the source, then run the sync script:
-
-| What                   | Source of truth                         | Sync command                       |
-| ---------------------- | --------------------------------------- | ---------------------------------- |
-| Project instructions   | `AGENTS.md`                             | `bash scripts/sync-agent-rules.sh` |
-| `/clone-website` skill | `.claude/skills/clone-website/SKILL.md` | `node scripts/sync-skills.mjs`     |
-
-Each script regenerates the platform-specific copies automatically. Agents that read the source files natively need no regeneration.
-
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=JCodesMore/ai-website-cloner-template&type=Date)](https://star-history.com/#JCodesMore/ai-website-cloner-template&Date)
-
-## License
+## Лицензия
 
 MIT
