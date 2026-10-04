@@ -1,6 +1,7 @@
 import { MediaImage } from "@/components/MediaImage";
 import { X } from "lucide-react";
 import { InstagramIcon, LinkedinIcon } from "@/components/icons";
+import { asset } from "@/lib/site";
 
 const TIMELINE = [
   { role: "Freelance Practice", company: "Hanzo Co.", period: "2011 → Now" },
@@ -33,7 +34,7 @@ export function FounderBio() {
         <div>
           <div className="relative aspect-[708/541] w-full overflow-hidden rounded-2xl">
             <MediaImage
-              src="/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
+              src={asset("/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png")}
               alt="Joris van Dijk, Founder of Hanzo Studio"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"

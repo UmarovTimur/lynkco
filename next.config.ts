@@ -1,6 +1,23 @@
 import type { NextConfig } from "next";
 
+// "" at a domain root; "/lynkco" when served as a GitHub Pages project site.
+// The Pages workflow sets it from actions/configure-pages, which already
+// returns "" once a custom domain is attached.
+const basePath = process.env.PAGES_BASE_PATH?.replace(/\/+$/, "") ?? "";
+
 const nextConfig: NextConfig = {
+  basePath,
+  // GitHub Pages has no try_files: /gallery would hit the out/gallery/ folder
+  // of RSC payloads rather than gallery.html. Emitting gallery/index.html
+  // instead sidesteps that. Off for the nginx build, which has its own rule.
+  trailingSlash: process.env.GITHUB_PAGES === "true",
+  // Next prefixes its own URLs with basePath but not the strings we hand to
+  // `src` — `asset()` in src/lib/site.ts reads this to do the same for files
+  // in public/.
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
+
   // Pure static site: `next build` writes a self-contained `out/` that nginx
   // can serve straight off disk, with no Node process behind it.
   //

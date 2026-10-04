@@ -722,6 +722,8 @@ html.lenis {
 
    Grain that stays put while the page slides under it is also what film
    actually does: the grain is in the print, not in the scene. */
+/* The grain tile is referenced relatively so the bundler copies it into
+   _next/static/media — a root-relative "/images/..." would miss basePath. */
 .sepia-grain-overlay {
   position: fixed;
   inset: 0;
@@ -729,7 +731,7 @@ html.lenis {
   pointer-events: none;
   background-image:
     linear-gradient(rgba(120, 74, 30, 0.18), rgba(120, 74, 30, 0.18)),
-    url("/images/6mcf62RlDfRfU61Yg5vb2pefpi4.png");
+    url("../../public/images/6mcf62RlDfRfU61Yg5vb2pefpi4.png");
   background-repeat: repeat, repeat;
   background-size:
     auto,

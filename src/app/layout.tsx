@@ -4,7 +4,7 @@ import Script from "next/script";
 import { ReactLenis } from "lenis/react";
 import { PageTransitionProvider } from "@/components/PageTransition";
 import { REVEAL_FALLBACK_SCRIPT } from "@/lib/reveal-fallback";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL, asset } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 import { SiteLoader } from "@/components/SiteLoader";
 import "./globals.css";
@@ -83,15 +83,15 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/seo/favicon-light.png",
+        url: asset("/seo/favicon-light.png"),
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/seo/favicon-dark.png",
+        url: asset("/seo/favicon-dark.png"),
         media: "(prefers-color-scheme: dark)",
       },
     ],
-    apple: "/seo/apple-touch-icon.png",
+    apple: asset("/seo/apple-touch-icon.png"),
   },
   robots: {
     index: true,

@@ -38,10 +38,29 @@ function resolveSiteUrl(): string {
 
 export const SITE_URL = resolveSiteUrl();
 
+/**
+ * Path prefix the site is served under — "" at a domain root, "/lynkco" for a
+ * GitHub Pages project site. Set from PAGES_BASE_PATH in next.config.ts, which
+ * also hands it to Next as `basePath`.
+ *
+ * Next prefixes its own output (`_next/`, <Link>, router.push) but not the
+ * plain strings we pass as `src`, so every file from public/ goes through
+ * `asset()`.
+ */
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/** URL of a file in public/, given as "/images/...". */
+export function asset(path: string): string {
+  return `${BASE_PATH}${path}`;
+}
+
 /** Brand name, used in metadata, JSON-LD and the OG card. */
 export const SITE_NAME = "Lynk & Co 06 — параллельный импорт";
 
 /** Absolute URL for a site-relative path. */
 export function absoluteUrl(path: string): string {
-  return new URL(path, SITE_URL).toString();
+  // Concatenated rather than `new URL(path, SITE_URL)`: a root-relative path
+  // would drop SITE_URL's own path, and under GitHub Pages that path is the
+  // repository name.
+  return `${SITE_URL}${path}`;
 }

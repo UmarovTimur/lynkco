@@ -12,6 +12,7 @@ import { Folder } from "lucide-react";
 import { MediaImage } from "@/components/MediaImage";
 import { TransitionLink } from "@/components/PageTransition";
 import type { BentoImage } from "@/types/content";
+import { asset } from "@/lib/site";
 import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 
 // Each column mixes exterior and interior on purpose: COLUMN_TWO is hidden
@@ -19,25 +20,25 @@ import { PHOTO_COUNT, VIDEO_COUNT, plural } from "@/lib/gallery";
 // shots of the same thing.
 const COLUMN_ONE: BentoImage[] = [
   {
-    src: "/images/second/6.webp",
+    src: asset("/images/second/6.webp"),
     alt: "Lynk & Co 06 — вид спереди три четверти, белый",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/second/2.webp",
+    src: asset("/images/second/2.webp"),
     alt: "Lynk & Co 06 — передние сиденья, чёрная кожа",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/second/1.webp",
+    src: asset("/images/second/1.webp"),
     alt: "Lynk & Co 06 — вид сбоку, белый",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/about/1/4.webp",
+    src: asset("/images/about/1/4.webp"),
     alt: "Lynk & Co 06 в зелёном цвете — вид спереди, фото со склада",
     width: 4096,
     height: 3072,
@@ -46,25 +47,25 @@ const COLUMN_ONE: BentoImage[] = [
 
 const COLUMN_TWO: BentoImage[] = [
   {
-    src: "/images/second/5.webp",
+    src: asset("/images/second/5.webp"),
     alt: "Lynk & Co 06 — вид сзади три четверти, белый",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/second/4.webp",
+    src: asset("/images/second/4.webp"),
     alt: "Lynk & Co 06 — передняя панель с центральным экраном",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/second/3.webp",
+    src: asset("/images/second/3.webp"),
     alt: "Lynk & Co 06 — подкапотное пространство",
     width: 1200,
     height: 800,
   },
   {
-    src: "/images/about/1/3.webp",
+    src: asset("/images/about/1/3.webp"),
     alt: "Lynk & Co 06 в сером цвете — вид спереди, фото со склада",
     width: 1706,
     height: 1279,

@@ -5,16 +5,17 @@ import { MediaImage } from "@/components/MediaImage";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { asset } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const SPECS = ["B-SUV", "1.5T 156 л.с.", "7DCT", "L2 ADAS", "FWD"];
 
-const CHIP_IMAGES = ["/images/hero/car-4.webp", "/images/hero/car-5.webp"];
+const CHIP_IMAGES = [asset("/images/hero/car-4.webp"), asset("/images/hero/car-5.webp")];
 
 const STRIP_IMAGES = [
-  "/images/hero/car-1.webp",
-  "/images/hero/car-2.webp",
-  "/images/hero/car-3.webp",
+  asset("/images/hero/car-1.webp"),
+  asset("/images/hero/car-2.webp"),
+  asset("/images/hero/car-3.webp"),
 ];
 
 const CHIP_CLASS =

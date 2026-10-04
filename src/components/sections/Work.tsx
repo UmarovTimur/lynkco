@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import { MediaImage } from "@/components/MediaImage";
+import { asset } from "@/lib/site";
 import { ImageReveal } from "@/components/ImageReveal";
 import { Reveal } from "@/components/Reveal";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
@@ -43,7 +44,7 @@ const GALLERY: GalleryItem[] = [
   {
     title: "Lynk & Co 06",
     caption: "Белый — базовый цвет для Max и Ultra",
-    image: "/images/gallery/06-white-coast.webp",
+    image: asset("/images/gallery/06-white-coast.webp"),
     width: 1600,
     height: 899,
     wide: true,
@@ -51,42 +52,42 @@ const GALLERY: GalleryItem[] = [
   {
     title: "В движении",
     caption: "",
-    image: "/images/gallery/06-white-mountain-road.webp",
+    image: asset("/images/gallery/06-white-mountain-road.webp"),
     width: 1600,
     height: 1067,
   },
   {
     title: "Интерьер",
     caption: "",
-    image: "/images/gallery/06-interior-dashboard.webp",
+    image: asset("/images/gallery/06-interior-dashboard.webp"),
     width: 930,
     height: 620,
   },
   {
     title: "Twilight Purple",
     caption: "Только Ultra, +1 200 ¥",
-    image: "/images/gallery/06-purple-profile.webp",
+    image: asset("/images/gallery/06-purple-profile.webp"),
     width: 1024,
     height: 576,
   },
   {
     title: "Forest Green",
     caption: "Только Ultra, +1 500 ¥",
-    image: "/images/gallery/06-green-studio.webp",
+    image: asset("/images/gallery/06-green-studio.webp"),
     width: 660,
     height: 360,
   },
   {
     title: "Экстерьер",
     caption: "",
-    image: "/images/gallery/06-mint-architecture.webp",
+    image: asset("/images/gallery/06-mint-architecture.webp"),
     width: 930,
     height: 620,
   },
   {
     title: "Городской формат",
     caption: "",
-    image: "/images/gallery/06-mint-street.webp",
+    image: asset("/images/gallery/06-mint-street.webp"),
     width: 700,
     height: 415,
   },

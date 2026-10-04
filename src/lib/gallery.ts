@@ -1,4 +1,5 @@
 import manifest from "./gallery-manifest.json";
+import { asset } from "./site";
 
 export type GalleryItemType = "photo" | "video";
 
@@ -47,7 +48,19 @@ const GROUP_META: Omit<GalleryGroup, "items">[] = [
   { slug: "interior", label: "Интерьер", swatch: null, note: null },
 ];
 
-const ITEMS_BY_SLUG = manifest as Record<string, GalleryItem[]>;
+const ITEMS_BY_SLUG = Object.fromEntries(
+  Object.entries(manifest as Record<string, GalleryItem[]>).map(
+    ([slug, items]) => [
+      slug,
+      items.map((item) => ({
+        ...item,
+        src: asset(item.src),
+        thumb: asset(item.thumb),
+        ...(item.poster && { poster: asset(item.poster) }),
+      })),
+    ],
+  ),
+);
 
 /** Groups that actually have assets, in display order. */
 export const GALLERY_GROUPS: GalleryGroup[] = GROUP_META.filter(
